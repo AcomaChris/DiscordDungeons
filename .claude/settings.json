@@ -1,0 +1,44 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(git *)",
+      "Bash(ssh *)",
+      "Bash(curl *)",
+      "Bash(docker *)",
+      "Bash(python *)",
+      "Bash(python3 *)",
+      "Bash(ls *)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(chmod *)",
+      "Bash(touch *)",
+      "Bash(diff *)",
+      "Bash(jq *)",
+      "Bash(pwd)",
+      "Bash(gh *)"
+    ],
+    "deny": [
+      "Bash(git push --force*)",
+      "Bash(docker rm *)",
+      "Bash(docker rmi *)",
+      "Bash(docker system prune*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "file=\"$CLAUDE_FILE_PATH\"; if echo \"$file\" | grep -qE '\\.(js|ts)$'; then cd /home/chris-linux/dev/DiscordDungeons && npx prettier --write \"$file\" 2>/dev/null && npx eslint --fix \"$file\" 2>/dev/null; fi; exit 0"
+          }
+        ]
+      }
+    ]
+  }
+}
