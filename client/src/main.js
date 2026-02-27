@@ -4,6 +4,7 @@ import { MainMenuScene } from './scenes/MainMenuScene.js';
 import { GameScene } from './scenes/GameScene.js';
 import { WORLD_WIDTH, WORLD_HEIGHT } from './core/Constants.js';
 import authManager from './auth/AuthManager.js';
+import { isDiscordActivity, setupDiscordActivity } from './discord/activitySdk.js';
 
 // --- Game Configuration ---
 
@@ -28,12 +29,20 @@ const config = {
 };
 
 // --- Bootstrap ---
-// Check for OAuth redirect callback before starting the game,
-// so MainMenuScene sees the authenticated identity on first render.
+// In Activity mode: SDK handles auth before Phaser starts.
+// In web mode: restore session or handle OAuth redirect callback.
 
 async function boot() {
-  if (!authManager.restore()) {
-    await authManager.checkOAuthCallback();
+  if (isDiscordActivity) {
+    const result = await setupDiscordActivity();
+    if (result) {
+      authManager.setDiscordActivityIdentity(result.user);
+      authManager.activityChannelId = result.channelId;
+    }
+  } else {
+    if (!authManager.restore()) {
+      await authManager.checkOAuthCallback();
+    }
   }
   new Phaser.Game(config);
 }

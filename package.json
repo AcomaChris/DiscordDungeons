@@ -24,6 +24,7 @@
     "vitest": "^3.0.0"
   },
   "dependencies": {
+    "@discord/embedded-app-sdk": "^2.4.0",
     "phaser": "^3.90.0",
     "ws": "^8.19.0"
   }

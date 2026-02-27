@@ -131,7 +131,8 @@ export class GameScene extends Phaser.Scene {
 
   _connectNetwork() {
     this.networkManager = new NetworkManager(WS_URL);
-    this.networkManager.connect('default', authManager.identity);
+    const roomId = authManager.activityChannelId || 'default';
+    this.networkManager.connect(roomId, authManager.identity);
   }
 
   // --- Cleanup ---

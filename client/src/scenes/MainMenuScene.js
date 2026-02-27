@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import eventBus from '../core/EventBus.js';
 import { SCENE_CHANGE } from '../core/Events.js';
 import authManager from '../auth/AuthManager.js';
+import { isDiscordActivity } from '../discord/activitySdk.js';
 import '../styles/login-ui.css';
 
 export class MainMenuScene extends Phaser.Scene {
@@ -21,6 +22,11 @@ export class MainMenuScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     if (authManager.isAuthenticated) {
+      // Activity mode: skip menu, jump straight into the game
+      if (isDiscordActivity) {
+        this._startGame();
+        return;
+      }
       this._showWelcomeBack(width, height);
     } else {
       this._showLoginOptions();

@@ -48,6 +48,11 @@ async function handleHttpRequest(req, res) {
     return handleDiscordAuth(req, res);
   }
 
+  // Activity SDK token exchange — simpler than /auth/discord (returns raw token)
+  if (url.pathname === '/token' && req.method === 'POST') {
+    return handleActivityToken(req, res);
+  }
+
   if (url.pathname === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ status: 'ok' }));
@@ -109,6 +114,43 @@ async function handleDiscordAuth(req, res) {
     }));
   } catch (err) {
     console.error('[auth] Error:', err);
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Internal server error' }));
+  }
+}
+
+// --- Activity SDK Token Exchange ---
+// AGENT: Activity SDK uses authorize() → code, then exchanges code for token.
+// Unlike /auth/discord, this returns the raw access_token (client calls authenticate() with it).
+
+async function handleActivityToken(req, res) {
+  try {
+    const body = await readBody(req);
+    const { code } = JSON.parse(body);
+
+    const tokenRes = await fetch('https://discord.com/api/oauth2/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        client_id: process.env.DISCORD_CLIENT_ID,
+        client_secret: process.env.DISCORD_CLIENT_SECRET,
+        grant_type: 'authorization_code',
+        code,
+      }),
+    });
+
+    if (!tokenRes.ok) {
+      console.error('[activity-auth] Token exchange failed:', tokenRes.status);
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Token exchange failed' }));
+      return;
+    }
+
+    const { access_token } = await tokenRes.json();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ access_token }));
+  } catch (err) {
+    console.error('[activity-auth] Error:', err);
     res.writeHead(500, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ error: 'Internal server error' }));
   }

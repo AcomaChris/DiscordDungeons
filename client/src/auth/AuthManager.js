@@ -69,6 +69,18 @@ export class AuthManager {
     window.location.href = `https://discord.com/oauth2/authorize?${params}`;
   }
 
+  // Sets identity from Discord Activity SDK auth (no sessionStorage — Activity re-auths each launch)
+  setDiscordActivityIdentity(user) {
+    this._identity = {
+      type: 'discord',
+      playerName: user.global_name || user.username,
+      avatarUrl: user.avatar
+        ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+        : null,
+      discordId: user.id,
+    };
+  }
+
   setGuestIdentity(name) {
     this._identity = {
       type: 'guest',
