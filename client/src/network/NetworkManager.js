@@ -7,6 +7,7 @@ import {
   NETWORK_PLAYER_LEFT,
   NETWORK_STATE_UPDATE,
   NETWORK_ROOM_JOINED,
+  NETWORK_PLAYER_IDENTITY,
 } from '../core/Events.js';
 import { NETWORK_SEND_RATE } from '../core/Constants.js';
 
@@ -23,7 +24,7 @@ export class NetworkManager {
     this._latestLocalState = null;
   }
 
-  connect(roomId) {
+  connect(roomId, identity) {
     const url = `${this.serverUrl}?room=${encodeURIComponent(roomId)}`;
 
     // AGENT: WebSocket constructor throws synchronously on mixed content (ws:// from HTTPS page).
@@ -37,6 +38,16 @@ export class NetworkManager {
 
     this.ws.onopen = () => {
       eventBus.emit(NETWORK_CONNECTED);
+
+      // Send player identity so other players see our name
+      if (identity && this.ws.readyState === WebSocket.OPEN) {
+        this.ws.send(JSON.stringify({
+          type: 'identify',
+          playerName: identity.playerName,
+          avatarUrl: identity.avatarUrl || null,
+        }));
+      }
+
       this._startSending();
     };
 
@@ -90,10 +101,18 @@ export class NetworkManager {
         eventBus.emit(NETWORK_PLAYER_JOINED, {
           playerId: msg.playerId,
           colorIndex: msg.colorIndex,
+          playerName: msg.playerName || null,
         });
         break;
       case 'playerLeft':
         eventBus.emit(NETWORK_PLAYER_LEFT, { playerId: msg.playerId });
+        break;
+      case 'playerIdentity':
+        eventBus.emit(NETWORK_PLAYER_IDENTITY, {
+          playerId: msg.playerId,
+          playerName: msg.playerName,
+          avatarUrl: msg.avatarUrl,
+        });
         break;
       case 'stateUpdate':
         // Exclude our own state from the update

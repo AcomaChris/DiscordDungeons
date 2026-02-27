@@ -46,6 +46,9 @@ jobs:
         env:
           BASE_PATH: /
           VITE_WS_URL: wss://ws.discorddungeons.com
+          VITE_AUTH_URL: https://ws.discorddungeons.com
+          VITE_DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
+          VITE_REDIRECT_URI: https://discorddungeons.com/
 
       - name: Add CNAME for custom domain
         run: echo "discorddungeons.com" > dist/CNAME

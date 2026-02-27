@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { BootScene } from './scenes/BootScene.js';
 import { MainMenuScene } from './scenes/MainMenuScene.js';
 import { GameScene } from './scenes/GameScene.js';
+import authManager from './auth/AuthManager.js';
 
 // --- Game Configuration ---
 
@@ -19,14 +20,23 @@ const config = {
     },
   },
   scale: {
-    mode: Phaser.Scale.FIT,
+    mode: Phaser.Scale.RESIZE,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
   scene: [BootScene, MainMenuScene, GameScene],
 };
 
 // --- Bootstrap ---
+// Check for OAuth redirect callback before starting the game,
+// so MainMenuScene sees the authenticated identity on first render.
 
-new Phaser.Game(config);
+async function boot() {
+  if (!authManager.restore()) {
+    await authManager.checkOAuthCallback();
+  }
+  new Phaser.Game(config);
+}
+
+boot();
 
 export { config };

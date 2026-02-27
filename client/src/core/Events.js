@@ -17,3 +17,4 @@ export const NETWORK_PLAYER_JOINED = 'network:playerJoined';
 export const NETWORK_PLAYER_LEFT = 'network:playerLeft';
 export const NETWORK_STATE_UPDATE = 'network:stateUpdate';
 export const NETWORK_ROOM_JOINED = 'network:roomJoined';
+export const NETWORK_PLAYER_IDENTITY = 'network:playerIdentity';

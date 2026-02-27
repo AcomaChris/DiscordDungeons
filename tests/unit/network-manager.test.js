@@ -6,6 +6,7 @@ import {
   NETWORK_PLAYER_LEFT,
   NETWORK_STATE_UPDATE,
   NETWORK_ROOM_JOINED,
+  NETWORK_PLAYER_IDENTITY,
 } from '../../client/src/core/Events.js';
 import { NetworkManager } from '../../client/src/network/NetworkManager.js';
 
@@ -79,15 +80,15 @@ describe('NetworkManager', () => {
     nm.disconnect();
   });
 
-  it('emits NETWORK_PLAYER_JOINED on playerJoined message', () => {
+  it('emits NETWORK_PLAYER_JOINED with playerName on playerJoined message', () => {
     const nm = new NetworkManager('ws://localhost:3001');
     const calls = [];
     eventBus.on(NETWORK_PLAYER_JOINED, (data) => calls.push(data));
 
     nm.connect('test-room');
-    nm.ws._receive({ type: 'playerJoined', playerId: '99', colorIndex: 2 });
+    nm.ws._receive({ type: 'playerJoined', playerId: '99', colorIndex: 2, playerName: 'Hero' });
 
-    expect(calls[0]).toEqual({ playerId: '99', colorIndex: 2 });
+    expect(calls[0]).toEqual({ playerId: '99', colorIndex: 2, playerName: 'Hero' });
     nm.disconnect();
   });
 
@@ -133,6 +134,40 @@ describe('NetworkManager', () => {
 
     // Should exclude player '1' (self)
     expect(calls[0]).toEqual({ 2: { x: 300, y: 400, facing: 'right' } });
+    nm.disconnect();
+  });
+
+  it('sends identify message on connect when identity is provided', async () => {
+    const nm = new NetworkManager('ws://localhost:3001');
+    nm.connect('test-room', { playerName: 'TestUser', avatarUrl: null });
+    await new Promise((r) => setTimeout(r, 10));
+
+    expect(nm.ws.sent[0]).toEqual({
+      type: 'identify',
+      playerName: 'TestUser',
+      avatarUrl: null,
+    });
+    nm.disconnect();
+  });
+
+  it('emits NETWORK_PLAYER_IDENTITY on playerIdentity message', () => {
+    const nm = new NetworkManager('ws://localhost:3001');
+    const calls = [];
+    eventBus.on(NETWORK_PLAYER_IDENTITY, (data) => calls.push(data));
+
+    nm.connect('test-room');
+    nm.ws._receive({
+      type: 'playerIdentity',
+      playerId: '5',
+      playerName: 'Hero',
+      avatarUrl: 'https://cdn.example.com/avatar.png',
+    });
+
+    expect(calls[0]).toEqual({
+      playerId: '5',
+      playerName: 'Hero',
+      avatarUrl: 'https://cdn.example.com/avatar.png',
+    });
     nm.disconnect();
   });
 });

@@ -6,3 +6,6 @@ services:
       - "3001:3001"
     environment:
       - WS_PORT=3001
+      - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
+      - DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
+      - CORS_ORIGIN=https://discorddungeons.com

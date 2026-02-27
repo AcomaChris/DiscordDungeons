@@ -6,7 +6,7 @@ import { MOVE_SPEED, JUMP_VELOCITY, CHAR_HEIGHT, FLOOR_HEIGHT } from '../core/Co
 // Wraps the local player sprite, handles input actions, emits state for network.
 
 export class Player {
-  constructor(scene, floor) {
+  constructor(scene, floor, playerName) {
     this.scene = scene;
     this.facing = 'right';
     this.texturePrefix = 'player-0';
@@ -18,6 +18,13 @@ export class Player {
     this.sprite = scene.physics.add.sprite(spawnX, spawnY, 'player-0-right');
     this.sprite.setCollideWorldBounds(true);
     scene.physics.add.collider(this.sprite, floor);
+
+    this.nameLabel = scene.add.text(spawnX, spawnY - CHAR_HEIGHT / 2 - 4, playerName || 'Player', {
+      fontSize: '12px',
+      color: '#ffffff',
+      stroke: '#000000',
+      strokeThickness: 2,
+    }).setOrigin(0.5, 1);
   }
 
   setColorIndex(colorIndex) {
@@ -41,6 +48,7 @@ export class Player {
       this.sprite.setVelocityY(JUMP_VELOCITY);
     }
 
+    this.nameLabel.setPosition(this.sprite.x, this.sprite.y - CHAR_HEIGHT / 2 - 4);
     eventBus.emit(PLAYER_MOVED, this.getState());
   }
 
@@ -56,5 +64,6 @@ export class Player {
 
   destroy() {
     this.sprite.destroy();
+    this.nameLabel.destroy();
   }
 }

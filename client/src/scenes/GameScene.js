@@ -6,6 +6,7 @@ import {
   NETWORK_PLAYER_JOINED,
   NETWORK_PLAYER_LEFT,
   NETWORK_STATE_UPDATE,
+  NETWORK_PLAYER_IDENTITY,
 } from '../core/Events.js';
 import { FLOOR_HEIGHT } from '../core/Constants.js';
 import { InputManager } from '../input/InputManager.js';
@@ -14,6 +15,7 @@ import { mergeInputSnapshots } from '../input/mergeInputSnapshots.js';
 import { Player } from '../entities/Player.js';
 import { RemotePlayer } from '../entities/RemotePlayer.js';
 import { NetworkManager } from '../network/NetworkManager.js';
+import authManager from '../auth/AuthManager.js';
 
 // --- GameScene ---
 // Thin orchestrator: creates floor, player, input, network. Delegates everything via events.
@@ -28,14 +30,17 @@ export class GameScene extends Phaser.Scene {
   }
 
   create() {
+    const { width, height } = this.scale;
     this.remotePlayers = new Map();
 
+    this.physics.world.setBounds(0, 0, width, height);
     this._createFloor();
-    this.player = new Player(this, this.floor);
+    this.player = new Player(this, this.floor, authManager.identity?.playerName);
     this.inputManager = new InputManager(this);
     this.touchManager = new TouchManager();
     this.touchManager.show();
 
+    this.scale.on('resize', this._onResize, this);
     this._subscribeEvents();
     this._connectNetwork();
   }
@@ -47,6 +52,17 @@ export class GameScene extends Phaser.Scene {
     this.floor = this.physics.add.staticImage(width / 2, floorY, 'floor');
   }
 
+  // --- Resize ---
+
+  _onResize(gameSize) {
+    const { width, height } = gameSize;
+    this.physics.world.setBounds(0, 0, width, height);
+
+    const floorY = height - FLOOR_HEIGHT / 2;
+    this.floor.setPosition(width / 2, floorY);
+    this.floor.body.updateFromGameObject();
+  }
+
   // --- Event Subscriptions ---
 
   _subscribeEvents() {
@@ -55,20 +71,27 @@ export class GameScene extends Phaser.Scene {
     this._onPlayerJoined = (data) => this._addRemotePlayer(data);
     this._onPlayerLeft = (data) => this._removeRemotePlayer(data);
     this._onStateUpdate = (data) => this._updateRemotePlayers(data);
+    this._onPlayerIdentity = (data) => this._updatePlayerIdentity(data);
 
     eventBus.on(INPUT_ACTION, this._onInput);
     eventBus.on(NETWORK_ROOM_JOINED, this._onRoomJoined);
     eventBus.on(NETWORK_PLAYER_JOINED, this._onPlayerJoined);
     eventBus.on(NETWORK_PLAYER_LEFT, this._onPlayerLeft);
     eventBus.on(NETWORK_STATE_UPDATE, this._onStateUpdate);
+    eventBus.on(NETWORK_PLAYER_IDENTITY, this._onPlayerIdentity);
   }
 
   // --- Remote Players ---
 
-  _addRemotePlayer({ playerId, colorIndex }) {
+  _addRemotePlayer({ playerId, colorIndex, playerName }) {
     if (this.remotePlayers.has(playerId)) return;
-    const rp = new RemotePlayer(this, colorIndex);
+    const rp = new RemotePlayer(this, colorIndex, playerName);
     this.remotePlayers.set(playerId, rp);
+  }
+
+  _updatePlayerIdentity({ playerId, playerName }) {
+    const rp = this.remotePlayers.get(playerId);
+    if (rp) rp.setPlayerName(playerName);
   }
 
   _removeRemotePlayer({ playerId }) {
@@ -103,18 +126,20 @@ export class GameScene extends Phaser.Scene {
 
   _connectNetwork() {
     this.networkManager = new NetworkManager(WS_URL);
-    this.networkManager.connect('default');
+    this.networkManager.connect('default', authManager.identity);
   }
 
   // --- Cleanup ---
   // AGENT: Must unsubscribe all EventBus listeners to prevent duplicates on scene restart
 
   shutdown() {
+    this.scale.off('resize', this._onResize, this);
     eventBus.off(INPUT_ACTION, this._onInput);
     eventBus.off(NETWORK_ROOM_JOINED, this._onRoomJoined);
     eventBus.off(NETWORK_PLAYER_JOINED, this._onPlayerJoined);
     eventBus.off(NETWORK_PLAYER_LEFT, this._onPlayerLeft);
     eventBus.off(NETWORK_STATE_UPDATE, this._onStateUpdate);
+    eventBus.off(NETWORK_PLAYER_IDENTITY, this._onPlayerIdentity);
 
     if (this.networkManager) this.networkManager.disconnect();
     this.inputManager.destroy();
