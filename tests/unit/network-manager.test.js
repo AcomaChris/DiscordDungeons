@@ -72,10 +72,10 @@ describe('NetworkManager', () => {
     eventBus.on(NETWORK_ROOM_JOINED, (data) => calls.push(data));
 
     nm.connect('test-room');
-    nm.ws._receive({ type: 'welcome', playerId: '42', roomId: 'test-room' });
+    nm.ws._receive({ type: 'welcome', playerId: '42', roomId: 'test-room', colorIndex: 3 });
 
     expect(nm.playerId).toBe('42');
-    expect(calls[0]).toEqual({ playerId: '42', roomId: 'test-room' });
+    expect(calls[0]).toEqual({ playerId: '42', roomId: 'test-room', colorIndex: 3 });
     nm.disconnect();
   });
 
@@ -122,7 +122,7 @@ describe('NetworkManager', () => {
     eventBus.on(NETWORK_STATE_UPDATE, (data) => calls.push(data));
 
     nm.connect('test-room');
-    nm.ws._receive({ type: 'welcome', playerId: '1', roomId: 'test-room' });
+    nm.ws._receive({ type: 'welcome', playerId: '1', roomId: 'test-room', colorIndex: 0 });
     nm.ws._receive({
       type: 'stateUpdate',
       states: {

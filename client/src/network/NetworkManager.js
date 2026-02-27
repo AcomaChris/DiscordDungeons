@@ -80,7 +80,11 @@ export class NetworkManager {
     switch (msg.type) {
       case 'welcome':
         this.playerId = msg.playerId;
-        eventBus.emit(NETWORK_ROOM_JOINED, { playerId: msg.playerId, roomId: msg.roomId });
+        eventBus.emit(NETWORK_ROOM_JOINED, {
+          playerId: msg.playerId,
+          roomId: msg.roomId,
+          colorIndex: msg.colorIndex,
+        });
         break;
       case 'playerJoined':
         eventBus.emit(NETWORK_PLAYER_JOINED, {

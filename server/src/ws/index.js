@@ -25,8 +25,10 @@ wss.on('connection', (ws, req) => {
   const colorIndex = room.size;
   room.set(playerId, { ws, colorIndex, state: null });
 
+  console.log(`[connect] player=${playerId} room=${roomId} roomSize=${room.size}`);
+
   // Tell the new player their ID
-  ws.send(JSON.stringify({ type: 'welcome', playerId, roomId }));
+  ws.send(JSON.stringify({ type: 'welcome', playerId, roomId, colorIndex }));
 
   // Tell existing players about the new player, and vice versa
   for (const [pid, peer] of room) {
@@ -42,7 +44,10 @@ wss.on('connection', (ws, req) => {
       const msg = JSON.parse(data);
       if (msg.type === 'state') {
         const peer = room.get(playerId);
-        if (peer) peer.state = msg.payload;
+        if (peer) {
+          peer.state = msg.payload;
+          console.log(`[state] player=${playerId}`, JSON.stringify(msg.payload));
+        }
       }
     } catch {
       // Ignore malformed messages
@@ -51,6 +56,7 @@ wss.on('connection', (ws, req) => {
 
   // --- Disconnect ---
   ws.on('close', () => {
+    console.log(`[disconnect] player=${playerId} room=${roomId}`);
     room.delete(playerId);
     for (const [, peer] of room) {
       peer.ws.send(JSON.stringify({ type: 'playerLeft', playerId }));

@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import eventBus from '../core/EventBus.js';
 import {
   INPUT_ACTION,
+  NETWORK_ROOM_JOINED,
   NETWORK_PLAYER_JOINED,
   NETWORK_PLAYER_LEFT,
   NETWORK_STATE_UPDATE,
@@ -46,11 +47,13 @@ export class GameScene extends Phaser.Scene {
 
   _subscribeEvents() {
     this._onInput = (data) => this.player.handleInput(data);
+    this._onRoomJoined = ({ colorIndex }) => this.player.setColorIndex(colorIndex);
     this._onPlayerJoined = (data) => this._addRemotePlayer(data);
     this._onPlayerLeft = (data) => this._removeRemotePlayer(data);
     this._onStateUpdate = (data) => this._updateRemotePlayers(data);
 
     eventBus.on(INPUT_ACTION, this._onInput);
+    eventBus.on(NETWORK_ROOM_JOINED, this._onRoomJoined);
     eventBus.on(NETWORK_PLAYER_JOINED, this._onPlayerJoined);
     eventBus.on(NETWORK_PLAYER_LEFT, this._onPlayerLeft);
     eventBus.on(NETWORK_STATE_UPDATE, this._onStateUpdate);
@@ -101,6 +104,7 @@ export class GameScene extends Phaser.Scene {
 
   shutdown() {
     eventBus.off(INPUT_ACTION, this._onInput);
+    eventBus.off(NETWORK_ROOM_JOINED, this._onRoomJoined);
     eventBus.off(NETWORK_PLAYER_JOINED, this._onPlayerJoined);
     eventBus.off(NETWORK_PLAYER_LEFT, this._onPlayerLeft);
     eventBus.off(NETWORK_STATE_UPDATE, this._onStateUpdate);

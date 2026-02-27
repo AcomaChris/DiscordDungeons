@@ -9,6 +9,7 @@ export class Player {
   constructor(scene, floor) {
     this.scene = scene;
     this.facing = 'right';
+    this.texturePrefix = 'player';
 
     const { width, height } = scene.scale;
     const spawnX = width / 2;
@@ -19,15 +20,20 @@ export class Player {
     scene.physics.add.collider(this.sprite, floor);
   }
 
+  setColorIndex(colorIndex) {
+    this.texturePrefix = `remote-${colorIndex}`;
+    this.sprite.setTexture(`${this.texturePrefix}-${this.facing}`);
+  }
+
   handleInput({ moveX, jump }) {
     this.sprite.setVelocityX(moveX * MOVE_SPEED);
 
     if (moveX < 0 && this.facing !== 'left') {
       this.facing = 'left';
-      this.sprite.setTexture('player-left');
+      this.sprite.setTexture(`${this.texturePrefix}-left`);
     } else if (moveX > 0 && this.facing !== 'right') {
       this.facing = 'right';
-      this.sprite.setTexture('player-right');
+      this.sprite.setTexture(`${this.texturePrefix}-right`);
     }
 
     const onGround = this.sprite.body.touching.down || this.sprite.body.blocked.down;
