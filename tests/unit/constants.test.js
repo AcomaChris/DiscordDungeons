@@ -8,6 +8,8 @@ import {
   NETWORK_SEND_RATE,
   MAX_PLAYERS,
   PLAYER_COLORS,
+  WORLD_WIDTH,
+  WORLD_HEIGHT,
 } from '../../client/src/core/Constants.js';
 
 describe('Game constants', () => {
@@ -39,5 +41,16 @@ describe('Game constants', () => {
   it('all player colors are unique', () => {
     const unique = new Set(PLAYER_COLORS);
     expect(unique.size).toBe(PLAYER_COLORS.length);
+  });
+
+  it('world dimensions are positive', () => {
+    expect(WORLD_WIDTH).toBeGreaterThan(0);
+    expect(WORLD_HEIGHT).toBeGreaterThan(0);
+  });
+
+  it('floor and character fit within world', () => {
+    expect(FLOOR_HEIGHT).toBeLessThan(WORLD_HEIGHT);
+    expect(CHAR_HEIGHT).toBeLessThan(WORLD_HEIGHT - FLOOR_HEIGHT);
+    expect(CHAR_WIDTH).toBeLessThan(WORLD_WIDTH);
   });
 });

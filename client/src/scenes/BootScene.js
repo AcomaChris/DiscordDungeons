@@ -6,6 +6,7 @@ import {
   EYE_RADIUS,
   EYE_OFFSET_X,
   FLOOR_HEIGHT,
+  WORLD_WIDTH,
   PLAYER_COLORS,
 } from '../core/Constants.js';
 
@@ -28,12 +29,10 @@ export class BootScene extends Phaser.Scene {
   }
 
   _createFloorTexture() {
-    // AGENT: Use a wide texture so it covers any screen width after resize
-    const maxWidth = 4096;
     const gfx = this.add.graphics();
     gfx.fillStyle(0x4a4a4a, 1);
-    gfx.fillRect(0, 0, maxWidth, FLOOR_HEIGHT);
-    gfx.generateTexture('floor', maxWidth, FLOOR_HEIGHT);
+    gfx.fillRect(0, 0, WORLD_WIDTH, FLOOR_HEIGHT);
+    gfx.generateTexture('floor', WORLD_WIDTH, FLOOR_HEIGHT);
     gfx.destroy();
   }
 

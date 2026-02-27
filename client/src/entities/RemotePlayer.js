@@ -1,4 +1,4 @@
-import { CHAR_HEIGHT, FLOOR_HEIGHT } from '../core/Constants.js';
+import { CHAR_HEIGHT, FLOOR_HEIGHT, WORLD_WIDTH, WORLD_HEIGHT } from '../core/Constants.js';
 
 // --- RemotePlayer ---
 // Renders a network-synced player. Position set from server state via lerp.
@@ -11,9 +11,8 @@ export class RemotePlayer {
     this.scene = scene;
     this.texturePrefix = `player-${colorIndex}`;
 
-    const { width, height } = scene.scale;
-    const spawnX = width / 2;
-    const spawnY = height - FLOOR_HEIGHT - CHAR_HEIGHT / 2;
+    const spawnX = WORLD_WIDTH / 2;
+    const spawnY = WORLD_HEIGHT - FLOOR_HEIGHT - CHAR_HEIGHT / 2;
 
     this.sprite = scene.add.sprite(spawnX, spawnY, `${this.texturePrefix}-right`);
     this._targetX = spawnX;

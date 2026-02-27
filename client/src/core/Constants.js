@@ -9,6 +9,12 @@ export const CHAR_RADIUS = CHAR_WIDTH / 2;
 export const EYE_RADIUS = 4;
 export const EYE_OFFSET_X = 7;
 
+// --- World ---
+// Fixed logical world size. All positions use these dimensions, independent of
+// screen size. Camera zoom maps this world onto the physical screen.
+export const WORLD_WIDTH = 800;
+export const WORLD_HEIGHT = 600;
+
 // --- Floor ---
 export const FLOOR_HEIGHT = 32;
 

@@ -8,7 +8,7 @@ import {
   NETWORK_STATE_UPDATE,
   NETWORK_PLAYER_IDENTITY,
 } from '../core/Events.js';
-import { FLOOR_HEIGHT } from '../core/Constants.js';
+import { FLOOR_HEIGHT, WORLD_WIDTH, WORLD_HEIGHT } from '../core/Constants.js';
 import { InputManager } from '../input/InputManager.js';
 import { TouchManager } from '../input/TouchManager.js';
 import { mergeInputSnapshots } from '../input/mergeInputSnapshots.js';
@@ -30,37 +30,47 @@ export class GameScene extends Phaser.Scene {
   }
 
   create() {
-    const { width, height } = this.scale;
     this.remotePlayers = new Map();
 
-    this.physics.world.setBounds(0, 0, width, height);
+    this.physics.world.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
     this._createFloor();
     this.player = new Player(this, this.floor, authManager.identity?.playerName);
     this.inputManager = new InputManager(this);
     this.touchManager = new TouchManager();
     this.touchManager.show();
 
+    this._updateCamera(this.scale.width, this.scale.height);
     this.scale.on('resize', this._onResize, this);
     this._subscribeEvents();
     this._connectNetwork();
   }
 
   _createFloor() {
-    const { width, height } = this.scale;
-    const floorY = height - FLOOR_HEIGHT / 2;
+    const floorY = WORLD_HEIGHT - FLOOR_HEIGHT / 2;
     // AGENT: 'floor' texture is created by BootScene — do not recreate here
-    this.floor = this.physics.add.staticImage(width / 2, floorY, 'floor');
+    this.floor = this.physics.add.staticImage(WORLD_WIDTH / 2, floorY, 'floor');
+  }
+
+  // --- Camera ---
+  // Zoom fits the entire logical world on screen. Scroll anchors the floor to
+  // the bottom of the visible area and centers horizontally.
+
+  _updateCamera(screenWidth, screenHeight) {
+    const cam = this.cameras.main;
+    const zoom = Math.min(screenWidth / WORLD_WIDTH, screenHeight / WORLD_HEIGHT);
+    cam.setZoom(zoom);
+
+    const visibleWidth = screenWidth / zoom;
+    const visibleHeight = screenHeight / zoom;
+
+    cam.scrollX = (WORLD_WIDTH - visibleWidth) / 2;
+    cam.scrollY = WORLD_HEIGHT - visibleHeight;
   }
 
   // --- Resize ---
 
   _onResize(gameSize) {
-    const { width, height } = gameSize;
-    this.physics.world.setBounds(0, 0, width, height);
-
-    const floorY = height - FLOOR_HEIGHT / 2;
-    this.floor.setPosition(width / 2, floorY);
-    this.floor.body.updateFromGameObject();
+    this._updateCamera(gameSize.width, gameSize.height);
   }
 
   // --- Event Subscriptions ---
