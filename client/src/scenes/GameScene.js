@@ -40,6 +40,7 @@ export class GameScene extends Phaser.Scene {
     this.touchManager.show();
 
     this._updateCamera(this.scale.width, this.scale.height);
+    this.cameras.main.startFollow(this.player.sprite);
     this.scale.on('resize', this._onResize, this);
     this._subscribeEvents();
     this._connectNetwork();
@@ -52,19 +53,13 @@ export class GameScene extends Phaser.Scene {
   }
 
   // --- Camera ---
-  // Zoom fits the entire logical world on screen. Scroll anchors the floor to
-  // the bottom of the visible area and centers horizontally.
+  // Zoom fits the entire logical world on screen. startFollow keeps the
+  // player centered; Phaser handles scroll positioning correctly with zoom.
 
   _updateCamera(screenWidth, screenHeight) {
     const cam = this.cameras.main;
     const zoom = Math.min(screenWidth / WORLD_WIDTH, screenHeight / WORLD_HEIGHT);
     cam.setZoom(zoom);
-
-    const visibleWidth = screenWidth / zoom;
-    const visibleHeight = screenHeight / zoom;
-
-    cam.scrollX = (WORLD_WIDTH - visibleWidth) / 2;
-    cam.scrollY = WORLD_HEIGHT - visibleHeight;
   }
 
   // --- Resize ---
