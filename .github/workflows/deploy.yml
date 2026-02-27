@@ -44,8 +44,11 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          BASE_PATH: /DiscordDungeons/
+          BASE_PATH: /
           VITE_WS_URL: wss://ws.discorddungeons.com
+
+      - name: Add CNAME for custom domain
+        run: echo "discorddungeons.com" > dist/CNAME
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
