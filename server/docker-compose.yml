@@ -1,0 +1,8 @@
+services:
+  ws-server:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - WS_PORT=3001
