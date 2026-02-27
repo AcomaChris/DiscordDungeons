@@ -103,6 +103,19 @@ describe('NetworkManager', () => {
     nm.disconnect();
   });
 
+  it('does not throw when WebSocket constructor fails', () => {
+    // Simulate mixed-content SecurityError
+    globalThis.WebSocket = class {
+      constructor() {
+        throw new DOMException('Insecure WebSocket', 'SecurityError');
+      }
+    };
+
+    const nm = new NetworkManager('ws://localhost:3001');
+    expect(() => nm.connect('test-room')).not.toThrow();
+    expect(nm.ws).toBeNull();
+  });
+
   it('emits NETWORK_STATE_UPDATE excluding own player', () => {
     const nm = new NetworkManager('ws://localhost:3001');
     const calls = [];

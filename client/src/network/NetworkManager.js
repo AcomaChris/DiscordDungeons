@@ -25,7 +25,15 @@ export class NetworkManager {
 
   connect(roomId) {
     const url = `${this.serverUrl}?room=${encodeURIComponent(roomId)}`;
-    this.ws = new WebSocket(url);
+
+    // AGENT: WebSocket constructor throws synchronously on mixed content (ws:// from HTTPS page).
+    // Must catch so the game continues in offline/single-player mode.
+    try {
+      this.ws = new WebSocket(url);
+    } catch {
+      console.warn('[NetworkManager] WebSocket connection failed — running offline');
+      return;
+    }
 
     this.ws.onopen = () => {
       eventBus.emit(NETWORK_CONNECTED);
@@ -40,6 +48,10 @@ export class NetworkManager {
     this.ws.onclose = () => {
       this._stopSending();
       eventBus.emit(NETWORK_DISCONNECTED);
+    };
+
+    this.ws.onerror = () => {
+      // Logged by the browser; onclose fires after this, which handles cleanup.
     };
 
     this._onPlayerMoved = (state) => {
