@@ -18,6 +18,15 @@ export default [
     },
   },
   {
+    // Root config files run in Node.js
+    files: ['*.config.mjs'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
+  {
     // Client code runs in the browser
     files: ['client/**/*.js'],
     languageOptions: {
