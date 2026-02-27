@@ -1,25 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(node *)",
-      "Bash(npm *)",
-      "Bash(npx *)",
-      "Bash(git *)",
-      "Bash(ssh *)",
-      "Bash(curl *)",
-      "Bash(docker *)",
-      "Bash(python *)",
-      "Bash(python3 *)",
-      "Bash(ls *)",
-      "Bash(mkdir *)",
-      "Bash(cp *)",
-      "Bash(mv *)",
-      "Bash(chmod *)",
-      "Bash(touch *)",
-      "Bash(diff *)",
-      "Bash(jq *)",
-      "Bash(pwd)",
-      "Bash(gh *)"
+      "Bash(*)"
     ],
     "deny": [
       "Bash(git push --force*)",

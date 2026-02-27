@@ -1,7 +1,11 @@
 import js from '@eslint/js';
 import prettier from 'eslint-config-prettier';
+import globals from 'globals';
 
 export default [
+  {
+    ignores: ['dist/'],
+  },
   js.configs.recommended,
   prettier,
   {
@@ -11,6 +15,15 @@ export default [
     },
     rules: {
       'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    },
+  },
+  {
+    // Client code runs in the browser
+    files: ['client/**/*.js'],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+      },
     },
   },
   {

@@ -7,10 +7,16 @@
 - After planning: implement → run tests (`npm test`) → build → commit/push → **deploy** (when server is provisioned).
 - The commit must exist in git before deploying so the deploy announcement lists the correct commits.
 
+## Skills (Slash Commands)
+- `/commit` — run tests, lint, and commit with a conventional message
+- `/deploy` — build and deploy (full deploy once VPS is provisioned)
+- `/issue` — file a GitHub issue from a description or conversation
+
 ## Issue Tracking
 - Use **GitHub Issues** for all task tracking — no external issue trackers.
 - Reference issues in commits: `(#42)` or `fixes #42`.
 - Use `gh issue create`, `gh issue list`, `gh issue view` for CLI access.
+- Users can say "file an issue about X" or use `/issue` to create issues conversationally.
 
 ## Deployment (once VPS is provisioned)
 - Build: `node server/src/workflow-builder.js && node server/deploy-workflow.js`

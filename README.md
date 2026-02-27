@@ -4,7 +4,7 @@ A Discord Activity (Embedded App) dungeon game — played directly inside Discor
 
 ## Status
 
-Early development — project scaffolding and tooling setup.
+Early development — basic Phaser game client with movement prototype.
 
 ## Architecture
 
@@ -16,6 +16,9 @@ Early development — project scaffolding and tooling setup.
 
 ```bash
 npm install        # Install dependencies
+npm run dev        # Start game dev server (http://localhost:8080)
+npm run build      # Production build to dist/
+npm run preview    # Preview production build
 npm test           # Run tests
 npm run lint       # Lint code
 npm run format     # Format code
@@ -24,12 +27,17 @@ npm run format     # Format code
 ## Project Structure
 
 ```
-client/             # Game client (Discord Activity frontend)
+client/
+  index.html          # Game entry point
+  src/
+    main.js            # Phaser game config and bootstrap
+    scenes/
+      GameScene.js     # Main game scene (floor, character, controls)
 server/
   src/
-    code/           # n8n Code node files (backend logic)
+    code/              # n8n Code node files (backend logic)
     workflow-builder.js
   deploy-workflow.js
 tests/
-  unit/             # Unit tests
+  unit/                # Unit tests
 ```
