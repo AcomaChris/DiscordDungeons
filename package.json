@@ -10,6 +10,7 @@
     "test": "vitest run",
     "test:unit": "vitest run tests/unit",
     "test:watch": "vitest",
+    "server": "node server/src/ws/index.js",
     "lint": "eslint .",
     "format": "prettier --write ."
   },
@@ -22,6 +23,7 @@
     "vitest": "^3.0.0"
   },
   "dependencies": {
-    "phaser": "^3.90.0"
+    "phaser": "^3.90.0",
+    "ws": "^8.19.0"
   }
 }

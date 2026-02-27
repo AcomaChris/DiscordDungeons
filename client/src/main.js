@@ -1,4 +1,6 @@
 import Phaser from 'phaser';
+import { BootScene } from './scenes/BootScene.js';
+import { MainMenuScene } from './scenes/MainMenuScene.js';
 import { GameScene } from './scenes/GameScene.js';
 
 // --- Game Configuration ---
@@ -20,7 +22,7 @@ const config = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [GameScene],
+  scene: [BootScene, MainMenuScene, GameScene],
 };
 
 // --- Bootstrap ---

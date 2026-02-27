@@ -1,18 +1,23 @@
 import Phaser from 'phaser';
+import eventBus from '../core/EventBus.js';
+import {
+  INPUT_ACTION,
+  NETWORK_PLAYER_JOINED,
+  NETWORK_PLAYER_LEFT,
+  NETWORK_STATE_UPDATE,
+} from '../core/Events.js';
+import { FLOOR_HEIGHT } from '../core/Constants.js';
+import { InputManager } from '../input/InputManager.js';
+import { Player } from '../entities/Player.js';
+import { RemotePlayer } from '../entities/RemotePlayer.js';
+import { NetworkManager } from '../network/NetworkManager.js';
 
-// --- Physics / movement tuning ---
-const MOVE_SPEED = 300;
-const JUMP_VELOCITY = -500;
+// --- GameScene ---
+// Thin orchestrator: creates floor, player, input, network. Delegates everything via events.
 
-// --- Character dimensions ---
-const CHAR_WIDTH = 30;
-const CHAR_HEIGHT = 50;
-const CHAR_RADIUS = CHAR_WIDTH / 2;
-const EYE_RADIUS = 4;
-const EYE_OFFSET_X = 7;
-
-// --- Floor ---
-const FLOOR_HEIGHT = 32;
+// AGENT: WS_URL is set at build time for production, falls back to localhost for dev.
+// When deploying the WS server, set VITE_WS_URL in the GitHub Actions env.
+const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:3001';
 
 export class GameScene extends Phaser.Scene {
   constructor() {
@@ -20,107 +25,91 @@ export class GameScene extends Phaser.Scene {
   }
 
   create() {
-    this.createFloor();
-    this.createCharacterTextures();
-    this.createPlayer();
-    this.setupControls();
+    this.remotePlayers = new Map();
+
+    this._createFloor();
+    this.player = new Player(this, this.floor);
+    this.inputManager = new InputManager(this);
+
+    this._subscribeEvents();
+    this._connectNetwork();
   }
 
-  // --- Floor ---
-
-  createFloor() {
+  _createFloor() {
     const { width, height } = this.scale;
     const floorY = height - FLOOR_HEIGHT / 2;
-
-    const gfx = this.add.graphics();
-    gfx.fillStyle(0x4a4a4a, 1);
-    gfx.fillRect(0, 0, width, FLOOR_HEIGHT);
-    gfx.generateTexture('floor', width, FLOOR_HEIGHT);
-    gfx.destroy();
-
+    // AGENT: 'floor' texture is created by BootScene — do not recreate here
     this.floor = this.physics.add.staticImage(width / 2, floorY, 'floor');
   }
 
-  // --- Character Textures ---
-  // Two pre-rendered textures (left/right) so the eye dot reflects facing direction.
-  // Using generateTexture because Arcade Physics requires sprite-based game objects.
+  // --- Event Subscriptions ---
 
-  createCharacterTextures() {
-    const w = CHAR_WIDTH;
-    const h = CHAR_HEIGHT;
-    const r = CHAR_RADIUS;
+  _subscribeEvents() {
+    this._onInput = (data) => this.player.handleInput(data);
+    this._onPlayerJoined = (data) => this._addRemotePlayer(data);
+    this._onPlayerLeft = (data) => this._removeRemotePlayer(data);
+    this._onStateUpdate = (data) => this._updateRemotePlayers(data);
 
-    const gfx = this.add.graphics();
-
-    // Right-facing texture
-    gfx.fillStyle(0x00ccff, 1);
-    gfx.fillRoundedRect(0, 0, w, h, r);
-    gfx.fillStyle(0xffffff, 1);
-    gfx.fillCircle(w / 2 + EYE_OFFSET_X, r + 4, EYE_RADIUS);
-    gfx.generateTexture('player-right', w, h);
-
-    // Left-facing texture
-    gfx.clear();
-    gfx.fillStyle(0x00ccff, 1);
-    gfx.fillRoundedRect(0, 0, w, h, r);
-    gfx.fillStyle(0xffffff, 1);
-    gfx.fillCircle(w / 2 - EYE_OFFSET_X, r + 4, EYE_RADIUS);
-    gfx.generateTexture('player-left', w, h);
-
-    gfx.destroy();
+    eventBus.on(INPUT_ACTION, this._onInput);
+    eventBus.on(NETWORK_PLAYER_JOINED, this._onPlayerJoined);
+    eventBus.on(NETWORK_PLAYER_LEFT, this._onPlayerLeft);
+    eventBus.on(NETWORK_STATE_UPDATE, this._onStateUpdate);
   }
 
-  // --- Player ---
+  // --- Remote Players ---
 
-  createPlayer() {
-    const { width, height } = this.scale;
-    const spawnX = width / 2;
-    const spawnY = height - FLOOR_HEIGHT - CHAR_HEIGHT / 2;
-
-    this.player = this.physics.add.sprite(spawnX, spawnY, 'player-right');
-    this.player.setCollideWorldBounds(true);
-    this.physics.add.collider(this.player, this.floor);
-
-    this.facing = 'right';
+  _addRemotePlayer({ playerId, colorIndex }) {
+    if (this.remotePlayers.has(playerId)) return;
+    const rp = new RemotePlayer(this, colorIndex);
+    this.remotePlayers.set(playerId, rp);
   }
 
-  // --- Controls ---
+  _removeRemotePlayer({ playerId }) {
+    const rp = this.remotePlayers.get(playerId);
+    if (rp) {
+      rp.destroy();
+      this.remotePlayers.delete(playerId);
+    }
+  }
 
-  setupControls() {
-    this.cursors = this.input.keyboard.createCursorKeys();
-    this.keys = this.input.keyboard.addKeys({
-      w: Phaser.Input.Keyboard.KeyCodes.W,
-      a: Phaser.Input.Keyboard.KeyCodes.A,
-      d: Phaser.Input.Keyboard.KeyCodes.D,
-    });
+  _updateRemotePlayers(states) {
+    for (const [playerId, state] of Object.entries(states)) {
+      const rp = this.remotePlayers.get(playerId);
+      if (rp) rp.applyState(state);
+    }
   }
 
   // --- Update Loop ---
 
-  update() {
-    const { player, cursors, keys } = this;
-    const onGround = player.body.touching.down || player.body.blocked.down;
+  update(_time, _delta) {
+    this.inputManager.update();
 
-    // --- Horizontal movement ---
-    if (cursors.left.isDown || keys.a.isDown) {
-      player.setVelocityX(-MOVE_SPEED);
-      if (this.facing !== 'left') {
-        this.facing = 'left';
-        player.setTexture('player-left');
-      }
-    } else if (cursors.right.isDown || keys.d.isDown) {
-      player.setVelocityX(MOVE_SPEED);
-      if (this.facing !== 'right') {
-        this.facing = 'right';
-        player.setTexture('player-right');
-      }
-    } else {
-      player.setVelocityX(0);
+    for (const rp of this.remotePlayers.values()) {
+      rp.update();
     }
+  }
 
-    // --- Jump ---
-    if ((cursors.up.isDown || cursors.space.isDown || keys.w.isDown) && onGround) {
-      player.setVelocityY(JUMP_VELOCITY);
+  // --- Network ---
+
+  _connectNetwork() {
+    this.networkManager = new NetworkManager(WS_URL);
+    this.networkManager.connect('default');
+  }
+
+  // --- Cleanup ---
+  // AGENT: Must unsubscribe all EventBus listeners to prevent duplicates on scene restart
+
+  shutdown() {
+    eventBus.off(INPUT_ACTION, this._onInput);
+    eventBus.off(NETWORK_PLAYER_JOINED, this._onPlayerJoined);
+    eventBus.off(NETWORK_PLAYER_LEFT, this._onPlayerLeft);
+    eventBus.off(NETWORK_STATE_UPDATE, this._onStateUpdate);
+
+    if (this.networkManager) this.networkManager.disconnect();
+    this.inputManager.destroy();
+    for (const rp of this.remotePlayers.values()) {
+      rp.destroy();
     }
+    this.remotePlayers.clear();
   }
 }

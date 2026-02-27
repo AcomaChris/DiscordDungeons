@@ -27,6 +27,15 @@ export default [
     },
   },
   {
+    // Test files run in Node.js via Vitest
+    files: ['tests/**/*.js'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
+  {
     // Client code runs in the browser
     files: ['client/**/*.js'],
     languageOptions: {
@@ -41,14 +50,7 @@ export default [
     languageOptions: {
       sourceType: 'commonjs',
       globals: {
-        console: 'readonly',
-        process: 'readonly',
-        Buffer: 'readonly',
-        __dirname: 'readonly',
-        __filename: 'readonly',
-        require: 'readonly',
-        module: 'readonly',
-        exports: 'readonly',
+        ...globals.node,
       },
     },
   },

@@ -1,0 +1,61 @@
+import Phaser from 'phaser';
+import {
+  CHAR_WIDTH,
+  CHAR_HEIGHT,
+  CHAR_RADIUS,
+  EYE_RADIUS,
+  EYE_OFFSET_X,
+  FLOOR_HEIGHT,
+  LOCAL_PLAYER_COLOR,
+  REMOTE_PLAYER_COLORS,
+} from '../core/Constants.js';
+
+// --- BootScene ---
+// Generates all shared textures once, then transitions to MainMenu.
+// AGENT: All textures must be created here — other scenes only reference them.
+
+export class BootScene extends Phaser.Scene {
+  constructor() {
+    super({ key: 'BootScene' });
+  }
+
+  create() {
+    this._createFloorTexture();
+    this._createPlayerTextures(LOCAL_PLAYER_COLOR, 'player');
+    REMOTE_PLAYER_COLORS.forEach((color, i) => {
+      this._createPlayerTextures(color, `remote-${i}`);
+    });
+
+    this.scene.start('MainMenuScene');
+  }
+
+  _createFloorTexture() {
+    const { width } = this.scale;
+    const gfx = this.add.graphics();
+    gfx.fillStyle(0x4a4a4a, 1);
+    gfx.fillRect(0, 0, width, FLOOR_HEIGHT);
+    gfx.generateTexture('floor', width, FLOOR_HEIGHT);
+    gfx.destroy();
+  }
+
+  _createPlayerTextures(color, prefix) {
+    const gfx = this.add.graphics();
+
+    // Right-facing
+    gfx.fillStyle(color, 1);
+    gfx.fillRoundedRect(0, 0, CHAR_WIDTH, CHAR_HEIGHT, CHAR_RADIUS);
+    gfx.fillStyle(0xffffff, 1);
+    gfx.fillCircle(CHAR_WIDTH / 2 + EYE_OFFSET_X, CHAR_RADIUS + 4, EYE_RADIUS);
+    gfx.generateTexture(`${prefix}-right`, CHAR_WIDTH, CHAR_HEIGHT);
+
+    // Left-facing
+    gfx.clear();
+    gfx.fillStyle(color, 1);
+    gfx.fillRoundedRect(0, 0, CHAR_WIDTH, CHAR_HEIGHT, CHAR_RADIUS);
+    gfx.fillStyle(0xffffff, 1);
+    gfx.fillCircle(CHAR_WIDTH / 2 - EYE_OFFSET_X, CHAR_RADIUS + 4, EYE_RADIUS);
+    gfx.generateTexture(`${prefix}-left`, CHAR_WIDTH, CHAR_HEIGHT);
+
+    gfx.destroy();
+  }
+}
