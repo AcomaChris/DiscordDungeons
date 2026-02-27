@@ -2,7 +2,6 @@ import Phaser from 'phaser';
 import { BootScene } from './scenes/BootScene.js';
 import { MainMenuScene } from './scenes/MainMenuScene.js';
 import { GameScene } from './scenes/GameScene.js';
-import { WORLD_WIDTH, WORLD_HEIGHT } from './core/Constants.js';
 import authManager from './auth/AuthManager.js';
 import { isDiscordActivity, setupDiscordActivity } from './discord/activitySdk.js';
 
@@ -10,8 +9,6 @@ import { isDiscordActivity, setupDiscordActivity } from './discord/activitySdk.j
 
 const config = {
   type: Phaser.AUTO,
-  width: WORLD_WIDTH,
-  height: WORLD_HEIGHT,
   parent: 'game-container',
   backgroundColor: '#1a1a2e',
   physics: {

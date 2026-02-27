@@ -10,10 +10,16 @@ export const EYE_RADIUS = 4;
 export const EYE_OFFSET_X = 7;
 
 // --- World ---
-// Fixed logical world size. All positions use these dimensions, independent of
-// screen size. Camera zoom maps this world onto the physical screen.
-export const WORLD_WIDTH = 800;
-export const WORLD_HEIGHT = 600;
+// World is much larger than any single viewport; the camera scrolls to follow
+// the player rather than scaling the world to fit.
+export const WORLD_WIDTH = 4000;
+export const WORLD_HEIGHT = 800;
+
+// --- Camera ---
+// Fixed zoom applied on all screen sizes. Character always appears
+// CHAR_HEIGHT * CAMERA_ZOOM pixels tall on screen — tune this to adjust
+// how large the character looks without affecting any other measurements.
+export const CAMERA_ZOOM = 2;
 
 // --- Floor ---
 export const FLOOR_HEIGHT = 32;
