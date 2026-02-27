@@ -41,6 +41,7 @@ export class GameScene extends Phaser.Scene {
 
     this._updateCamera();
     this.cameras.main.startFollow(this.player.sprite);
+    this.scale.on('resize', this._onResize, this);
     this._subscribeEvents();
     this._connectNetwork();
   }
@@ -52,13 +53,21 @@ export class GameScene extends Phaser.Scene {
   }
 
   // --- Camera ---
-  // Fixed zoom keeps the character the same visual size on all screen sizes.
-  // Larger screens show more world; the camera scrolls to follow the player.
+  // Zoom = CAMERA_ZOOM × devicePixelRatio so the character always appears
+  // CHAR_HEIGHT × CAMERA_ZOOM CSS pixels tall regardless of screen DPR.
+  // The renderer is separately resized to physical pixels in main.js.
 
   _updateCamera() {
     const cam = this.cameras.main;
-    cam.setZoom(CAMERA_ZOOM);
+    const dpr = window.devicePixelRatio || 1;
+    cam.setZoom(CAMERA_ZOOM * dpr);
     cam.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
+  }
+
+  // --- Resize ---
+
+  _onResize() {
+    this._updateCamera();
   }
 
   // --- Event Subscriptions ---
@@ -132,6 +141,7 @@ export class GameScene extends Phaser.Scene {
   // AGENT: Must unsubscribe all EventBus listeners to prevent duplicates on scene restart
 
   shutdown() {
+    this.scale.off('resize', this._onResize, this);
     eventBus.off(INPUT_ACTION, this._onInput);
     eventBus.off(NETWORK_ROOM_JOINED, this._onRoomJoined);
     eventBus.off(NETWORK_PLAYER_JOINED, this._onPlayerJoined);

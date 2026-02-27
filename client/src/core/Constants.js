@@ -16,9 +16,10 @@ export const WORLD_WIDTH = 4000;
 export const WORLD_HEIGHT = 800;
 
 // --- Camera ---
-// Fixed zoom applied on all screen sizes. Character always appears
-// CHAR_HEIGHT * CAMERA_ZOOM pixels tall on screen — tune this to adjust
-// how large the character looks without affecting any other measurements.
+// Design zoom: character appears CHAR_HEIGHT * CAMERA_ZOOM CSS pixels tall.
+// At runtime this is multiplied by window.devicePixelRatio so the renderer
+// uses all physical pixels on HiDPI screens without changing the visual size.
+// Tune CAMERA_ZOOM to change how large the character looks on all devices.
 export const CAMERA_ZOOM = 2;
 
 // --- Floor ---
