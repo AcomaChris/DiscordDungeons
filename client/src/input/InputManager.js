@@ -39,7 +39,7 @@ export class InputManager {
     this._jumpRequested = true;
   }
 
-  update() {
+  getSnapshot() {
     const leftHeld = this.keyObjects[Actions.MOVE_LEFT].some((k) => k.isDown);
     const rightHeld = this.keyObjects[Actions.MOVE_RIGHT].some((k) => k.isDown);
 
@@ -50,7 +50,11 @@ export class InputManager {
     const jump = this._jumpRequested;
     this._jumpRequested = false;
 
-    eventBus.emit(INPUT_ACTION, { moveX, jump });
+    return { moveX, jump };
+  }
+
+  update() {
+    eventBus.emit(INPUT_ACTION, this.getSnapshot());
   }
 
   rebind(action, newKeyCodes) {

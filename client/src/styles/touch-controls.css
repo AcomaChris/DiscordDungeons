@@ -1,0 +1,89 @@
+/* --- Touch Controls Overlay --- */
+
+#touch-controls {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  display: none;
+}
+
+#touch-controls.visible {
+  display: block;
+}
+
+/* Hide on devices with a mouse/trackpad (desktop fallback) */
+@media (hover: hover) and (pointer: fine) {
+  #touch-controls {
+    display: none !important;
+  }
+}
+
+/* --- Buttons --- */
+
+#touch-controls button {
+  pointer-events: auto;
+  position: absolute;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+#touch-controls button:active {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* --- Landscape (default) --- */
+
+#touch-controls .btn-left {
+  width: 64px;
+  height: 64px;
+  bottom: 24px;
+  left: 24px;
+}
+
+#touch-controls .btn-right {
+  width: 64px;
+  height: 64px;
+  bottom: 24px;
+  left: 104px;
+}
+
+#touch-controls .btn-jump {
+  width: 72px;
+  height: 72px;
+  bottom: 24px;
+  right: 24px;
+}
+
+/* --- Portrait --- */
+
+#touch-controls.portrait .btn-left {
+  width: 80px;
+  height: 80px;
+  bottom: 48px;
+  left: 24px;
+}
+
+#touch-controls.portrait .btn-right {
+  width: 80px;
+  height: 80px;
+  bottom: 48px;
+  left: 120px;
+}
+
+#touch-controls.portrait .btn-jump {
+  width: 88px;
+  height: 88px;
+  bottom: 48px;
+  right: 24px;
+}

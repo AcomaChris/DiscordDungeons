@@ -116,6 +116,23 @@ describe('InputManager', () => {
     im.destroy();
   });
 
+  it('getSnapshot returns current state without emitting', async () => {
+    const scene = createMockScene();
+    const im = new InputManager(scene);
+    const eventBusMod = await import('../../client/src/core/EventBus.js');
+
+    const rightKeys = im.keyObjects.moveRight;
+    rightKeys[0].isDown = true;
+
+    const calls = [];
+    eventBusMod.default.on(INPUT_ACTION, (data) => calls.push(data));
+
+    const snap = im.getSnapshot();
+    expect(snap).toEqual({ moveX: 1, jump: false });
+    expect(calls).toHaveLength(0);
+    im.destroy();
+  });
+
   it('emits jump=true only once per keydown', async () => {
     const scene = createMockScene();
     const im = new InputManager(scene);

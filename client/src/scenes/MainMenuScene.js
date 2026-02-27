@@ -9,6 +9,7 @@ export class MainMenuScene extends Phaser.Scene {
 
   create() {
     const { width, height } = this.scale;
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
     this.add
       .text(width / 2, height / 2 - 60, 'DiscordDungeons', {
@@ -18,15 +19,18 @@ export class MainMenuScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     this.add
-      .text(width / 2, height / 2 + 20, 'Press ENTER to start', {
+      .text(width / 2, height / 2 + 20, isTouch ? 'Tap to start' : 'Press ENTER to start', {
         fontSize: '18px',
         color: '#ffffff',
       })
       .setOrigin(0.5);
 
-    this.input.keyboard.on('keydown-ENTER', () => {
+    const startGame = () => {
       eventBus.emit(SCENE_CHANGE, { from: 'MainMenuScene', to: 'GameScene' });
       this.scene.start('GameScene');
-    });
+    };
+
+    this.input.keyboard.on('keydown-ENTER', startGame);
+    this.input.on('pointerdown', startGame);
   }
 }

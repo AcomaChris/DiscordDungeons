@@ -9,6 +9,8 @@ import {
 } from '../core/Events.js';
 import { FLOOR_HEIGHT } from '../core/Constants.js';
 import { InputManager } from '../input/InputManager.js';
+import { TouchManager } from '../input/TouchManager.js';
+import { mergeInputSnapshots } from '../input/mergeInputSnapshots.js';
 import { Player } from '../entities/Player.js';
 import { RemotePlayer } from '../entities/RemotePlayer.js';
 import { NetworkManager } from '../network/NetworkManager.js';
@@ -31,6 +33,8 @@ export class GameScene extends Phaser.Scene {
     this._createFloor();
     this.player = new Player(this, this.floor);
     this.inputManager = new InputManager(this);
+    this.touchManager = new TouchManager();
+    this.touchManager.show();
 
     this._subscribeEvents();
     this._connectNetwork();
@@ -85,7 +89,10 @@ export class GameScene extends Phaser.Scene {
   // --- Update Loop ---
 
   update(_time, _delta) {
-    this.inputManager.update();
+    const kbSnap = this.inputManager.getSnapshot();
+    const touchSnap = this.touchManager.getSnapshot();
+    const merged = mergeInputSnapshots(kbSnap, touchSnap);
+    eventBus.emit(INPUT_ACTION, merged);
 
     for (const rp of this.remotePlayers.values()) {
       rp.update();
@@ -111,6 +118,7 @@ export class GameScene extends Phaser.Scene {
 
     if (this.networkManager) this.networkManager.disconnect();
     this.inputManager.destroy();
+    this.touchManager.destroy();
     for (const rp of this.remotePlayers.values()) {
       rp.destroy();
     }
