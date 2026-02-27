@@ -9,7 +9,7 @@ const LERP_FACTOR = 0.3;
 export class RemotePlayer {
   constructor(scene, colorIndex) {
     this.scene = scene;
-    this.texturePrefix = `remote-${colorIndex}`;
+    this.texturePrefix = `player-${colorIndex}`;
 
     const { width, height } = scene.scale;
     const spawnX = width / 2;

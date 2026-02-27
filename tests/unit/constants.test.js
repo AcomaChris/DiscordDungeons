@@ -6,8 +6,8 @@ import {
   CHAR_HEIGHT,
   FLOOR_HEIGHT,
   NETWORK_SEND_RATE,
-  LOCAL_PLAYER_COLOR,
-  REMOTE_PLAYER_COLORS,
+  MAX_PLAYERS,
+  PLAYER_COLORS,
 } from '../../client/src/core/Constants.js';
 
 describe('Game constants', () => {
@@ -31,11 +31,13 @@ describe('Game constants', () => {
     expect(NETWORK_SEND_RATE).toBeLessThanOrEqual(60);
   });
 
-  it('has enough remote player colors', () => {
-    expect(REMOTE_PLAYER_COLORS.length).toBeGreaterThanOrEqual(4);
+  it('has exactly MAX_PLAYERS colors', () => {
+    expect(PLAYER_COLORS.length).toBe(MAX_PLAYERS);
+    PLAYER_COLORS.forEach((c) => expect(typeof c).toBe('number'));
   });
 
-  it('local player color is a number', () => {
-    expect(typeof LOCAL_PLAYER_COLOR).toBe('number');
+  it('all player colors are unique', () => {
+    const unique = new Set(PLAYER_COLORS);
+    expect(unique.size).toBe(PLAYER_COLORS.length);
   });
 });

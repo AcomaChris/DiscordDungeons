@@ -9,19 +9,19 @@ export class Player {
   constructor(scene, floor) {
     this.scene = scene;
     this.facing = 'right';
-    this.texturePrefix = 'player';
+    this.texturePrefix = 'player-0';
 
     const { width, height } = scene.scale;
     const spawnX = width / 2;
     const spawnY = height - FLOOR_HEIGHT - CHAR_HEIGHT / 2;
 
-    this.sprite = scene.physics.add.sprite(spawnX, spawnY, 'player-right');
+    this.sprite = scene.physics.add.sprite(spawnX, spawnY, 'player-0-right');
     this.sprite.setCollideWorldBounds(true);
     scene.physics.add.collider(this.sprite, floor);
   }
 
   setColorIndex(colorIndex) {
-    this.texturePrefix = `remote-${colorIndex}`;
+    this.texturePrefix = `player-${colorIndex}`;
     this.sprite.setTexture(`${this.texturePrefix}-${this.facing}`);
   }
 

@@ -6,8 +6,7 @@ import {
   EYE_RADIUS,
   EYE_OFFSET_X,
   FLOOR_HEIGHT,
-  LOCAL_PLAYER_COLOR,
-  REMOTE_PLAYER_COLORS,
+  PLAYER_COLORS,
 } from '../core/Constants.js';
 
 // --- BootScene ---
@@ -21,9 +20,8 @@ export class BootScene extends Phaser.Scene {
 
   create() {
     this._createFloorTexture();
-    this._createPlayerTextures(LOCAL_PLAYER_COLOR, 'player');
-    REMOTE_PLAYER_COLORS.forEach((color, i) => {
-      this._createPlayerTextures(color, `remote-${i}`);
+    PLAYER_COLORS.forEach((color, i) => {
+      this._createPlayerTextures(color, `player-${i}`);
     });
 
     this.scene.start('MainMenuScene');
