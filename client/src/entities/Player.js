@@ -17,14 +17,10 @@ export class Player {
     this.sprite = scene.physics.add.sprite(spawnX, spawnY, 'player-0-down');
     this.sprite.setScale(1 / TEXTURE_SCALE);
 
-    // Feet-only collision body: only the bottom 8px of the character collides.
-    // This is standard for 3/4 view — the character's upper body overlaps
-    // walls and objects naturally.
-    this.sprite.body.setSize(12, 8);
-    this.sprite.body.setOffset(
-      (this.sprite.width - 12) / 2,
-      this.sprite.height - 8,
-    );
+    // Feet-only collision body: full width prevents horizontal wall overlap,
+    // short height lets the upper body overlap objects above (3/4 view).
+    this.sprite.body.setSize(this.sprite.width, 8);
+    this.sprite.body.setOffset(0, this.sprite.height - 8);
 
     this.nameLabel = scene.add.text(spawnX, spawnY - CHAR_HEIGHT / 2 - 4, playerName || 'Player', {
       fontSize: '12px',
