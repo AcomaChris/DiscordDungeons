@@ -41,9 +41,12 @@
 - Build: `node server/src/workflow-builder.js && node server/deploy-workflow.js`
 - The deploy script output includes the new `versionId` — this must be applied to the n8n SQLite DB via SSH, then container restarted
 
-## Versioning
-- Version lives in `package.json`. Follow semver: patch for fixes, minor for features, major for breaking changes.
-- Bump the version when making a commit that adds a feature or fixes a bug. Don't bump for chore/docs-only commits.
+## Versioning (SemVer: MAJOR.MINOR.PATCH)
+- Version lives in `package.json`. Format: `MAJOR.MINOR.PATCH`
+  - **MAJOR** — reserved for full public releases and breaking changes (stay at `0` until v1 launch)
+  - **MINOR** — new features or significant functionality (e.g., tilemap system, multiplayer)
+  - **PATCH** — bug fixes, small tweaks, incremental improvements
+- **Bump on every commit** that changes code: `feat:` → bump MINOR (reset PATCH to 0), `fix:` → bump PATCH. Don't bump for `chore:`/`docs:`-only commits.
 - The build injects version, git commit hash, and timestamp automatically via Vite `define` — no manual steps needed.
 
 ## Code Style
