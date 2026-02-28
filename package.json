@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "mkdir -p client/public && cp DEVLOG.md client/public/DEVLOG.md && vite build",
     "preview": "vite preview",
     "test": "vitest run",
     "test:unit": "vitest run tests/unit",
@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@discord/embedded-app-sdk": "^2.4.0",
+    "marked": "^17.0.3",
     "phaser": "^3.90.0",
     "ws": "^8.19.0"
   }

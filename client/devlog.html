@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DiscordDungeons — Dev Log</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #1a1a2e;
+      color: #e0e0e0;
+      line-height: 1.7;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    /* --- Header --- */
+
+    header {
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #2a2a4a;
+    }
+
+    header h1 {
+      font-size: 1.6rem;
+      color: #00ccff;
+      margin-bottom: 0.25rem;
+    }
+
+    header a {
+      color: #7a7aaa;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    header a:hover { color: #00ccff; }
+
+    /* --- Markdown content --- */
+
+    #devlog h1 { display: none; } /* Hide the redundant top-level heading */
+
+    #devlog h2 {
+      color: #00ccff;
+      font-size: 1.25rem;
+      margin-top: 2.5rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid #2a2a4a;
+    }
+
+    #devlog h3 {
+      color: #c0c0e0;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    #devlog p {
+      margin-bottom: 0.75rem;
+    }
+
+    #devlog ul, #devlog ol {
+      margin: 0.5rem 0 1rem 1.5rem;
+    }
+
+    #devlog li {
+      margin-bottom: 0.35rem;
+    }
+
+    #devlog strong {
+      color: #ffffff;
+    }
+
+    #devlog code {
+      background: #16213e;
+      padding: 0.15em 0.4em;
+      border-radius: 3px;
+      font-size: 0.9em;
+      color: #ff6b9d;
+    }
+
+    #devlog pre {
+      background: #16213e;
+      padding: 1rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin: 0.75rem 0;
+    }
+
+    #devlog pre code {
+      background: none;
+      padding: 0;
+      color: #e0e0e0;
+    }
+
+    #devlog hr {
+      border: none;
+      border-top: 1px solid #2a2a4a;
+      margin: 1.5rem 0;
+    }
+
+    #devlog a {
+      color: #00ccff;
+      text-decoration: none;
+    }
+
+    #devlog a:hover {
+      text-decoration: underline;
+    }
+
+    /* --- Loading / Error --- */
+
+    .status {
+      color: #7a7aaa;
+      font-style: italic;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Dev Log</h1>
+      <a href="/">&larr; Back to DiscordDungeons</a>
+    </header>
+    <div id="devlog">
+      <p class="status">Loading...</p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { marked } from 'marked';
+
+    const el = document.getElementById('devlog');
+
+    try {
+      const res = await fetch('/DEVLOG.md');
+      if (!res.ok) throw new Error(`${res.status}`);
+      const md = await res.text();
+      el.innerHTML = marked(md);
+    } catch (err) {
+      el.innerHTML = '<p class="status">Failed to load dev log.</p>';
+      console.error('[devlog] Load failed:', err);
+    }
+  </script>
+</body>
+</html>

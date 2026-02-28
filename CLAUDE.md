@@ -7,6 +7,12 @@
 - After planning: implement → run tests (`npm test`) → build → commit/push → **deploy** (`/deploy`).
 - The commit must exist in git before deploying so the deploy announcement lists the correct commits.
 
+## Dev Log (`DEVLOG.md`)
+- **Update every session.** At the end of each working session (or before committing), add an entry to `DEVLOG.md` covering what was done.
+- **Format**: Date heading, commit range, bullet points covering: what changed, why, any dead ends or key decisions.
+- **Keep it brief.** 3–6 bullets per session. Focus on decisions, gotchas, and context that helps the next session — not play-by-play narration.
+- **Commit messages should be descriptive.** Include the *why*, not just the *what*. Reference issues when applicable. The devlog and git log work together — commits are the detailed record, the devlog is the narrative thread.
+
 ## Skills (Slash Commands)
 - `/commit` — run tests, lint, and commit with a conventional message
 - `/deploy` — build and deploy (full deploy once VPS is provisioned)
