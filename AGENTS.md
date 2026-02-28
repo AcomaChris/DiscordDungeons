@@ -1,21 +1,28 @@
 # DiscordDungeons — Agent Instructions
 
 ## Project Overview
-DiscordDungeons is a Discord Activity (Embedded App) — a game played directly inside Discord. The game style (isometric dungeon crawler or 2D side platformer) is TBD. It uses n8n on a Hostinger VPS for matchmaking, game state, and server-side logic.
+DiscordDungeons is a Discord Activity (Embedded App) — a 3/4 view tile-based RPG played directly inside Discord. It uses n8n on a Hostinger VPS for matchmaking, game state, and server-side logic.
 
 ## Architecture
 - **Runtime**: Discord Embedded App SDK (game runs as an iframe inside Discord)
-- **Game client**: Web-based (HTML/CSS/JS) — game engine TBD
+- **Game client**: Phaser 3 (WebGL, Arcade Physics) — 3/4 view RPG with Tiled maps
 - **Backend**: n8n (self-hosted, Docker on Hostinger VPS) for matchmaking and server logic
 - **Platform**: Discord API for user identity, voice channels, social features
 
 ### Key directories
 - `client/` — Game client (Discord Activity frontend)
+- `client/src/map/` — TileMapManager, MapRegistry (tilemap loading pipeline)
+- `client/src/entities/` — Player, RemotePlayer (game entities)
+- `client/src/input/` — InputManager, TouchManager, InputActions (input system)
+- `client/public/maps/` — Tiled JSON map files
+- `client/public/tilesets/` — Tileset PNG images
+- `scripts/` — Build/generation scripts (e.g. create-test-map.js)
 - `server/src/code/` — n8n Code node files for backend logic
 - `server/src/workflow-builder.js` — Assembles n8n workflow JSON from code files
 - `server/deploy-workflow.js` — Deploys workflow via n8n REST API
 - `tests/unit/` — Unit tests (Vitest, run in Node/jsdom)
 - `tests/e2e/` — E2E gameplay tests (Playwright, run in real Chromium)
+- `assets/tilesets/` — Source tileset packs (tavern etc., used with Tiled editor)
 
 ### Infrastructure (to be provisioned)
 - Hostinger VPS with Docker + n8n
@@ -25,6 +32,22 @@ DiscordDungeons is a Discord Activity (Embedded App) — a game played directly 
 - JavaScript (ES modules for client, CommonJS for n8n Code nodes)
 - Each n8n Code node file in `server/src/code/` is standalone and self-contained
 - n8n Code nodes reference implicit globals: `$input`, `$env`, `$getWorkflowStaticData()`, `$node`, etc.
+
+## Tilemap Layer Convention
+
+All Tiled maps must follow this layer naming convention. TileMapManager creates layers by these exact names.
+
+| Layer Name   | Type         | Depth             | Purpose                      |
+|--------------|--------------|-------------------|------------------------------|
+| Ground       | tile layer   | 0                 | Floor/terrain base           |
+| GroundDecor  | tile layer   | 1                 | Rugs, cracks, floor detail   |
+| Walls        | tile layer   | 2                 | Wall bases, furniture        |
+| WallTops     | tile layer   | 10000             | Upper wall parts (above player) |
+| Overlay      | tile layer   | 10001             | Ceiling, always-on-top decor |
+| Collision    | tile layer   | Not rendered      | Invisible collision mask     |
+| Objects      | object layer | Parsed, not rendered | spawn, door, chest, npc    |
+
+Player/NPC depth = their sprite Y position (updated each frame for Y-sorting).
 
 ## Commenting Rules
 - **Section headers**: Use short `// --- Section name ---` comments to mark logical blocks within a file

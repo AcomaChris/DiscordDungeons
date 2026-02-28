@@ -4,6 +4,23 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-02-28 — Tilemap System: Phase 1 MVP
+
+**Commits:** `b5bbb36` → `3f55431`
+
+Major architectural shift from side-scrolling platformer to 3/4 view tile-based RPG.
+
+- **4-directional input**: Replaced left/right/jump with WASD/arrows D-pad (up/down/left/right + interact). Touch controls updated to D-pad layout. Diagonal movement normalized to same speed.
+- **RPG constants**: TILE_SIZE=16, CHAR_WIDTH=16, CHAR_HEIGHT=24, MOVE_SPEED=80 px/s, CAMERA_ZOOM=3. Gravity disabled (y: 0).
+- **4-direction textures**: BootScene generates up/down/left/right textures per player color. Down=centered eye, up=no eye (back of head).
+- **Tilemap pipeline**: TileMapManager loads Tiled JSON maps with standard layer convention (Ground/GroundDecor/Walls/WallTops/Overlay/Collision/Objects). MapRegistry for map metadata lookup. Invisible collision layer blocks movement.
+- **Test map generator**: `scripts/create-test-map.js` generates a 30×20 test map (floor, walls, wall tops, border collision, spawn point) without needing Tiled GUI.
+- **Player rebuild**: Feet-only hitbox (12×8 at sprite bottom) for natural 3/4 view overlap. Y-sorted depth (sprite.y). Simplified network state (x, y, facing — no velocity).
+- **GameScene rebuild**: Loads tilemap via TileMapManager, physics bounds from map, camera follow with zoom×DPR, depth sorting for all entities.
+- **Dead code cleanup**: Removed JUMP_VELOCITY, WORLD_WIDTH/HEIGHT, FLOOR_HEIGHT, floor texture generation.
+
+Next: Phase 2 (elevation/jump), real tavern map import via Tiled, tile animations.
+
 ## 2026-02-28 — Build Info Display + Versioning SOP (v0.2.0)
 
 - **Build info on main menu**: Version, git commit hash, and build date shown at the bottom of MainMenuScene. Injected at build time via Vite `define` — no runtime API calls.

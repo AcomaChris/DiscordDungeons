@@ -29,13 +29,6 @@ export const CAMERA_ZOOM = 3;
 // Player/NPC depth = their Y position for Y-sorting.
 export const DEPTH_ABOVE_PLAYER = 10000;
 
-// --- Legacy (removed in upcoming commits when BootScene/Player/GameScene are rebuilt) ---
-// AGENT: delete these once all importers are updated
-export const JUMP_VELOCITY = -500;
-export const WORLD_WIDTH = 4000;
-export const WORLD_HEIGHT = 800;
-export const FLOOR_HEIGHT = 32;
-
 // --- Network ---
 export const NETWORK_SEND_RATE = 10;
 
