@@ -22,8 +22,8 @@ export class MainMenuScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     // --- Build info ---
-    const buildDate = new Date(__BUILD_TIME__).toLocaleDateString();
-    const versionText = `v${__APP_VERSION__} (${__GIT_COMMIT__}) \u2022 ${buildDate}`;
+    const buildWhen = new Date(__BUILD_TIME__).toLocaleString();
+    const versionText = `v${__APP_VERSION__} (${__GIT_COMMIT__}) \u2022 ${buildWhen}`;
     this.add
       .text(width / 2, height - 16, versionText, {
         fontSize: '12px',
