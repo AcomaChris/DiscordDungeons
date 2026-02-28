@@ -40,7 +40,14 @@ function applyDPR(game) {
   const dpr = window.devicePixelRatio || 1;
   const cssW = game.scale.width;
   const cssH = game.scale.height;
-  game.renderer.resize(Math.floor(cssW * dpr), Math.floor(cssH * dpr));
+  const physW = Math.floor(cssW * dpr);
+  const physH = Math.floor(cssH * dpr);
+  game.renderer.resize(physW, physH);
+  // AGENT: renderer.resize does NOT update scene cameras in Phaser 3.
+  // Without this, the camera renders into only a portion of the canvas on HiDPI.
+  game.scene.scenes.forEach((s) => {
+    if (s.cameras) s.cameras.resize(physW, physH);
+  });
   game.canvas.style.width = cssW + 'px';
   game.canvas.style.height = cssH + 'px';
 }
