@@ -9,6 +9,11 @@ export const CHAR_RADIUS = CHAR_WIDTH / 2;
 export const EYE_RADIUS = 4;
 export const EYE_OFFSET_X = 7;
 
+// Textures are generated at TEXTURE_SCALE× resolution and the sprites are
+// scaled down so they look crisp when the camera zooms in. Without this,
+// a 30×50 texture zoomed 4× becomes a 4×4 pixel grid — visibly blocky.
+export const TEXTURE_SCALE = 4;
+
 // --- World ---
 // World is much larger than any single viewport; the camera scrolls to follow
 // the player rather than scaling the world to fit.

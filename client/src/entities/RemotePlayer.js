@@ -1,4 +1,4 @@
-import { CHAR_HEIGHT, FLOOR_HEIGHT, WORLD_WIDTH, WORLD_HEIGHT } from '../core/Constants.js';
+import { CHAR_HEIGHT, FLOOR_HEIGHT, WORLD_WIDTH, WORLD_HEIGHT, TEXTURE_SCALE } from '../core/Constants.js';
 
 // --- RemotePlayer ---
 // Renders a network-synced player. Position set from server state via lerp.
@@ -15,6 +15,7 @@ export class RemotePlayer {
     const spawnY = WORLD_HEIGHT - FLOOR_HEIGHT - CHAR_HEIGHT / 2;
 
     this.sprite = scene.add.sprite(spawnX, spawnY, `${this.texturePrefix}-right`);
+    this.sprite.setScale(1 / TEXTURE_SCALE);
     this._targetX = spawnX;
     this._targetY = spawnY;
     this._facing = 'right';
@@ -44,7 +45,7 @@ export class RemotePlayer {
   update() {
     this.sprite.x += (this._targetX - this.sprite.x) * LERP_FACTOR;
     this.sprite.y += (this._targetY - this.sprite.y) * LERP_FACTOR;
-    this.nameLabel.setPosition(this.sprite.x, this.sprite.y - CHAR_HEIGHT / 2 - 4);
+    this.nameLabel.setPosition(Math.round(this.sprite.x), Math.round(this.sprite.y - CHAR_HEIGHT / 2 - 4));
   }
 
   destroy() {

@@ -1,6 +1,6 @@
 import eventBus from '../core/EventBus.js';
 import { PLAYER_MOVED } from '../core/Events.js';
-import { MOVE_SPEED, JUMP_VELOCITY, CHAR_HEIGHT, FLOOR_HEIGHT, WORLD_WIDTH, WORLD_HEIGHT } from '../core/Constants.js';
+import { MOVE_SPEED, JUMP_VELOCITY, CHAR_HEIGHT, FLOOR_HEIGHT, WORLD_WIDTH, WORLD_HEIGHT, TEXTURE_SCALE } from '../core/Constants.js';
 
 // --- Player ---
 // Wraps the local player sprite, handles input actions, emits state for network.
@@ -15,6 +15,7 @@ export class Player {
     const spawnY = WORLD_HEIGHT - FLOOR_HEIGHT - CHAR_HEIGHT / 2;
 
     this.sprite = scene.physics.add.sprite(spawnX, spawnY, 'player-0-right');
+    this.sprite.setScale(1 / TEXTURE_SCALE);
     this.sprite.setCollideWorldBounds(true);
     scene.physics.add.collider(this.sprite, floor);
 
@@ -47,7 +48,7 @@ export class Player {
       this.sprite.setVelocityY(JUMP_VELOCITY);
     }
 
-    this.nameLabel.setPosition(this.sprite.x, this.sprite.y - CHAR_HEIGHT / 2 - 4);
+    this.nameLabel.setPosition(Math.round(this.sprite.x), Math.round(this.sprite.y - CHAR_HEIGHT / 2 - 4));
     eventBus.emit(PLAYER_MOVED, this.getState());
   }
 

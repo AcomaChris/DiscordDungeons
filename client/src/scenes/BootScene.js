@@ -8,6 +8,7 @@ import {
   FLOOR_HEIGHT,
   WORLD_WIDTH,
   PLAYER_COLORS,
+  TEXTURE_SCALE,
 } from '../core/Constants.js';
 
 // --- BootScene ---
@@ -37,22 +38,23 @@ export class BootScene extends Phaser.Scene {
   }
 
   _createPlayerTextures(color, prefix) {
+    const s = TEXTURE_SCALE;
     const gfx = this.add.graphics();
 
     // Right-facing
     gfx.fillStyle(color, 1);
-    gfx.fillRoundedRect(0, 0, CHAR_WIDTH, CHAR_HEIGHT, CHAR_RADIUS);
+    gfx.fillRoundedRect(0, 0, CHAR_WIDTH * s, CHAR_HEIGHT * s, CHAR_RADIUS * s);
     gfx.fillStyle(0xffffff, 1);
-    gfx.fillCircle(CHAR_WIDTH / 2 + EYE_OFFSET_X, CHAR_RADIUS + 4, EYE_RADIUS);
-    gfx.generateTexture(`${prefix}-right`, CHAR_WIDTH, CHAR_HEIGHT);
+    gfx.fillCircle((CHAR_WIDTH / 2 + EYE_OFFSET_X) * s, (CHAR_RADIUS + 4) * s, EYE_RADIUS * s);
+    gfx.generateTexture(`${prefix}-right`, CHAR_WIDTH * s, CHAR_HEIGHT * s);
 
     // Left-facing
     gfx.clear();
     gfx.fillStyle(color, 1);
-    gfx.fillRoundedRect(0, 0, CHAR_WIDTH, CHAR_HEIGHT, CHAR_RADIUS);
+    gfx.fillRoundedRect(0, 0, CHAR_WIDTH * s, CHAR_HEIGHT * s, CHAR_RADIUS * s);
     gfx.fillStyle(0xffffff, 1);
-    gfx.fillCircle(CHAR_WIDTH / 2 - EYE_OFFSET_X, CHAR_RADIUS + 4, EYE_RADIUS);
-    gfx.generateTexture(`${prefix}-left`, CHAR_WIDTH, CHAR_HEIGHT);
+    gfx.fillCircle((CHAR_WIDTH / 2 - EYE_OFFSET_X) * s, (CHAR_RADIUS + 4) * s, EYE_RADIUS * s);
+    gfx.generateTexture(`${prefix}-left`, CHAR_WIDTH * s, CHAR_HEIGHT * s);
 
     gfx.destroy();
   }
