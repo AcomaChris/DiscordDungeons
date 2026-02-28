@@ -53,7 +53,10 @@
 
 ## Testing (before every commit)
 - Run `npm test` before committing any code changes. If tests fail, fix the issue before committing — never skip tests.
-- Test location: `tests/unit/` — run with `npx vitest run`
+- Run `npm run test:e2e` for gameplay/rendering changes to verify behavior in a real browser.
+- **Unit tests** (`tests/unit/`): pure logic, events, input, config. Run with `npx vitest run`.
+- **E2E tests** (`tests/e2e/`): gameplay, physics, positions, rendering. Run with `npx playwright test`.
+- When fixing a gameplay or rendering bug, add an e2e test that reproduces the issue and verifies the fix.
 
 ## Context Management
 - Use subagents (Explore/Plan) for deep codebase research to keep the main context clean

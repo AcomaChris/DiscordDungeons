@@ -45,7 +45,7 @@ export class RemotePlayer {
   update() {
     this.sprite.x += (this._targetX - this.sprite.x) * LERP_FACTOR;
     this.sprite.y += (this._targetY - this.sprite.y) * LERP_FACTOR;
-    this.nameLabel.setPosition(Math.round(this.sprite.x), Math.round(this.sprite.y - CHAR_HEIGHT / 2 - 4));
+    this.nameLabel.setPosition(this.sprite.x, this.sprite.y - CHAR_HEIGHT / 2 - 4);
   }
 
   destroy() {

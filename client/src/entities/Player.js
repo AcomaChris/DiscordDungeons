@@ -25,6 +25,17 @@ export class Player {
       stroke: '#000000',
       strokeThickness: 2,
     }).setOrigin(0.5, 1);
+
+    // Position the label after physics so it tracks the sprite's final position
+    // for the current frame. Doing this in handleInput() causes 1-frame lag
+    // because physics hasn't moved the sprite yet at that point.
+    this._postUpdate = () => {
+      this.nameLabel.setPosition(
+        this.sprite.x,
+        this.sprite.y - CHAR_HEIGHT / 2 - 4
+      );
+    };
+    scene.events.on('postupdate', this._postUpdate);
   }
 
   setColorIndex(colorIndex) {
@@ -48,7 +59,6 @@ export class Player {
       this.sprite.setVelocityY(JUMP_VELOCITY);
     }
 
-    this.nameLabel.setPosition(Math.round(this.sprite.x), Math.round(this.sprite.y - CHAR_HEIGHT / 2 - 4));
     eventBus.emit(PLAYER_MOVED, this.getState());
   }
 
@@ -63,6 +73,7 @@ export class Player {
   }
 
   destroy() {
+    this.scene.events.off('postupdate', this._postUpdate);
     this.sprite.destroy();
     this.nameLabel.destroy();
   }

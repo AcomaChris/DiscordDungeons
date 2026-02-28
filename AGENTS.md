@@ -14,7 +14,8 @@ DiscordDungeons is a Discord Activity (Embedded App) — a game played directly 
 - `server/src/code/` — n8n Code node files for backend logic
 - `server/src/workflow-builder.js` — Assembles n8n workflow JSON from code files
 - `server/deploy-workflow.js` — Deploys workflow via n8n REST API
-- `tests/unit/` — Unit tests
+- `tests/unit/` — Unit tests (Vitest, run in Node/jsdom)
+- `tests/e2e/` — E2E gameplay tests (Playwright, run in real Chromium)
 
 ### Infrastructure (to be provisioned)
 - Hostinger VPS with Docker + n8n
@@ -45,12 +46,25 @@ After deploy, the activeVersionId in the n8n SQLite DB must be updated to the ne
 - Do not modify deployed n8n workflows via the n8n UI; all changes go through code files → workflow-builder → deploy
 
 ## Testing
-- All tests: `npm test` (Vitest)
+
+### Unit tests (Vitest)
+- All unit tests: `npm test`
 - Unit only: `npm run test:unit`
 - Watch mode: `npm run test:watch`
 
+### E2E gameplay tests (Playwright)
+- Run: `npm run test:e2e`
+- Tests launch the game in headless Chromium via the Vite dev server (port 8081)
+- `globalThis.__PHASER_GAME__` is exposed by `main.js` for test introspection
+- Use e2e tests to verify runtime gameplay behavior: sprite positions, label tracking, console output, rendering issues
+- When adding gameplay features or fixing rendering/physics bugs, add or update an e2e test that exercises the behavior in a real browser
+
+### When to write which type of test
+- **Unit tests**: pure logic, event bus, input snapshots, constants, config — anything that doesn't need a real Phaser instance
+- **E2E tests**: rendering, physics interactions, position tracking, visual regressions, anything that needs the full game loop running in a browser
+
 ## Definition of Done
-- All tests pass (`npm test`)
+- All tests pass (`npm test` + `npm run test:e2e`)
 - Code builds without errors
 - Deploy succeeds (once server is provisioned)
 - Feature works correctly when tested

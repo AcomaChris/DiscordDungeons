@@ -10,12 +10,14 @@
     "test": "vitest run",
     "test:unit": "vitest run tests/unit",
     "test:watch": "vitest",
+    "test:e2e": "npx playwright test",
     "server": "node server/src/ws/index.js",
     "lint": "eslint .",
     "format": "prettier --write ."
   },
   "devDependencies": {
     "@eslint/js": "^9.0.0",
+    "@playwright/test": "^1.58.2",
     "eslint": "^9.0.0",
     "eslint-config-prettier": "^10.0.0",
     "jsdom": "^28.1.0",

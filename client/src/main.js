@@ -65,6 +65,8 @@ async function boot() {
     }
   }
   const game = new Phaser.Game(config);
+  // Expose for e2e tests — Playwright reads this to inspect game state
+  globalThis.__PHASER_GAME__ = game;
   game.events.once('ready', () => {
     applyDPR(game);
     game.scale.on('resize', () => applyDPR(game));
