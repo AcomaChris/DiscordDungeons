@@ -9,6 +9,7 @@ import { isDiscordActivity, setupDiscordActivity } from './discord/activitySdk.j
 
 const config = {
   type: Phaser.AUTO,
+  pixelArt: true,
   parent: 'game-container',
   backgroundColor: '#1a1a2e',
   physics: {
