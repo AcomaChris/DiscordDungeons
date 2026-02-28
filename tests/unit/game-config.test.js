@@ -17,7 +17,7 @@ describe('game configuration', () => {
     if (!mod) return;
 
     expect(mod.config.physics.default).toBe('arcade');
-    expect(mod.config.physics.arcade.gravity.y).toBeGreaterThan(0);
+    expect(mod.config.physics.arcade.gravity.y).toBe(0);
     expect(mod.config.scale.mode).toBeDefined();
     expect(mod.config.scene).toHaveLength(3);
   });

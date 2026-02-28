@@ -1,33 +1,39 @@
 // --- Physics / Movement ---
-export const MOVE_SPEED = 300;
-export const JUMP_VELOCITY = -500;
+export const MOVE_SPEED = 80; // pixels/sec (~5 tiles/sec at 16px tiles)
+
+// --- Tile ---
+export const TILE_SIZE = 16;
 
 // --- Character ---
-export const CHAR_WIDTH = 30;
-export const CHAR_HEIGHT = 50;
+// Taller than 1 tile for 3/4 perspective (head extends above the tile row)
+export const CHAR_WIDTH = 16;
+export const CHAR_HEIGHT = 24;
 export const CHAR_RADIUS = CHAR_WIDTH / 2;
 export const EYE_RADIUS = 4;
 export const EYE_OFFSET_X = 7;
 
 // Textures are generated at TEXTURE_SCALE× resolution and the sprites are
 // scaled down so they look crisp when the camera zooms in. Without this,
-// a 30×50 texture zoomed 4× becomes a 4×4 pixel grid — visibly blocky.
+// a 16×24 texture zoomed 3× becomes a 4×4 pixel grid — visibly blocky.
 export const TEXTURE_SCALE = 4;
-
-// --- World ---
-// World is much larger than any single viewport; the camera scrolls to follow
-// the player rather than scaling the world to fit.
-export const WORLD_WIDTH = 4000;
-export const WORLD_HEIGHT = 800;
 
 // --- Camera ---
 // Design zoom: character appears CHAR_HEIGHT * CAMERA_ZOOM CSS pixels tall.
 // At runtime this is multiplied by window.devicePixelRatio so the renderer
 // uses all physical pixels on HiDPI screens without changing the visual size.
 // Tune CAMERA_ZOOM to change how large the character looks on all devices.
-export const CAMERA_ZOOM = 2;
+export const CAMERA_ZOOM = 3;
 
-// --- Floor ---
+// --- Depth ---
+// Layers above the player (wall tops, overlay) use fixed depths above this.
+// Player/NPC depth = their Y position for Y-sorting.
+export const DEPTH_ABOVE_PLAYER = 10000;
+
+// --- Legacy (removed in upcoming commits when BootScene/Player/GameScene are rebuilt) ---
+// AGENT: delete these once all importers are updated
+export const JUMP_VELOCITY = -500;
+export const WORLD_WIDTH = 4000;
+export const WORLD_HEIGHT = 800;
 export const FLOOR_HEIGHT = 32;
 
 // --- Network ---

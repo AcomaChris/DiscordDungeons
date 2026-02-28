@@ -1,21 +1,23 @@
 import { describe, it, expect } from 'vitest';
 import {
   MOVE_SPEED,
-  JUMP_VELOCITY,
+  TILE_SIZE,
   CHAR_WIDTH,
   CHAR_HEIGHT,
-  FLOOR_HEIGHT,
   NETWORK_SEND_RATE,
   MAX_PLAYERS,
   PLAYER_COLORS,
-  WORLD_WIDTH,
-  WORLD_HEIGHT,
+  CAMERA_ZOOM,
+  DEPTH_ABOVE_PLAYER,
 } from '../../client/src/core/Constants.js';
 
 describe('Game constants', () => {
-  it('movement values are sane', () => {
+  it('movement speed is positive', () => {
     expect(MOVE_SPEED).toBeGreaterThan(0);
-    expect(JUMP_VELOCITY).toBeLessThan(0);
+  });
+
+  it('tile size is positive', () => {
+    expect(TILE_SIZE).toBeGreaterThan(0);
   });
 
   it('character dimensions are positive', () => {
@@ -24,8 +26,8 @@ describe('Game constants', () => {
     expect(CHAR_HEIGHT).toBeGreaterThan(CHAR_WIDTH);
   });
 
-  it('floor height is positive', () => {
-    expect(FLOOR_HEIGHT).toBeGreaterThan(0);
+  it('character width matches tile size for 3/4 view', () => {
+    expect(CHAR_WIDTH).toBe(TILE_SIZE);
   });
 
   it('network send rate is reasonable', () => {
@@ -43,14 +45,11 @@ describe('Game constants', () => {
     expect(unique.size).toBe(PLAYER_COLORS.length);
   });
 
-  it('world dimensions are positive', () => {
-    expect(WORLD_WIDTH).toBeGreaterThan(0);
-    expect(WORLD_HEIGHT).toBeGreaterThan(0);
+  it('CAMERA_ZOOM is positive', () => {
+    expect(CAMERA_ZOOM).toBeGreaterThan(0);
   });
 
-  it('floor and character fit within world', () => {
-    expect(FLOOR_HEIGHT).toBeLessThan(WORLD_HEIGHT);
-    expect(CHAR_HEIGHT).toBeLessThan(WORLD_HEIGHT - FLOOR_HEIGHT);
-    expect(CHAR_WIDTH).toBeLessThan(WORLD_WIDTH);
+  it('DEPTH_ABOVE_PLAYER is large enough to be above any Y position', () => {
+    expect(DEPTH_ABOVE_PLAYER).toBeGreaterThanOrEqual(10000);
   });
 });
