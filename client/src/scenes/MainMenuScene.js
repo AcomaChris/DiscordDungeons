@@ -21,6 +21,16 @@ export class MainMenuScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
+    // --- Build info ---
+    const buildDate = new Date(__BUILD_TIME__).toLocaleDateString();
+    const versionText = `v${__APP_VERSION__} (${__GIT_COMMIT__}) \u2022 ${buildDate}`;
+    this.add
+      .text(width / 2, height - 16, versionText, {
+        fontSize: '12px',
+        color: 'rgba(255,255,255,0.35)',
+      })
+      .setOrigin(0.5);
+
     if (authManager.isAuthenticated) {
       // Activity mode: skip menu, jump straight into the game
       if (isDiscordActivity) {

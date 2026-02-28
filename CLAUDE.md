@@ -41,6 +41,11 @@
 - Build: `node server/src/workflow-builder.js && node server/deploy-workflow.js`
 - The deploy script output includes the new `versionId` — this must be applied to the n8n SQLite DB via SSH, then container restarted
 
+## Versioning
+- Version lives in `package.json`. Follow semver: patch for fixes, minor for features, major for breaking changes.
+- Bump the version when making a commit that adds a feature or fixes a bug. Don't bump for chore/docs-only commits.
+- The build injects version, git commit hash, and timestamp automatically via Vite `define` — no manual steps needed.
+
 ## Code Style
 - Keep n8n Code node files self-contained — each file in `server/src/code/` is a standalone unit
 - Prefer clarity over cleverness; n8n Code nodes run inside a sandboxed JS environment

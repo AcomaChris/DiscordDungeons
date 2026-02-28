@@ -4,6 +4,13 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-02-28 — Build Info Display + Versioning SOP (v0.2.0)
+
+- **Build info on main menu**: Version, git commit hash, and build date shown at the bottom of MainMenuScene. Injected at build time via Vite `define` — no runtime API calls.
+- **Versioning SOP**: Semver in `package.json` is source of truth. Bump on feature/fix commits, skip for chore/docs. Added to CLAUDE.md.
+- **Version bump to 0.2.0**: Milestone — multiplayer, auth, mobile, Discord Activity, devlog, public devlog page all in place.
+- ESLint globals added for `__APP_VERSION__`, `__GIT_COMMIT__`, `__BUILD_TIME__` in client code.
+
 ## 2026-02-28 — Process: Devlog + Public Devlog Page
 
 - Established `DEVLOG.md` as a running development log checked into the repo

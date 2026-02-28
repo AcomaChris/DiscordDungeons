@@ -41,6 +41,10 @@ export default [
     languageOptions: {
       globals: {
         ...globals.browser,
+        // Vite build-time constants (injected via `define` in vite.config.mjs)
+        __APP_VERSION__: 'readonly',
+        __GIT_COMMIT__: 'readonly',
+        __BUILD_TIME__: 'readonly',
       },
     },
   },
