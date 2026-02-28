@@ -5,8 +5,6 @@ import {
   CHAR_RADIUS,
   EYE_RADIUS,
   EYE_OFFSET_X,
-  FLOOR_HEIGHT,
-  WORLD_WIDTH,
   PLAYER_COLORS,
   TEXTURE_SCALE,
 } from '../core/Constants.js';
@@ -14,6 +12,7 @@ import {
 // --- BootScene ---
 // Generates all shared textures once, then transitions to MainMenu.
 // AGENT: All textures must be created here — other scenes only reference them.
+// Each color gets 4 directional textures: -right, -left, -down, -up.
 
 export class BootScene extends Phaser.Scene {
   constructor() {
@@ -21,7 +20,6 @@ export class BootScene extends Phaser.Scene {
   }
 
   create() {
-    this._createFloorTexture();
     PLAYER_COLORS.forEach((color, i) => {
       this._createPlayerTextures(color, `player-${i}`);
     });
@@ -29,32 +27,43 @@ export class BootScene extends Phaser.Scene {
     this.scene.start('MainMenuScene');
   }
 
-  _createFloorTexture() {
-    const gfx = this.add.graphics();
-    gfx.fillStyle(0x4a4a4a, 1);
-    gfx.fillRect(0, 0, WORLD_WIDTH, FLOOR_HEIGHT);
-    gfx.generateTexture('floor', WORLD_WIDTH, FLOOR_HEIGHT);
-    gfx.destroy();
-  }
-
   _createPlayerTextures(color, prefix) {
     const s = TEXTURE_SCALE;
+    const w = CHAR_WIDTH * s;
+    const h = CHAR_HEIGHT * s;
+    const r = CHAR_RADIUS * s;
+    const eyeR = EYE_RADIUS * s;
+    const eyeY = (CHAR_RADIUS + 4) * s;
     const gfx = this.add.graphics();
 
-    // Right-facing
+    // --- Right-facing ---
     gfx.fillStyle(color, 1);
-    gfx.fillRoundedRect(0, 0, CHAR_WIDTH * s, CHAR_HEIGHT * s, CHAR_RADIUS * s);
+    gfx.fillRoundedRect(0, 0, w, h, r);
     gfx.fillStyle(0xffffff, 1);
-    gfx.fillCircle((CHAR_WIDTH / 2 + EYE_OFFSET_X) * s, (CHAR_RADIUS + 4) * s, EYE_RADIUS * s);
-    gfx.generateTexture(`${prefix}-right`, CHAR_WIDTH * s, CHAR_HEIGHT * s);
+    gfx.fillCircle((CHAR_WIDTH / 2 + EYE_OFFSET_X) * s, eyeY, eyeR);
+    gfx.generateTexture(`${prefix}-right`, w, h);
 
-    // Left-facing
+    // --- Left-facing ---
     gfx.clear();
     gfx.fillStyle(color, 1);
-    gfx.fillRoundedRect(0, 0, CHAR_WIDTH * s, CHAR_HEIGHT * s, CHAR_RADIUS * s);
+    gfx.fillRoundedRect(0, 0, w, h, r);
     gfx.fillStyle(0xffffff, 1);
-    gfx.fillCircle((CHAR_WIDTH / 2 - EYE_OFFSET_X) * s, (CHAR_RADIUS + 4) * s, EYE_RADIUS * s);
-    gfx.generateTexture(`${prefix}-left`, CHAR_WIDTH * s, CHAR_HEIGHT * s);
+    gfx.fillCircle((CHAR_WIDTH / 2 - EYE_OFFSET_X) * s, eyeY, eyeR);
+    gfx.generateTexture(`${prefix}-left`, w, h);
+
+    // --- Down-facing (centered eye — looking toward camera) ---
+    gfx.clear();
+    gfx.fillStyle(color, 1);
+    gfx.fillRoundedRect(0, 0, w, h, r);
+    gfx.fillStyle(0xffffff, 1);
+    gfx.fillCircle((CHAR_WIDTH / 2) * s, eyeY, eyeR);
+    gfx.generateTexture(`${prefix}-down`, w, h);
+
+    // --- Up-facing (no eye — back of head) ---
+    gfx.clear();
+    gfx.fillStyle(color, 1);
+    gfx.fillRoundedRect(0, 0, w, h, r);
+    gfx.generateTexture(`${prefix}-up`, w, h);
 
     gfx.destroy();
   }
