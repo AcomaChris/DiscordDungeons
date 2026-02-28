@@ -27,8 +27,18 @@ export default [
     },
   },
   {
-    // Test files run in Node.js via Vitest
+    // Test files run in Node.js via Vitest (some use jsdom for browser globals)
     files: ['tests/**/*.js'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        ...globals.browser,
+      },
+    },
+  },
+  {
+    // Build/generation scripts run in Node.js
+    files: ['scripts/**/*.js'],
     languageOptions: {
       globals: {
         ...globals.node,

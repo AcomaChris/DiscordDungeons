@@ -1,5 +1,4 @@
 // @vitest-environment jsdom
-/* global window, document, navigator */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 // Mock the CSS import so it doesn't fail in Node

@@ -1,7 +1,9 @@
-const { execSync } = require('child_process');
-const { readFileSync, writeFileSync, mkdirSync } = require('fs');
-const { join } = require('path');
+import { execSync } from 'child_process';
+import { readFileSync, writeFileSync, mkdirSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const pkg = JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf-8'));
 
 let commit;

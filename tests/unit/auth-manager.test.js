@@ -1,5 +1,4 @@
 // @vitest-environment jsdom
-/* global sessionStorage */
 import { describe, it, expect, beforeEach } from 'vitest';
 import { AuthManager } from '../../client/src/auth/AuthManager.js';
 
