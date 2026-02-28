@@ -29,7 +29,7 @@ describe('BuildStatusIndicator', () => {
     indicator.destroy();
   });
 
-  it('creates DOM element on mount', () => {
+  it('creates DOM element on mount with overlay', () => {
     vi.stubGlobal('fetch', vi.fn(() => Promise.resolve({ ok: false })));
 
     const indicator = new BuildStatusIndicator();
@@ -39,6 +39,31 @@ describe('BuildStatusIndicator', () => {
     expect(el).not.toBeNull();
     expect(el.querySelector('.build-status-dot')).not.toBeNull();
     expect(el.querySelector('.build-status-tooltip')).not.toBeNull();
+    expect(el.querySelector('.build-status-overlay')).not.toBeNull();
+    expect(el.querySelector('.build-status-overlay-legend')).not.toBeNull();
+
+    indicator.destroy();
+  });
+
+  it('toggles overlay on dot click and closes on document click', () => {
+    vi.stubGlobal('fetch', vi.fn(() => Promise.resolve({ ok: false })));
+
+    const indicator = new BuildStatusIndicator();
+    indicator.mount();
+
+    const dot = document.querySelector('.build-status-dot');
+    const overlay = document.querySelector('.build-status-overlay');
+
+    // Initially hidden
+    expect(overlay.classList.contains('visible')).toBe(false);
+
+    // Click dot opens overlay
+    dot.click();
+    expect(overlay.classList.contains('visible')).toBe(true);
+
+    // Click document closes overlay
+    document.dispatchEvent(new Event('click'));
+    expect(overlay.classList.contains('visible')).toBe(false);
 
     indicator.destroy();
   });

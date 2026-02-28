@@ -44,3 +44,73 @@
 .build-status-indicator:hover .build-status-tooltip {
   display: block;
 }
+
+/* --- Overlay Panel (click to open) --- */
+
+.build-status-overlay {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  background: rgba(0, 0, 0, 0.9);
+  color: #e0e0e0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 13px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  white-space: nowrap;
+  pointer-events: auto;
+  min-width: 180px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.build-status-overlay.visible {
+  display: block;
+}
+
+/* Hide tooltip when overlay is open */
+.build-status-overlay.visible ~ .build-status-tooltip,
+.build-status-indicator:has(.build-status-overlay.visible):hover .build-status-tooltip {
+  display: none;
+}
+
+.build-status-overlay-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.build-status-overlay-current {
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.build-status-overlay-divider {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 0 0 8px 0;
+}
+
+.build-status-overlay-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.build-status-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #b0b0b0;
+}
+
+.build-status-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.build-status-legend-flash {
+  animation: build-status-flash 1s ease-in-out infinite;
+}
