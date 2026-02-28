@@ -61,9 +61,9 @@ export class GameScene extends Phaser.Scene {
     this.touchManager.show();
 
     // --- Camera ---
-    this._updateCamera(width, height);
+    this._updateCamera();
     this.cameras.main.startFollow(this.player.sprite);
-    this.scale.on('resize', () => this._updateCamera(width, height), this);
+    this.scale.on('resize', () => this._updateCamera(), this);
 
     // --- Network ---
     this._subscribeEvents();
@@ -74,11 +74,10 @@ export class GameScene extends Phaser.Scene {
   // Zoom = CAMERA_ZOOM × devicePixelRatio so the character always appears
   // CHAR_HEIGHT × CAMERA_ZOOM CSS pixels tall regardless of screen DPR.
 
-  _updateCamera(worldWidth, worldHeight) {
+  _updateCamera() {
     const cam = this.cameras.main;
     const dpr = window.devicePixelRatio || 1;
     cam.setZoom(CAMERA_ZOOM * dpr);
-    cam.setBounds(0, 0, worldWidth, worldHeight, true);
   }
 
   // --- Event Subscriptions ---
