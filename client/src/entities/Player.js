@@ -1,23 +1,30 @@
 import eventBus from '../core/EventBus.js';
 import { PLAYER_MOVED } from '../core/Events.js';
-import { MOVE_SPEED, JUMP_VELOCITY, CHAR_HEIGHT, FLOOR_HEIGHT, WORLD_WIDTH, WORLD_HEIGHT, TEXTURE_SCALE } from '../core/Constants.js';
+import { MOVE_SPEED, CHAR_HEIGHT, TEXTURE_SCALE } from '../core/Constants.js';
 
 // --- Player ---
-// Wraps the local player sprite, handles input actions, emits state for network.
+// Wraps the local player sprite, handles 4-directional input, emits state
+// for network sync. Uses a feet-only hitbox for natural 3/4 view overlap.
+
+const SQRT2 = Math.sqrt(2);
 
 export class Player {
-  constructor(scene, floor, playerName) {
+  constructor(scene, spawnX, spawnY, playerName) {
     this.scene = scene;
-    this.facing = 'right';
+    this.facing = 'down';
     this.texturePrefix = 'player-0';
 
-    const spawnX = WORLD_WIDTH / 2;
-    const spawnY = WORLD_HEIGHT - FLOOR_HEIGHT - CHAR_HEIGHT / 2;
-
-    this.sprite = scene.physics.add.sprite(spawnX, spawnY, 'player-0-right');
+    this.sprite = scene.physics.add.sprite(spawnX, spawnY, 'player-0-down');
     this.sprite.setScale(1 / TEXTURE_SCALE);
-    this.sprite.setCollideWorldBounds(true);
-    scene.physics.add.collider(this.sprite, floor);
+
+    // Feet-only collision body: only the bottom 8px of the character collides.
+    // This is standard for 3/4 view — the character's upper body overlaps
+    // walls and objects naturally.
+    this.sprite.body.setSize(12, 8);
+    this.sprite.body.setOffset(
+      (this.sprite.width - 12) / 2,
+      this.sprite.height - 8,
+    );
 
     this.nameLabel = scene.add.text(spawnX, spawnY - CHAR_HEIGHT / 2 - 4, playerName || 'Player', {
       fontSize: '12px',
@@ -32,7 +39,7 @@ export class Player {
     this._postUpdate = () => {
       this.nameLabel.setPosition(
         this.sprite.x,
-        this.sprite.y - CHAR_HEIGHT / 2 - 4
+        this.sprite.y - CHAR_HEIGHT / 2 - 4,
       );
     };
     scene.events.on('postupdate', this._postUpdate);
@@ -43,31 +50,43 @@ export class Player {
     this.sprite.setTexture(`${this.texturePrefix}-${this.facing}`);
   }
 
-  handleInput({ moveX, jump }) {
-    this.sprite.setVelocityX(moveX * MOVE_SPEED);
+  handleInput({ moveX, moveY }) {
+    let vx = moveX * MOVE_SPEED;
+    let vy = moveY * MOVE_SPEED;
 
-    if (moveX < 0 && this.facing !== 'left') {
-      this.facing = 'left';
-      this.sprite.setTexture(`${this.texturePrefix}-left`);
-    } else if (moveX > 0 && this.facing !== 'right') {
-      this.facing = 'right';
-      this.sprite.setTexture(`${this.texturePrefix}-right`);
+    // Normalize diagonal so total speed equals MOVE_SPEED
+    if (moveX !== 0 && moveY !== 0) {
+      vx /= SQRT2;
+      vy /= SQRT2;
     }
 
-    const onGround = this.sprite.body.touching.down || this.sprite.body.blocked.down;
-    if (jump && onGround) {
-      this.sprite.setVelocityY(JUMP_VELOCITY);
+    this.sprite.setVelocity(vx, vy);
+
+    // Update facing direction — prefer vertical when both axes active
+    let newFacing = this.facing;
+    if (moveY < 0) newFacing = 'up';
+    else if (moveY > 0) newFacing = 'down';
+    else if (moveX < 0) newFacing = 'left';
+    else if (moveX > 0) newFacing = 'right';
+
+    if (newFacing !== this.facing) {
+      this.facing = newFacing;
+      this.sprite.setTexture(`${this.texturePrefix}-${this.facing}`);
     }
 
     eventBus.emit(PLAYER_MOVED, this.getState());
+  }
+
+  // Y-sorted depth: objects lower on screen render in front
+  updateDepth() {
+    this.sprite.setDepth(this.sprite.y);
+    this.nameLabel.setDepth(this.sprite.y + 1);
   }
 
   getState() {
     return {
       x: this.sprite.x,
       y: this.sprite.y,
-      vx: this.sprite.body.velocity.x,
-      vy: this.sprite.body.velocity.y,
       facing: this.facing,
     };
   }
