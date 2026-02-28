@@ -32,8 +32,14 @@ export class TileMapManager {
   // Call from scene.preload(). Loads the JSON map and all tileset images.
   preload(mapKey, jsonPath, tilesetEntries) {
     this.scene.load.tilemapTiledJSON(mapKey, jsonPath);
-    for (const { key, path } of tilesetEntries) {
-      this.scene.load.image(key, path);
+    for (const { key, path, tileSize } of tilesetEntries) {
+      if (tileSize) {
+        // Spritesheet loading creates numbered frames (0, 1, 2...) so individual
+        // tiles can be used as sprite textures for Y-sorted wall rendering.
+        this.scene.load.spritesheet(key, path, { frameWidth: tileSize, frameHeight: tileSize });
+      } else {
+        this.scene.load.image(key, path);
+      }
     }
     this._mapKey = mapKey;
     this._tilesetEntries = tilesetEntries;
@@ -60,6 +66,9 @@ export class TileMapManager {
       }
     }
 
+    // Convert Walls/WallTops tiles to individual Y-sorted sprites
+    this._ySortWallLayers();
+
     // Collision layer — invisible, any non-empty tile blocks
     const collisionLayer = this.tilemap.createLayer('Collision', tilesets);
     if (collisionLayer) {
@@ -72,6 +81,38 @@ export class TileMapManager {
     this._parseObjects();
 
     return this.tilemap;
+  }
+
+  // --- Y-Sorted Wall Sprites ---
+  // Tile layers have a single depth for all tiles, which breaks 3/4 view
+  // depth sorting. We convert wall tiles to individual sprites so each can
+  // have depth = bottom Y, enabling proper Y-sorting with player sprites.
+  _ySortWallLayers() {
+    this.wallSprites = [];
+    const tileHeight = this.tilemap.tileHeight;
+    const firstGid = this.tilemap.tilesets[0].firstgid;
+    const tilesetKey = this._tilesetEntries[0].key;
+
+    for (const layerName of ['Walls', 'WallTops']) {
+      const layer = this.layers[layerName];
+      if (!layer) continue;
+
+      layer.forEachTile((tile) => {
+        if (tile.index <= 0) return;
+
+        const frame = tile.index - firstGid;
+        const sprite = this.scene.add.sprite(
+          tile.pixelX + tile.width / 2,
+          tile.pixelY + tile.height / 2,
+          tilesetKey,
+          frame,
+        );
+        sprite.setDepth(tile.pixelY + tileHeight);
+        this.wallSprites.push(sprite);
+      });
+
+      layer.setVisible(false);
+    }
   }
 
   _parseObjects() {
@@ -109,6 +150,11 @@ export class TileMapManager {
   }
 
   destroy() {
+    for (const s of this.wallSprites || []) {
+      s.destroy();
+    }
+    this.wallSprites = [];
+
     if (this.tilemap) {
       this.tilemap.destroy();
       this.tilemap = null;

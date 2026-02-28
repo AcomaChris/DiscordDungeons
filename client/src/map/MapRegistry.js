@@ -6,7 +6,7 @@ const maps = {
   test: {
     jsonPath: 'maps/test.json',
     tilesets: [
-      { key: 'test-tiles', path: 'tilesets/test-tiles.png', tiledName: 'test-tiles' },
+      { key: 'test-tiles', path: 'tilesets/test-tiles.png', tiledName: 'test-tiles', tileSize: 16 },
     ],
   },
 };
