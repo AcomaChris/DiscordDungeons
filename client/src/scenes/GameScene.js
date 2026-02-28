@@ -8,20 +8,22 @@ import {
   NETWORK_STATE_UPDATE,
   NETWORK_PLAYER_IDENTITY,
 } from '../core/Events.js';
-import { FLOOR_HEIGHT, WORLD_WIDTH, WORLD_HEIGHT, CAMERA_ZOOM } from '../core/Constants.js';
+import { CAMERA_ZOOM } from '../core/Constants.js';
 import { InputManager } from '../input/InputManager.js';
 import { TouchManager } from '../input/TouchManager.js';
 import { mergeInputSnapshots } from '../input/mergeInputSnapshots.js';
 import { Player } from '../entities/Player.js';
 import { RemotePlayer } from '../entities/RemotePlayer.js';
 import { NetworkManager } from '../network/NetworkManager.js';
+import { TileMapManager } from '../map/TileMapManager.js';
+import { getMapConfig } from '../map/MapRegistry.js';
 import authManager from '../auth/AuthManager.js';
 
 // --- GameScene ---
-// Thin orchestrator: creates floor, player, input, network. Delegates everything via events.
+// Orchestrator: loads tilemap, creates player, wires input + network.
+// Uses TileMapManager for map loading and collision.
 
 // AGENT: WS_URL is set at build time for production, falls back to localhost for dev.
-// When deploying the WS server, set VITE_WS_URL in the GitHub Actions env.
 const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:3001';
 
 export class GameScene extends Phaser.Scene {
@@ -29,45 +31,54 @@ export class GameScene extends Phaser.Scene {
     super({ key: 'GameScene' });
   }
 
+  preload() {
+    const mapConfig = getMapConfig('test');
+    this.tileMapManager = new TileMapManager(this);
+    this.tileMapManager.preload('test', mapConfig.jsonPath, mapConfig.tilesets);
+  }
+
   create() {
     this.remotePlayers = new Map();
 
-    this.physics.world.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
-    this._createFloor();
-    this.player = new Player(this, this.floor, authManager.identity?.playerName);
+    // --- Tilemap ---
+    this.tileMapManager.create('test');
+    const { width, height } = this.tileMapManager.getWorldBounds();
+    this.physics.world.setBounds(0, 0, width, height);
+
+    // --- Player ---
+    const spawn = this.tileMapManager.spawnPoint;
+    this.player = new Player(this, spawn.x, spawn.y, authManager.identity?.playerName);
+    this.player.sprite.setCollideWorldBounds(true);
+
+    // Collide player with the invisible collision layer
+    if (this.tileMapManager.collisionLayer) {
+      this.physics.add.collider(this.player.sprite, this.tileMapManager.collisionLayer);
+    }
+
+    // --- Input ---
     this.inputManager = new InputManager(this);
     this.touchManager = new TouchManager();
     this.touchManager.show();
 
-    this._updateCamera();
+    // --- Camera ---
+    this._updateCamera(width, height);
     this.cameras.main.startFollow(this.player.sprite);
-    this.scale.on('resize', this._onResize, this);
+    this.scale.on('resize', () => this._updateCamera(width, height), this);
+
+    // --- Network ---
     this._subscribeEvents();
     this._connectNetwork();
-  }
-
-  _createFloor() {
-    const floorY = WORLD_HEIGHT - FLOOR_HEIGHT / 2;
-    // AGENT: 'floor' texture is created by BootScene — do not recreate here
-    this.floor = this.physics.add.staticImage(WORLD_WIDTH / 2, floorY, 'floor');
   }
 
   // --- Camera ---
   // Zoom = CAMERA_ZOOM × devicePixelRatio so the character always appears
   // CHAR_HEIGHT × CAMERA_ZOOM CSS pixels tall regardless of screen DPR.
-  // The renderer is separately resized to physical pixels in main.js.
 
-  _updateCamera() {
+  _updateCamera(worldWidth, worldHeight) {
     const cam = this.cameras.main;
     const dpr = window.devicePixelRatio || 1;
     cam.setZoom(CAMERA_ZOOM * dpr);
-    cam.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
-  }
-
-  // --- Resize ---
-
-  _onResize() {
-    this._updateCamera();
+    cam.setBounds(0, 0, worldWidth, worldHeight);
   }
 
   // --- Event Subscriptions ---
@@ -92,7 +103,8 @@ export class GameScene extends Phaser.Scene {
 
   _addRemotePlayer({ playerId, colorIndex, playerName }) {
     if (this.remotePlayers.has(playerId)) return;
-    const rp = new RemotePlayer(this, colorIndex, playerName);
+    const spawn = this.tileMapManager.spawnPoint;
+    const rp = new RemotePlayer(this, colorIndex, spawn.x, spawn.y, playerName);
     this.remotePlayers.set(playerId, rp);
   }
 
@@ -124,8 +136,11 @@ export class GameScene extends Phaser.Scene {
     const merged = mergeInputSnapshots(kbSnap, touchSnap);
     eventBus.emit(INPUT_ACTION, merged);
 
+    // Depth sorting
+    this.player.updateDepth();
     for (const rp of this.remotePlayers.values()) {
       rp.update();
+      rp.updateDepth();
     }
   }
 
@@ -141,7 +156,7 @@ export class GameScene extends Phaser.Scene {
   // AGENT: Must unsubscribe all EventBus listeners to prevent duplicates on scene restart
 
   shutdown() {
-    this.scale.off('resize', this._onResize, this);
+    this.scale.off('resize', this._updateCamera, this);
     eventBus.off(INPUT_ACTION, this._onInput);
     eventBus.off(NETWORK_ROOM_JOINED, this._onRoomJoined);
     eventBus.off(NETWORK_PLAYER_JOINED, this._onPlayerJoined);
@@ -152,6 +167,7 @@ export class GameScene extends Phaser.Scene {
     if (this.networkManager) this.networkManager.disconnect();
     this.inputManager.destroy();
     this.touchManager.destroy();
+    this.tileMapManager.destroy();
     for (const rp of this.remotePlayers.values()) {
       rp.destroy();
     }

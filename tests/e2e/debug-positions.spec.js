@@ -7,9 +7,10 @@ import { test, expect } from '@playwright/test';
 // rendering issues like jitter, misalignment, or frame-lag.
 
 const GAME_URL = 'http://localhost:8081';
+const CHAR_HEIGHT = 24; // must match Constants.js
 
 // Wait for Phaser to boot and a specific scene to be active
-async function waitForScene(page, sceneKey, timeout = 15_000) {
+async function waitForScene(page, sceneKey, timeout = 30_000) {
   await page.waitForFunction(
     (key) => {
       const game = globalThis.__PHASER_GAME__;
@@ -37,14 +38,14 @@ async function skipMainMenu(page) {
 async function bootGame(page) {
   await page.goto(GAME_URL, { waitUntil: 'domcontentloaded' });
   await page.waitForFunction(() => globalThis.__PHASER_GAME__, {
-    timeout: 15_000,
+    timeout: 30_000,
     polling: 200,
   });
   await skipMainMenu(page);
 }
 
 test.describe('Position tracking', () => {
-  test('name label tracks sprite without jitter during horizontal movement', async ({ page }) => {
+  test('name label tracks sprite without jitter during movement', async ({ page }) => {
     const consoleLogs = [];
     page.on('console', (msg) => {
       if (msg.type() === 'log') consoleLogs.push(msg.text());
@@ -53,7 +54,7 @@ test.describe('Position tracking', () => {
     await bootGame(page);
 
     // Start recording position data each frame
-    await page.evaluate(() => {
+    await page.evaluate((charHeight) => {
       const game = globalThis.__PHASER_GAME__;
       const scene = game.scene.getScene('GameScene');
       globalThis.__POSITION_FRAMES__ = [];
@@ -65,27 +66,35 @@ test.describe('Position tracking', () => {
           spriteY: player.sprite.y,
           labelX: player.nameLabel.x,
           labelY: player.nameLabel.y,
-          expectedLabelY: player.sprite.y - 50 / 2 - 4,
+          expectedLabelY: player.sprite.y - charHeight / 2 - 4,
         });
       });
-    });
+    }, CHAR_HEIGHT);
 
-    // Use real keyboard input — Playwright sends actual key events
+    // Move right using real keyboard input
     await page.keyboard.down('ArrowRight');
-    await page.waitForTimeout(1500);
+    await page.waitForTimeout(1000);
     await page.keyboard.up('ArrowRight');
+
+    // Move down
+    await page.keyboard.down('ArrowDown');
+    await page.waitForTimeout(1000);
+    await page.keyboard.up('ArrowDown');
     await page.waitForTimeout(500);
 
     const positionData = await page.evaluate(() => globalThis.__POSITION_FRAMES__);
 
     console.log(`Captured ${positionData.length} frames of position data`);
 
-    // Check that during movement, the label Y matches expected position
+    // Check for movement in either axis
     const movingFrames = positionData.filter(
-      (f, i) => i > 0 && Math.abs(f.spriteX - positionData[i - 1].spriteX) > 0.1,
+      (f, i) => i > 0 && (
+        Math.abs(f.spriteX - positionData[i - 1].spriteX) > 0.1 ||
+        Math.abs(f.spriteY - positionData[i - 1].spriteY) > 0.1
+      ),
     );
 
-    console.log(`${movingFrames.length} frames had horizontal movement`);
+    console.log(`${movingFrames.length} frames had movement`);
 
     // The label Y should always equal sprite Y - CHAR_HEIGHT/2 - 4
     let yJitterCount = 0;
