@@ -3,23 +3,32 @@ import { mergeInputSnapshots } from '../../client/src/input/mergeInputSnapshots.
 
 describe('mergeInputSnapshots', () => {
   it('returns keyboard moveX when touch is idle', () => {
-    const result = mergeInputSnapshots({ moveX: -1, jump: false }, { moveX: 0, jump: false });
+    const result = mergeInputSnapshots({ moveX: -1, moveY: 0 }, { moveX: 0, moveY: 0 });
     expect(result.moveX).toBe(-1);
   });
 
   it('touch moveX wins when non-zero', () => {
-    const result = mergeInputSnapshots({ moveX: -1, jump: false }, { moveX: 1, jump: false });
+    const result = mergeInputSnapshots({ moveX: -1, moveY: 0 }, { moveX: 1, moveY: 0 });
     expect(result.moveX).toBe(1);
   });
 
-  it('ORs jump from both sources', () => {
-    expect(mergeInputSnapshots({ moveX: 0, jump: true }, { moveX: 0, jump: false }).jump).toBe(true);
-    expect(mergeInputSnapshots({ moveX: 0, jump: false }, { moveX: 0, jump: true }).jump).toBe(true);
-    expect(mergeInputSnapshots({ moveX: 0, jump: false }, { moveX: 0, jump: false }).jump).toBe(false);
+  it('returns keyboard moveY when touch is idle', () => {
+    const result = mergeInputSnapshots({ moveX: 0, moveY: -1 }, { moveX: 0, moveY: 0 });
+    expect(result.moveY).toBe(-1);
+  });
+
+  it('touch moveY wins when non-zero', () => {
+    const result = mergeInputSnapshots({ moveX: 0, moveY: -1 }, { moveX: 0, moveY: 1 });
+    expect(result.moveY).toBe(1);
   });
 
   it('both idle produces neutral snapshot', () => {
-    const result = mergeInputSnapshots({ moveX: 0, jump: false }, { moveX: 0, jump: false });
-    expect(result).toEqual({ moveX: 0, jump: false });
+    const result = mergeInputSnapshots({ moveX: 0, moveY: 0 }, { moveX: 0, moveY: 0 });
+    expect(result).toEqual({ moveX: 0, moveY: 0 });
+  });
+
+  it('merges axes independently', () => {
+    const result = mergeInputSnapshots({ moveX: 1, moveY: -1 }, { moveX: -1, moveY: 0 });
+    expect(result).toEqual({ moveX: -1, moveY: -1 });
   });
 });

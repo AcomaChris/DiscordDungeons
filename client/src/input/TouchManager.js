@@ -1,14 +1,14 @@
 import '../styles/touch-controls.css';
 
 // --- TouchManager ---
-// Creates an HTML overlay with touch buttons for mobile play.
+// Creates an HTML overlay with a D-pad for mobile play.
 // Only activates on touch-capable devices. Provides getSnapshot() for
-// the same { moveX, jump } shape as InputManager.
+// the same { moveX, moveY } shape as InputManager.
 
 export class TouchManager {
   constructor() {
     this._moveX = 0;
-    this._jumpPressed = false;
+    this._moveY = 0;
     this._container = null;
     this._orientationQuery = null;
     this._onOrientationChange = null;
@@ -30,16 +30,22 @@ export class TouchManager {
     container.id = 'touch-controls';
     this._container = container;
 
+    const dpad = document.createElement('div');
+    dpad.className = 'dpad';
+
+    const btnUp = this._createButton('btn-up', '\u25B2');
+    const btnDown = this._createButton('btn-down', '\u25BC');
     const btnLeft = this._createButton('btn-left', '\u25C0');
     const btnRight = this._createButton('btn-right', '\u25B6');
-    const btnJump = this._createButton('btn-jump', '\u25B2');
 
-    container.append(btnLeft, btnRight, btnJump);
+    dpad.append(btnUp, btnLeft, btnRight, btnDown);
+    container.appendChild(dpad);
     document.body.appendChild(container);
 
+    this._bindButton(btnUp, () => { this._moveY = -1; }, () => { if (this._moveY === -1) this._moveY = 0; });
+    this._bindButton(btnDown, () => { this._moveY = 1; }, () => { if (this._moveY === 1) this._moveY = 0; });
     this._bindButton(btnLeft, () => { this._moveX = -1; }, () => { if (this._moveX === -1) this._moveX = 0; });
     this._bindButton(btnRight, () => { this._moveX = 1; }, () => { if (this._moveX === 1) this._moveX = 0; });
-    this._bindButton(btnJump, () => { this._jumpPressed = true; }, () => {});
   }
 
   _createButton(className, label) {
@@ -84,9 +90,7 @@ export class TouchManager {
   // --- Snapshot ---
 
   getSnapshot() {
-    const jump = this._jumpPressed;
-    this._jumpPressed = false;
-    return { moveX: this._moveX, jump };
+    return { moveX: this._moveX, moveY: this._moveY };
   }
 
   // --- Visibility ---

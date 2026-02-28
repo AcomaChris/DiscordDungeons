@@ -1,7 +1,9 @@
 export const Actions = {
   MOVE_LEFT: 'moveLeft',
   MOVE_RIGHT: 'moveRight',
-  JUMP: 'jump',
+  MOVE_UP: 'moveUp',
+  MOVE_DOWN: 'moveDown',
+  INTERACT: 'interact',
 };
 
 // AGENT: Key codes use Phaser.Input.Keyboard.KeyCodes string names.
@@ -9,5 +11,7 @@ export const Actions = {
 export const DEFAULT_KEY_BINDINGS = {
   [Actions.MOVE_LEFT]: ['LEFT', 'A'],
   [Actions.MOVE_RIGHT]: ['RIGHT', 'D'],
-  [Actions.JUMP]: ['UP', 'W', 'SPACE'],
+  [Actions.MOVE_UP]: ['UP', 'W'],
+  [Actions.MOVE_DOWN]: ['DOWN', 'S'],
+  [Actions.INTERACT]: ['E', 'SPACE'],
 };

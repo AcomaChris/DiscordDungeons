@@ -19,11 +19,22 @@
   }
 }
 
+/* --- D-pad container --- */
+
+#touch-controls .dpad {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  display: grid;
+  grid-template-columns: 64px 64px 64px;
+  grid-template-rows: 64px 64px;
+  gap: 4px;
+}
+
 /* --- Buttons --- */
 
 #touch-controls button {
   pointer-events: auto;
-  position: absolute;
   border: none;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.18);
@@ -36,54 +47,42 @@
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
   outline: none;
+  width: 100%;
+  height: 100%;
 }
 
 #touch-controls button:active {
   background: rgba(255, 255, 255, 0.35);
 }
 
-/* --- Landscape (default) --- */
+/* --- D-pad layout (landscape default) --- */
+
+#touch-controls .btn-up {
+  grid-column: 2;
+  grid-row: 1;
+}
 
 #touch-controls .btn-left {
-  width: 64px;
-  height: 64px;
-  bottom: 24px;
-  left: 24px;
+  grid-column: 1;
+  grid-row: 2;
 }
 
 #touch-controls .btn-right {
-  width: 64px;
-  height: 64px;
-  bottom: 24px;
-  left: 104px;
+  grid-column: 3;
+  grid-row: 2;
 }
 
-#touch-controls .btn-jump {
-  width: 72px;
-  height: 72px;
-  bottom: 24px;
-  right: 24px;
+#touch-controls .btn-down {
+  grid-column: 2;
+  grid-row: 2;
 }
 
 /* --- Portrait --- */
 
-#touch-controls.portrait .btn-left {
-  width: 80px;
-  height: 80px;
+#touch-controls.portrait .dpad {
   bottom: 48px;
   left: 24px;
-}
-
-#touch-controls.portrait .btn-right {
-  width: 80px;
-  height: 80px;
-  bottom: 48px;
-  left: 120px;
-}
-
-#touch-controls.portrait .btn-jump {
-  width: 88px;
-  height: 88px;
-  bottom: 48px;
-  right: 24px;
+  grid-template-columns: 80px 80px 80px;
+  grid-template-rows: 80px 80px;
+  gap: 6px;
 }
