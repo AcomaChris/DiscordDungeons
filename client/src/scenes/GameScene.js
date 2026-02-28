@@ -75,9 +75,7 @@ export class GameScene extends Phaser.Scene {
   // CHAR_HEIGHT × CAMERA_ZOOM CSS pixels tall regardless of screen DPR.
 
   _updateCamera() {
-    const cam = this.cameras.main;
-    const dpr = window.devicePixelRatio || 1;
-    cam.setZoom(CAMERA_ZOOM * dpr);
+    this.cameras.main.setZoom(CAMERA_ZOOM);
   }
 
   // --- Event Subscriptions ---

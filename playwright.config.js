@@ -4,6 +4,9 @@ export default defineConfig({
   testDir: 'tests/e2e',
   timeout: 60_000,
   retries: 0,
+  // Single worker avoids Vite cold-start race when multiple browsers
+  // hit the dev server simultaneously during first module transform
+  workers: 1,
   use: {
     headless: true,
     viewport: { width: 800, height: 600 },
@@ -18,6 +21,6 @@ export default defineConfig({
     command: 'npm run dev -- --port 8081',
     port: 8081,
     reuseExistingServer: true,
-    timeout: 15_000,
+    timeout: 30_000,
   },
 });
