@@ -78,7 +78,7 @@ export class GameScene extends Phaser.Scene {
     const cam = this.cameras.main;
     const dpr = window.devicePixelRatio || 1;
     cam.setZoom(CAMERA_ZOOM * dpr);
-    cam.setBounds(0, 0, worldWidth, worldHeight);
+    cam.setBounds(0, 0, worldWidth, worldHeight, true);
   }
 
   // --- Event Subscriptions ---
