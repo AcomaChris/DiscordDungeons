@@ -4,6 +4,9 @@ import { MainMenuScene } from './scenes/MainMenuScene.js';
 import { GameScene } from './scenes/GameScene.js';
 import authManager from './auth/AuthManager.js';
 import { isDiscordActivity, setupDiscordActivity } from './discord/activitySdk.js';
+import { BuildStatusIndicator } from './build-status/BuildStatusIndicator.js';
+
+new BuildStatusIndicator().mount();
 
 // --- Game Configuration ---
 

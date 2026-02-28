@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "mkdir -p client/public && cp DEVLOG.md client/public/DEVLOG.md && vite build",
+    "build": "mkdir -p client/public && cp DEVLOG.md client/public/DEVLOG.md && node scripts/generate-version-json.js && vite build",
     "preview": "vite preview",
     "test": "vitest run",
     "test:unit": "vitest run tests/unit",

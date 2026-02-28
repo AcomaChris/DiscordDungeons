@@ -137,6 +137,9 @@
 
   <script type="module">
     import { marked } from 'marked';
+    import { BuildStatusIndicator } from './src/build-status/BuildStatusIndicator.js';
+
+    new BuildStatusIndicator().mount();
 
     const el = document.getElementById('devlog');
 
