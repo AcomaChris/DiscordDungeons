@@ -3694,8 +3694,8 @@
           "id": 1,
           "name": "spawn",
           "type": "spawn",
-          "x": 232,
-          "y": 152,
+          "x": 80,
+          "y": 256,
           "width": 16,
           "height": 16,
           "visible": true

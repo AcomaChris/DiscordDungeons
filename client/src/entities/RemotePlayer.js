@@ -45,10 +45,12 @@ export class RemotePlayer {
     this.nameLabel.setPosition(this.sprite.x, this.sprite.y - CHAR_HEIGHT / 2 - 4);
   }
 
-  // Y-sorted depth: objects lower on screen render in front
+  // Y-sorted depth: compare base (feet) position so objects lower on screen
+  // render in front. sprite.y is center; feet are CHAR_HEIGHT/2 below that.
   updateDepth() {
-    this.sprite.setDepth(this.sprite.y);
-    this.nameLabel.setDepth(this.sprite.y + 1);
+    const feetY = this.sprite.y + CHAR_HEIGHT / 2;
+    this.sprite.setDepth(feetY);
+    this.nameLabel.setDepth(feetY + 1);
   }
 
   destroy() {

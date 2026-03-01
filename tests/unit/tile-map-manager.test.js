@@ -74,7 +74,7 @@ describe('TileMapManager', () => {
         WallTops: wallTopsLayer,
         Collision: collisionLayer,
       },
-      { objects: [{ name: 'spawn', type: 'spawn', x: 80, y: 160, width: 16, height: 16 }] },
+      { objects: [{ name: 'spawn', type: 'spawn', x: 80, y: 256, width: 16, height: 16 }] },
     );
 
     const scene = createMockScene(tilemap);
@@ -100,7 +100,7 @@ describe('TileMapManager', () => {
     expect(collisionLayer.setCollisionByExclusion).toHaveBeenCalledWith([-1]);
 
     // Spawn point parsed
-    expect(mgr.spawnPoint).toEqual({ x: 88, y: 168 });
+    expect(mgr.spawnPoint).toEqual({ x: 88, y: 264 });
 
     // World bounds
     expect(mgr.getWorldBounds()).toEqual({ width: 480, height: 320 });

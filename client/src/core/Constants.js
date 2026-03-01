@@ -26,7 +26,7 @@ export const CAMERA_ZOOM = 3;
 
 // --- Depth ---
 // Layers above the player (wall tops, overlay) use fixed depths above this.
-// Player/NPC depth = their Y position for Y-sorting.
+// Player/NPC depth = feet Y position; wall sprite depth = tile bottom Y.
 export const DEPTH_ABOVE_PLAYER = 10000;
 
 // --- Network ---
