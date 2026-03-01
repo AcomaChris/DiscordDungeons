@@ -85,7 +85,7 @@ export class PlayerDebugPanel {
           <input type="number" class="player-debug-input player-debug-input-small" data-field="colorR" value="${r}" min="0" max="255" />
           <input type="number" class="player-debug-input player-debug-input-small" data-field="colorG" value="${g}" min="0" max="255" />
           <input type="number" class="player-debug-input player-debug-input-small" data-field="colorB" value="${b}" min="0" max="255" />
-          <div class="player-debug-swatch" data-field="swatch" style="background: rgb(${r},${g},${b})"></div>
+          <input type="color" class="player-debug-swatch" data-field="colorPicker" value="${this._rgbToHex(r, g, b)}" />
         </div>
       </div>
 
@@ -126,6 +126,10 @@ export class PlayerDebugPanel {
     colorG.addEventListener('input', () => this._updateColor());
     colorB.addEventListener('input', () => this._updateColor());
 
+    // Color picker — syncs back to R/G/B inputs
+    const colorPicker = this._dialog.querySelector('[data-field="colorPicker"]');
+    colorPicker.addEventListener('input', () => this._onPickerChange());
+
     // Name
     const nameInput = this._dialog.querySelector('[data-field="name"]');
     nameInput.addEventListener('change', () => this._updateName());
@@ -159,11 +163,25 @@ export class PlayerDebugPanel {
 
     const hexColor = (r << 16) | (g << 8) | b;
 
-    // Update swatch preview
-    const swatch = this._dialog.querySelector('[data-field="swatch"]');
-    swatch.style.background = `rgb(${r},${g},${b})`;
+    // Sync color picker
+    const picker = this._dialog.querySelector('[data-field="colorPicker"]');
+    picker.value = this._rgbToHex(r, g, b);
 
     this._player.setColor(hexColor);
+  }
+
+  _onPickerChange() {
+    const hex = this._dialog.querySelector('[data-field="colorPicker"]').value;
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+
+    // Sync R/G/B inputs
+    this._dialog.querySelector('[data-field="colorR"]').value = r;
+    this._dialog.querySelector('[data-field="colorG"]').value = g;
+    this._dialog.querySelector('[data-field="colorB"]').value = b;
+
+    this._player.setColor((r << 16) | (g << 8) | b);
   }
 
   _updateName() {
@@ -207,6 +225,10 @@ export class PlayerDebugPanel {
 
   _clamp(val) {
     return Math.max(0, Math.min(255, val));
+  }
+
+  _rgbToHex(r, g, b) {
+    return `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1)}`;
   }
 
   _escapeHtml(str) {

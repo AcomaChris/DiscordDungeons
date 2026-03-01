@@ -91,7 +91,7 @@ describe('PlayerDebugPanel', () => {
     expect(dialog.querySelector('[data-field="colorR"]')).not.toBeNull();
     expect(dialog.querySelector('[data-field="colorG"]')).not.toBeNull();
     expect(dialog.querySelector('[data-field="colorB"]')).not.toBeNull();
-    expect(dialog.querySelector('[data-field="swatch"]')).not.toBeNull();
+    expect(dialog.querySelector('[data-field="colorPicker"]')).not.toBeNull();
     expect(dialog.querySelector('[data-field="name"]')).not.toBeNull();
     expect(dialog.querySelector('[data-field="posX"]')).not.toBeNull();
     expect(dialog.querySelector('[data-field="posY"]')).not.toBeNull();
@@ -179,9 +179,25 @@ describe('PlayerDebugPanel', () => {
     // 0x006600 = 0 << 16 | 102 << 8 | 0
     expect(mockPlayer.setColor).toHaveBeenCalledWith(0x006600);
 
-    // Swatch should update
-    const swatch = document.querySelector('[data-field="swatch"]');
-    expect(swatch.style.background).toBe('rgb(0, 102, 0)');
+    // Color picker should sync
+    const picker = document.querySelector('[data-field="colorPicker"]');
+    expect(picker.value).toBe('#006600');
+
+    panel.close();
+  });
+
+  it('syncs RGB inputs from color picker', () => {
+    const panel = new PlayerDebugPanel();
+    panel.open();
+
+    const picker = document.querySelector('[data-field="colorPicker"]');
+    picker.value = '#00ff80';
+    picker.dispatchEvent(new Event('input'));
+
+    expect(document.querySelector('[data-field="colorR"]').value).toBe('0');
+    expect(document.querySelector('[data-field="colorG"]').value).toBe('255');
+    expect(document.querySelector('[data-field="colorB"]').value).toBe('128');
+    expect(mockPlayer.setColor).toHaveBeenCalledWith(0x00ff80);
 
     panel.close();
   });

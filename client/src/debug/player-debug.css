@@ -3,20 +3,22 @@
 .player-debug-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: none;
   z-index: 10000;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  pointer-events: none;
 }
 
 .player-debug-dialog {
+  pointer-events: auto;
   background: #1a1a2e;
   border: 1px solid rgba(0, 204, 255, 0.3);
   border-radius: 12px;
   padding: 24px;
-  width: 90vw;
-  max-width: 360px;
+  margin-left: 16px;
+  width: 280px;
   max-height: 85vh;
   overflow-y: auto;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
@@ -80,13 +82,16 @@
   cursor: default;
 }
 
-/* --- Color preview swatch --- */
+/* --- Color picker swatch --- */
 
 .player-debug-swatch {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
+  padding: 2px;
   border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  background: none;
+  cursor: pointer;
   flex-shrink: 0;
 }
 
