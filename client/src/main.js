@@ -5,8 +5,10 @@ import { GameScene } from './scenes/GameScene.js';
 import authManager from './auth/AuthManager.js';
 import { isDiscordActivity, setupDiscordActivity } from './discord/activitySdk.js';
 import { BuildStatusIndicator } from './build-status/BuildStatusIndicator.js';
+import { BugReporter } from './bug-report/BugReporter.js';
 
 new BuildStatusIndicator().mount();
+new BugReporter().mount();
 
 // --- Game Configuration ---
 

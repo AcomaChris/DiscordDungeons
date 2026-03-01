@@ -1,0 +1,248 @@
+/* --- Bug Reporter: Cog + Menu --- */
+
+.bug-report-container {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 9999;
+}
+
+.bug-report-cog {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  color: #ccc;
+  font-size: 20px;
+  line-height: 36px;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bug-report-cog:hover {
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+}
+
+.bug-report-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 140px;
+  background: rgba(0, 0, 0, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 4px 0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.bug-report-menu.visible {
+  display: block;
+}
+
+.bug-report-menu-item {
+  display: block;
+  width: 100%;
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  color: #ddd;
+  font-size: 14px;
+  font-family: sans-serif;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.bug-report-menu-item:hover {
+  background: rgba(0, 204, 255, 0.15);
+  color: #00ccff;
+}
+
+/* --- Backdrop + Dialog --- */
+
+.bug-report-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bug-report-dialog {
+  background: #1a1a2e;
+  border: 1px solid rgba(0, 204, 255, 0.3);
+  border-radius: 12px;
+  padding: 24px;
+  width: 90vw;
+  max-width: 420px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.bug-report-dialog-title {
+  margin: 0;
+  color: #00ccff;
+  font-size: 18px;
+  font-family: sans-serif;
+  font-weight: 600;
+}
+
+/* --- Form Elements --- */
+
+.bug-report-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #ccc;
+  font-size: 13px;
+  font-family: sans-serif;
+}
+
+.bug-report-required {
+  color: #ef4444;
+}
+
+.bug-report-input,
+.bug-report-textarea,
+.bug-report-select {
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 14px;
+  font-family: sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.bug-report-input:focus,
+.bug-report-textarea:focus,
+.bug-report-select:focus {
+  border-color: #00ccff;
+}
+
+.bug-report-textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.bug-report-select {
+  cursor: pointer;
+}
+
+.bug-report-select option {
+  background: #1a1a2e;
+  color: #fff;
+}
+
+.bug-report-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ccc;
+  font-size: 13px;
+  font-family: sans-serif;
+  cursor: pointer;
+}
+
+.bug-report-checkbox-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #00ccff;
+  cursor: pointer;
+}
+
+/* --- Screenshot Preview --- */
+
+.bug-report-preview-container {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #000;
+}
+
+.bug-report-preview {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 180px;
+  object-fit: contain;
+}
+
+/* --- Actions --- */
+
+.bug-report-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.bug-report-btn {
+  padding: 8px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: sans-serif;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bug-report-btn-cancel {
+  background: transparent;
+  color: #999;
+}
+
+.bug-report-btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #ccc;
+}
+
+.bug-report-btn-submit {
+  background: rgba(0, 204, 255, 0.15);
+  border-color: #00ccff;
+  color: #00ccff;
+}
+
+.bug-report-btn-submit:hover {
+  background: rgba(0, 204, 255, 0.3);
+}
+
+.bug-report-btn-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* --- Status Message --- */
+
+.bug-report-status {
+  font-size: 13px;
+  font-family: sans-serif;
+  text-align: center;
+  min-height: 18px;
+}
+
+.bug-report-status a {
+  color: #00ccff;
+  text-decoration: underline;
+}
+
+.bug-report-status-error {
+  color: #ef4444;
+}
+
+.bug-report-status-success {
+  color: #22c55e;
+}

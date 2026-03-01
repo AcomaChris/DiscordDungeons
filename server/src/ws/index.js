@@ -10,6 +10,9 @@ const { WebSocketServer } = require('ws');
 const PORT = process.env.WS_PORT || 3001;
 const BROADCAST_RATE = 100; // ms (10Hz)
 const CORS_ORIGIN = process.env.CORS_ORIGIN || '*';
+const GITHUB_TOKEN = process.env.GITHUB_API_TOKEN || '';
+const GITHUB_REPO = 'AcomaChris/DiscordDungeons';
+const GITHUB_API = 'https://api.github.com';
 
 const rooms = new Map();
 let nextPlayerId = 1;
@@ -51,6 +54,10 @@ async function handleHttpRequest(req, res) {
   // Activity SDK token exchange — simpler than /auth/discord (returns raw token)
   if (url.pathname === '/token' && req.method === 'POST') {
     return handleActivityToken(req, res);
+  }
+
+  if (url.pathname === '/api/issue' && req.method === 'POST') {
+    return handleFileIssue(req, res);
   }
 
   if (url.pathname === '/health') {
@@ -151,6 +158,123 @@ async function handleActivityToken(req, res) {
     res.end(JSON.stringify({ access_token }));
   } catch (err) {
     console.error('[activity-auth] Error:', err);
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Internal server error' }));
+  }
+}
+
+// --- GitHub Issue Filing ---
+// AGENT: Requires GITHUB_API_TOKEN with repo Issues + Contents permissions.
+// Screenshots are uploaded to the repo via the Contents API, then
+// referenced by raw URL in the issue body.
+
+const PRIORITY_LABELS = { low: 'priority: low', medium: 'priority: medium', high: 'priority: high' };
+
+function slugify(text) {
+  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
+}
+
+async function uploadScreenshot(base64Data, slug) {
+  // Strip data URL prefix if present
+  const raw = base64Data.replace(/^data:image\/\w+;base64,/, '');
+  const filename = `${Date.now()}-${slug}.png`;
+  const path = `bugimages/reports/${filename}`;
+
+  const res = await fetch(`${GITHUB_API}/repos/${GITHUB_REPO}/contents/${path}`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${GITHUB_TOKEN}`,
+      'Content-Type': 'application/json',
+      Accept: 'application/vnd.github+json',
+    },
+    body: JSON.stringify({
+      message: `bug-report: screenshot for ${slug}`,
+      content: raw,
+      branch: 'main',
+    }),
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    console.error('[issue] Screenshot upload failed:', res.status, err);
+    return null;
+  }
+
+  return `https://raw.githubusercontent.com/${GITHUB_REPO}/main/${path}`;
+}
+
+async function handleFileIssue(req, res) {
+  if (!GITHUB_TOKEN) {
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'GitHub API token not configured' }));
+    return;
+  }
+
+  try {
+    const body = await readBody(req);
+    const { title, description, priority, screenshot, commit, version } = JSON.parse(body);
+
+    if (!title || !title.trim()) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Title is required' }));
+      return;
+    }
+
+    const slug = slugify(title);
+
+    // Upload screenshot if provided
+    let screenshotUrl = null;
+    if (screenshot) {
+      screenshotUrl = await uploadScreenshot(screenshot, slug);
+    }
+
+    // Build issue body
+    const bodyParts = [];
+    if (description) bodyParts.push(description);
+    if (screenshotUrl) bodyParts.push(`\n### Screenshot\n\n![Screenshot](${screenshotUrl})`);
+
+    bodyParts.push('\n### Metadata');
+    bodyParts.push(`- **Priority**: ${priority || 'medium'}`);
+    if (version) bodyParts.push(`- **Version**: ${version}`);
+    if (commit) bodyParts.push(`- **Commit**: \`${commit}\``);
+    bodyParts.push(`- **Filed via**: in-game bug reporter`);
+
+    const labels = ['bug', 'in-game-report'];
+    if (priority && PRIORITY_LABELS[priority]) labels.push(PRIORITY_LABELS[priority]);
+
+    const issueRes = await fetch(`${GITHUB_API}/repos/${GITHUB_REPO}/issues`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${GITHUB_TOKEN}`,
+        'Content-Type': 'application/json',
+        Accept: 'application/vnd.github+json',
+      },
+      body: JSON.stringify({
+        title: title.trim(),
+        body: bodyParts.join('\n'),
+        labels,
+      }),
+    });
+
+    if (!issueRes.ok) {
+      const err = await issueRes.text();
+      console.error('[issue] GitHub issue creation failed:', issueRes.status, err);
+      res.writeHead(502, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Failed to create GitHub issue' }));
+      return;
+    }
+
+    const issue = await issueRes.json();
+    console.log(`[issue] Created #${issue.number}: ${title}`);
+
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({
+      success: true,
+      issueUrl: issue.html_url,
+      issueNumber: issue.number,
+    }));
+  } catch (err) {
+    console.error('[issue] Error:', err);
     res.writeHead(500, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ error: 'Internal server error' }));
   }
