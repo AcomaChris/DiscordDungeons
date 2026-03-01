@@ -6,9 +6,14 @@ import authManager from './auth/AuthManager.js';
 import { isDiscordActivity, setupDiscordActivity } from './discord/activitySdk.js';
 import { BuildStatusIndicator } from './build-status/BuildStatusIndicator.js';
 import { BugReporter } from './bug-report/BugReporter.js';
+import { PlayerDebugPanel } from './debug/PlayerDebugPanel.js';
 
 new BuildStatusIndicator().mount();
-new BugReporter().mount();
+const bugReporter = new BugReporter();
+bugReporter.mount();
+
+const debugPanel = new PlayerDebugPanel();
+bugReporter.addMenuItem('Player Debug', () => debugPanel.open());
 
 // --- Game Configuration ---
 

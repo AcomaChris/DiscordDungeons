@@ -1,6 +1,7 @@
 import eventBus from '../core/EventBus.js';
 import { PLAYER_MOVED } from '../core/Events.js';
-import { MOVE_SPEED, CHAR_WIDTH, CHAR_HEIGHT, TEXTURE_SCALE } from '../core/Constants.js';
+import { MOVE_SPEED, CHAR_WIDTH, CHAR_HEIGHT, TEXTURE_SCALE, PLAYER_COLORS } from '../core/Constants.js';
+import { generatePlayerTextures } from './PlayerTextureGenerator.js';
 
 // --- Player ---
 // Wraps the local player sprite, handles 4-directional input, emits state
@@ -13,6 +14,7 @@ export class Player {
     this.scene = scene;
     this.facing = 'down';
     this.texturePrefix = 'player-0';
+    this.color = PLAYER_COLORS[0];
 
     this.sprite = scene.physics.add.sprite(spawnX, spawnY, 'player-0-down');
     this.sprite.setScale(1 / TEXTURE_SCALE);
@@ -46,6 +48,13 @@ export class Player {
 
   setColorIndex(colorIndex) {
     this.texturePrefix = `player-${colorIndex}`;
+    this.color = PLAYER_COLORS[colorIndex];
+    this.sprite.setTexture(`${this.texturePrefix}-${this.facing}`);
+  }
+
+  setColor(hexColor) {
+    this.color = hexColor;
+    generatePlayerTextures(this.scene, hexColor, this.texturePrefix);
     this.sprite.setTexture(`${this.texturePrefix}-${this.facing}`);
   }
 
@@ -89,6 +98,7 @@ export class Player {
       x: this.sprite.x,
       y: this.sprite.y,
       facing: this.facing,
+      color: this.color,
     };
   }
 

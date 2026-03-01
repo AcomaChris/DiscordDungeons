@@ -25,6 +25,18 @@ export class BugReporter {
     this._createCog();
   }
 
+  addMenuItem(label, callback) {
+    const btn = document.createElement('button');
+    btn.className = 'bug-report-menu-item';
+    btn.textContent = label;
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this._menu.classList.remove('visible');
+      callback();
+    });
+    this._menu.appendChild(btn);
+  }
+
   destroy() {
     if (this._cog) this._cog.removeEventListener('click', this._onCogClick);
     document.removeEventListener('click', this._onDocClick);

@@ -1,4 +1,5 @@
-import { CHAR_HEIGHT, TEXTURE_SCALE } from '../core/Constants.js';
+import { CHAR_HEIGHT, TEXTURE_SCALE, PLAYER_COLORS } from '../core/Constants.js';
+import { generatePlayerTextures } from './PlayerTextureGenerator.js';
 
 // --- RemotePlayer ---
 // Renders a network-synced player. Position set from server state via lerp.
@@ -10,6 +11,7 @@ export class RemotePlayer {
   constructor(scene, colorIndex, spawnX, spawnY, playerName) {
     this.scene = scene;
     this.texturePrefix = `player-${colorIndex}`;
+    this.color = PLAYER_COLORS[colorIndex];
 
     this.sprite = scene.add.sprite(spawnX, spawnY, `${this.texturePrefix}-down`);
     this.sprite.setScale(1 / TEXTURE_SCALE);
@@ -29,9 +31,19 @@ export class RemotePlayer {
     this.nameLabel.setText(name);
   }
 
-  applyState({ x, y, facing }) {
+  setColor(hexColor) {
+    this.color = hexColor;
+    generatePlayerTextures(this.scene, hexColor, this.texturePrefix);
+    this.sprite.setTexture(`${this.texturePrefix}-${this._facing}`);
+  }
+
+  applyState({ x, y, facing, color }) {
     this._targetX = x;
     this._targetY = y;
+
+    if (color !== undefined && color !== this.color) {
+      this.setColor(color);
+    }
 
     if (facing !== this._facing) {
       this._facing = facing;

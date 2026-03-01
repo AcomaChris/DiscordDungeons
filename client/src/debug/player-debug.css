@@ -1,0 +1,128 @@
+/* --- Player Debug Panel --- */
+
+.player-debug-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.player-debug-dialog {
+  background: #1a1a2e;
+  border: 1px solid rgba(0, 204, 255, 0.3);
+  border-radius: 12px;
+  padding: 24px;
+  width: 90vw;
+  max-width: 360px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.player-debug-title {
+  margin: 0;
+  color: #00ccff;
+  font-size: 18px;
+  font-family: sans-serif;
+  font-weight: 600;
+}
+
+/* --- Form rows --- */
+
+.player-debug-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.player-debug-label {
+  color: #ccc;
+  font-size: 13px;
+  font-family: sans-serif;
+}
+
+.player-debug-inline {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.player-debug-input {
+  padding: 6px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 14px;
+  font-family: sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.player-debug-input:focus {
+  border-color: #00ccff;
+}
+
+.player-debug-input-small {
+  width: 60px;
+  text-align: center;
+}
+
+.player-debug-input[readonly] {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* --- Color preview swatch --- */
+
+.player-debug-swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+}
+
+/* --- Section dividers --- */
+
+.player-debug-section {
+  color: #888;
+  font-size: 11px;
+  font-family: sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-top: 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* --- Actions --- */
+
+.player-debug-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.player-debug-btn {
+  padding: 8px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: sans-serif;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  background: transparent;
+  color: #999;
+}
+
+.player-debug-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #ccc;
+}
