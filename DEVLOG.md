@@ -4,6 +4,19 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-02-28 — Wall Depth Sorting, Collision Fix, Build Status UX
+
+**Commits:** `a12a26d` → `887f301`
+
+Bug fixes and polish pass on the tilemap system, plus build status indicator improvements.
+
+- **Wall/player layer overlapping fix**: Tile layers have a single depth for all tiles, which breaks 3/4 view depth sorting. Converted Walls and WallTops tile layers to individual Y-sorted sprites (depth = tile bottom Y). Walls south of the player now correctly occlude; walls north render behind. TileMapManager loads tilesets as spritesheets (`load.spritesheet` with `tileSize`) to get per-tile frames.
+- **Collision body fix**: Player's feet-only hitbox was 12px wide (narrower than the character), letting the sprite visually sink into wall tiles horizontally. Widened to full sprite width while keeping the 8px-tall feet-only height for 3/4 view vertical overlap.
+- **Build status indicator**: New floating DOM widget on game + devlog pages. Polls `/version.json` (5s) and GitHub Actions API (2min) to show deployment state as a colored dot — green (current), yellow (stale), flashing yellow (building), red (failed), gray (unknown). Click opens overlay panel with current status and color legend.
+- **Camera centering fixes**: Series of fixes for camera centering on HiDPI screens — removed manual `applyDPR` scaling that conflicted with Phaser's camera follow, fixed vertical centering when map is smaller than viewport.
+- **Tavern tileset assets**: Checked in Craftpix free tavern tileset (PNGs, TMX maps, license). Source files (.aseprite, .psd) kept local only.
+- **Legacy cleanup**: Removed dead constants from platformer era, updated docs for tilemap architecture.
+
 ## 2026-02-28 — Tilemap System: Phase 1 MVP
 
 **Commits:** `b5bbb36` → `3f55431`
