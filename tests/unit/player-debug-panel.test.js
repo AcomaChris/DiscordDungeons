@@ -277,31 +277,24 @@ describe('PlayerDebugPanel', () => {
     panel.close();
   });
 
-  it('renders all abilities with equip checkboxes', () => {
+  it('renders only equipped abilities', () => {
     const panel = new PlayerDebugPanel();
     panel.open();
 
     const blocks = document.querySelectorAll('.player-debug-ability-block');
-    // ABILITY_DEFS has 3 abilities: movement, jump, float
-    expect(blocks.length).toBe(3);
-
-    const names = [...blocks].map((b) => b.dataset.abilityId);
-    expect(names).toContain('movement');
-    expect(names).toContain('jump');
-    expect(names).toContain('float');
+    // Only movement is equipped in the mock
+    expect(blocks.length).toBe(1);
+    expect(blocks[0].dataset.abilityId).toBe('movement');
 
     panel.close();
   });
 
-  it('checks equip checkbox for equipped abilities', () => {
+  it('shows remove button on equipped abilities', () => {
     const panel = new PlayerDebugPanel();
     panel.open();
 
-    const movementBlock = document.querySelector('[data-ability-id="movement"]');
-    const jumpBlock = document.querySelector('[data-ability-id="jump"]');
-
-    expect(movementBlock.querySelector('.player-debug-ability-equip').checked).toBe(true);
-    expect(jumpBlock.querySelector('.player-debug-ability-equip').checked).toBe(false);
+    const removeBtn = document.querySelector('[data-ability-id="movement"] .player-debug-ability-remove');
+    expect(removeBtn).not.toBeNull();
 
     panel.close();
   });
@@ -316,35 +309,72 @@ describe('PlayerDebugPanel', () => {
     expect(movementBlock.querySelector('[data-ability-param="movement.walkSpeed"]').value).toBe('80');
     expect(movementBlock.querySelector('[data-ability-param="movement.sprintSpeed"]').value).toBe('160');
 
-    // Unequipped abilities should not show param inputs
-    const jumpBlock = document.querySelector('[data-ability-id="jump"]');
-    expect(jumpBlock.querySelector('.player-debug-ability-params')).toBeNull();
-
     panel.close();
   });
 
-  it('calls equip when checkbox is checked', () => {
+  it('X button calls unequip and re-renders', () => {
     const panel = new PlayerDebugPanel();
     panel.open();
 
-    const jumpCheckbox = document.querySelector('[data-ability-id="jump"] .player-debug-ability-equip');
-    jumpCheckbox.checked = true;
-    jumpCheckbox.dispatchEvent(new Event('change'));
-
-    expect(mockPlayer.abilities.equip).toHaveBeenCalledWith('jump');
-
-    panel.close();
-  });
-
-  it('calls unequip when checkbox is unchecked', () => {
-    const panel = new PlayerDebugPanel();
-    panel.open();
-
-    const movementCheckbox = document.querySelector('[data-ability-id="movement"] .player-debug-ability-equip');
-    movementCheckbox.checked = false;
-    movementCheckbox.dispatchEvent(new Event('change'));
+    const removeBtn = document.querySelector('[data-ability-id="movement"] .player-debug-ability-remove');
+    removeBtn.click();
 
     expect(mockPlayer.abilities.unequip).toHaveBeenCalledWith('movement');
+    // After re-render, movement should be gone
+    expect(document.querySelector('[data-ability-id="movement"]')).toBeNull();
+
+    panel.close();
+  });
+
+  it('shows Add button', () => {
+    const panel = new PlayerDebugPanel();
+    panel.open();
+
+    const addBtn = document.querySelector('.player-debug-add-btn');
+    expect(addBtn).not.toBeNull();
+    expect(addBtn.textContent).toContain('Add');
+
+    panel.close();
+  });
+
+  it('Add button shows unequipped abilities grouped by category', () => {
+    const panel = new PlayerDebugPanel();
+    panel.open();
+
+    const addBtn = document.querySelector('.player-debug-add-btn');
+    addBtn.click();
+
+    const menu = document.querySelector('.player-debug-add-menu');
+    expect(menu).not.toBeNull();
+
+    // Should show category header
+    const categories = menu.querySelectorAll('.player-debug-add-category');
+    expect(categories.length).toBeGreaterThanOrEqual(1);
+    expect(categories[0].textContent).toBe('Movement');
+
+    // Should show unequipped abilities (jump and float are not equipped in mock)
+    const items = menu.querySelectorAll('.player-debug-add-item');
+    const itemNames = [...items].map((i) => i.textContent);
+    expect(itemNames).toContain('jump');
+    expect(itemNames).toContain('float');
+    // movement is equipped, should not appear
+    expect(itemNames).not.toContain('movement');
+
+    panel.close();
+  });
+
+  it('clicking Add menu item equips ability and re-renders', () => {
+    const panel = new PlayerDebugPanel();
+    panel.open();
+
+    const addBtn = document.querySelector('.player-debug-add-btn');
+    addBtn.click();
+
+    const items = document.querySelectorAll('.player-debug-add-item');
+    const jumpItem = [...items].find((i) => i.textContent === 'jump');
+    jumpItem.click();
+
+    expect(mockPlayer.abilities.equip).toHaveBeenCalledWith('jump');
 
     panel.close();
   });

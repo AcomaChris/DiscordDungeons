@@ -1,7 +1,7 @@
 import './player-debug.css';
 import { acquireInputFocus, releaseInputFocus } from '../core/InputContext.js';
 import { CHAR_HEIGHT, TEXTURE_SCALE } from '../core/Constants.js';
-import { ABILITY_DEFS } from '../abilities/AbilityDefs.js';
+import { ABILITY_DEFS, ABILITY_CATEGORIES } from '../abilities/AbilityDefs.js';
 
 // --- Player Debug Panel ---
 // Live-tweaking panel for player collision, color, and name.
@@ -224,8 +224,9 @@ export class PlayerDebugPanel {
     const abilities = this._player.abilities;
     container.innerHTML = '';
 
-    for (const [id, def] of Object.entries(ABILITY_DEFS)) {
-      const equipped = abilities.has(id);
+    // Show only equipped abilities
+    const equipped = abilities.getState().equipped;
+    for (const id of equipped) {
       const entry = abilities.get(id);
       const isActive = entry?.active ?? false;
 
@@ -233,22 +234,9 @@ export class PlayerDebugPanel {
       block.className = 'player-debug-ability-block';
       block.dataset.abilityId = id;
 
-      // --- Header: checkbox + name + active dot ---
+      // --- Header: name + active dot + X remove button ---
       const header = document.createElement('div');
       header.className = 'player-debug-ability-header';
-
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.className = 'player-debug-ability-equip';
-      checkbox.checked = equipped;
-      checkbox.addEventListener('change', () => {
-        if (checkbox.checked) {
-          abilities.equip(id);
-        } else {
-          abilities.unequip(id);
-        }
-        this._renderAbilityParams(block, id);
-      });
 
       const name = document.createElement('span');
       name.className = 'player-debug-ability-name';
@@ -257,16 +245,104 @@ export class PlayerDebugPanel {
       const dot = document.createElement('span');
       dot.className = `player-debug-ability-dot${isActive ? ' active' : ''}`;
 
-      header.appendChild(checkbox);
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'player-debug-ability-remove';
+      removeBtn.textContent = '\u00d7';
+      removeBtn.title = `Remove ${id}`;
+      removeBtn.addEventListener('click', () => {
+        abilities.unequip(id);
+        this._renderAbilities();
+      });
+
       header.appendChild(name);
       header.appendChild(dot);
+      header.appendChild(removeBtn);
       block.appendChild(header);
 
-      // --- Param inputs (only when equipped) ---
+      // --- Param inputs ---
       this._renderAbilityParams(block, id);
 
       container.appendChild(block);
     }
+
+    // --- Add button ---
+    const addBtn = document.createElement('button');
+    addBtn.className = 'player-debug-add-btn';
+    addBtn.textContent = '+ Add Ability';
+    addBtn.addEventListener('click', () => this._showAddAbilityMenu(container));
+    container.appendChild(addBtn);
+  }
+
+  // --- Add Ability Menu ---
+
+  _showAddAbilityMenu(container) {
+    // Remove existing menu if open
+    this._hideAddAbilityMenu(container);
+
+    const abilities = this._player.abilities;
+    const equippedSet = new Set(abilities.getState().equipped);
+
+    // Collect unequipped abilities grouped by category
+    const byCategory = {};
+    for (const [id, def] of Object.entries(ABILITY_DEFS)) {
+      if (equippedSet.has(id)) continue;
+      const cat = def.category || 'Uncategorized';
+      if (!byCategory[cat]) byCategory[cat] = [];
+      byCategory[cat].push(id);
+    }
+
+    // Nothing to add
+    if (Object.keys(byCategory).length === 0) return;
+
+    const menu = document.createElement('div');
+    menu.className = 'player-debug-add-menu';
+
+    // Render categories in defined order
+    for (const cat of ABILITY_CATEGORIES) {
+      const ids = byCategory[cat];
+      if (!ids || ids.length === 0) continue;
+
+      const catHeader = document.createElement('div');
+      catHeader.className = 'player-debug-add-category';
+      catHeader.textContent = cat;
+      menu.appendChild(catHeader);
+
+      for (const id of ids) {
+        const item = document.createElement('div');
+        item.className = 'player-debug-add-item';
+        item.textContent = id;
+        item.addEventListener('click', () => {
+          abilities.equip(id);
+          this._renderAbilities();
+        });
+        menu.appendChild(item);
+      }
+    }
+
+    // Handle uncategorized abilities (future-proofing)
+    if (byCategory.Uncategorized) {
+      const catHeader = document.createElement('div');
+      catHeader.className = 'player-debug-add-category';
+      catHeader.textContent = 'Uncategorized';
+      menu.appendChild(catHeader);
+      for (const id of byCategory.Uncategorized) {
+        const item = document.createElement('div');
+        item.className = 'player-debug-add-item';
+        item.textContent = id;
+        item.addEventListener('click', () => {
+          abilities.equip(id);
+          this._renderAbilities();
+        });
+        menu.appendChild(item);
+      }
+    }
+
+    container.appendChild(menu);
+  }
+
+  _hideAddAbilityMenu(container) {
+    const existing = container?.querySelector('.player-debug-add-menu');
+    if (existing) existing.remove();
   }
 
   _renderAbilityParams(block, abilityId) {

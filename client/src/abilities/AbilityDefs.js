@@ -8,9 +8,13 @@ export const AbilityType = {
   PASSIVE: 'passive',
 };
 
+// Theme-based categories for UI grouping
+export const ABILITY_CATEGORIES = ['Movement', 'Combat', 'Magic', 'Utility'];
+
 export const ABILITY_DEFS = {
   movement: {
     id: 'movement',
+    category: 'Movement',
     type: AbilityType.ACTIVE,
     inputKey: 'sprint',
     params: {
@@ -21,6 +25,7 @@ export const ABILITY_DEFS = {
 
   jump: {
     id: 'jump',
+    category: 'Movement',
     type: AbilityType.ACTIVE,
     inputKey: 'jump',
     params: {
@@ -31,6 +36,7 @@ export const ABILITY_DEFS = {
 
   float: {
     id: 'float',
+    category: 'Movement',
     type: AbilityType.PASSIVE,
     inputKey: null,
     params: {
