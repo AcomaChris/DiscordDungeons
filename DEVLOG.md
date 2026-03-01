@@ -4,6 +4,19 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-02-28 — Bug Reporter, Player Debug Panel, Network Smoothing
+
+**Commits:** `61143b9` → `fdb4850`
+
+Major quality-of-life session: in-game bug reporting, live debug tools, and smooth multiplayer movement.
+
+- **In-game bug reporter** (`61143b9`): Settings cog with "File Issue" menu item. Opens dialog to file GitHub issues with title, description, priority, and optional screenshot (captured from canvas). Server proxies to GitHub API with screenshot upload via Contents API. Reports include Discord username, platform, device, resolution, build version/commit.
+- **Input context manager** (`b99e026` → `7a1f6af`): `acquireInputFocus()`/`releaseInputFocus()` system to suppress game input during UI overlays. Event-driven via EventBus — InputManager subscribes and disables keyboard immediately. Fixed Phaser `addKey()` captures eating WASD/Space in form fields by calling `clearCaptures()` when UI acquires focus.
+- **Docker token fix** (`16bbc3e`): `docker-compose.yml` wasn't passing `GITHUB_API_TOKEN` to the container — bug reporter always got "token not configured". Added env var passthrough.
+- **Collision body fix** (`f38a0ce` → `3f0066a`): Issue #2 — player could get too close to walls vertically. First attempt increased body height but didn't account for Phaser's `body.setSize()` working in **unscaled texture space** (values multiplied by `sprite.scaleX/Y` internally). Fixed by passing `dimension * TEXTURE_SCALE` so the final body matches intended world-pixel size.
+- **Player Debug panel** (`7997785` → `9bb9030`): New "Player Debug" item in cog menu. Left-anchored side panel (game stays visible) with live controls for collision body W/H, RGB color (full texture regeneration via extracted `PlayerTextureGenerator`), and player name. Read-only position display updates per frame. Color picker uses native `<input type="color">` with bidirectional R/G/B sync. All changes replicate to other players — color via state payload, name via `identify` message.
+- **Smooth remote player interpolation** (`fdb4850`): Remote players appeared to "mini-teleport" between positions. Root cause: fixed `LERP_FACTOR = 0.3` per frame reached the target in ~5 frames, then sat idle until the next 10Hz update. Replaced with time-based linear interpolation over `INTERP_DURATION = 100ms` (matching server broadcast rate). Movement now spreads evenly across the full update interval. Also frame-rate independent.
+
 ## 2026-02-28 — Wall Depth Sorting, Collision Fix, Build Status UX
 
 **Commits:** `a12a26d` → `887f301`
