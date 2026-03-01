@@ -9,6 +9,7 @@ export class TouchManager {
   constructor() {
     this._moveX = 0;
     this._moveY = 0;
+    this._jump = false;
     this._container = null;
     this._orientationQuery = null;
     this._onOrientationChange = null;
@@ -40,12 +41,18 @@ export class TouchManager {
 
     dpad.append(btnUp, btnLeft, btnRight, btnDown);
     container.appendChild(dpad);
+
+    // Jump button (right side)
+    const btnJump = this._createButton('btn-jump', '\u25B2');
+    container.appendChild(btnJump);
+
     document.body.appendChild(container);
 
     this._bindButton(btnUp, () => { this._moveY = -1; }, () => { if (this._moveY === -1) this._moveY = 0; });
     this._bindButton(btnDown, () => { this._moveY = 1; }, () => { if (this._moveY === 1) this._moveY = 0; });
     this._bindButton(btnLeft, () => { this._moveX = -1; }, () => { if (this._moveX === -1) this._moveX = 0; });
     this._bindButton(btnRight, () => { this._moveX = 1; }, () => { if (this._moveX === 1) this._moveX = 0; });
+    this._bindButton(btnJump, () => { this._jump = true; }, () => { this._jump = false; });
   }
 
   _createButton(className, label) {
@@ -90,7 +97,7 @@ export class TouchManager {
   // --- Snapshot ---
 
   getSnapshot() {
-    return { moveX: this._moveX, moveY: this._moveY, sprint: false };
+    return { moveX: this._moveX, moveY: this._moveY, sprint: false, jump: this._jump };
   }
 
   // --- Visibility ---

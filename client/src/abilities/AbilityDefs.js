@@ -19,8 +19,6 @@ export const ABILITY_DEFS = {
     },
   },
 
-  // AGENT: Jump and Float are defined but non-functional until the elevation
-  // system exists. Their params will be consumed by future physics code.
   jump: {
     id: 'jump',
     type: AbilityType.ACTIVE,
@@ -42,4 +40,4 @@ export const ABILITY_DEFS = {
 };
 
 // Abilities equipped on every new player by default
-export const DEFAULT_ABILITIES = ['movement'];
+export const DEFAULT_ABILITIES = ['movement', 'jump'];

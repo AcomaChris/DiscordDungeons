@@ -7,5 +7,6 @@ export function mergeInputSnapshots(keyboard, touch) {
     moveX: touch.moveX !== 0 ? touch.moveX : keyboard.moveX,
     moveY: touch.moveY !== 0 ? touch.moveY : keyboard.moveY,
     sprint: keyboard.sprint || touch.sprint || false,
+    jump: keyboard.jump || touch.jump || false,
   };
 }

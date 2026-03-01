@@ -15,7 +15,6 @@ describe('AbilityManager', () => {
   });
 
   it('does not equip non-default abilities', () => {
-    expect(mgr.has('jump')).toBe(false);
     expect(mgr.has('float')).toBe(false);
   });
 
@@ -47,7 +46,7 @@ describe('AbilityManager', () => {
   });
 
   it('get returns null for unequipped ability', () => {
-    expect(mgr.get('jump')).toBeNull();
+    expect(mgr.get('float')).toBeNull();
   });
 
   it('getParam returns a specific param value', () => {
@@ -55,7 +54,7 @@ describe('AbilityManager', () => {
   });
 
   it('getParam returns undefined for unequipped ability', () => {
-    expect(mgr.getParam('jump', 'heightPower')).toBeUndefined();
+    expect(mgr.getParam('float', 'gravityFactor')).toBeUndefined();
   });
 
   it('setParam updates a param value', () => {
@@ -86,9 +85,10 @@ describe('AbilityManager', () => {
 
   it('getState returns correct shape', () => {
     const state = mgr.getState();
-    expect(state.equipped).toEqual(['movement']);
+    expect(state.equipped).toEqual(['movement', 'jump']);
     expect(state.active).toEqual([]);
     expect(state.params.movement).toEqual({ walkSpeed: 80, sprintSpeed: 160 });
+    expect(state.params.jump).toEqual({ heightPower: 200, horizontalPower: 100 });
   });
 
   it('getState includes active abilities when sprinting', () => {

@@ -77,6 +77,16 @@
   grid-row: 2;
 }
 
+/* --- Jump button (right side) --- */
+
+#touch-controls .btn-jump {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  width: 72px;
+  height: 72px;
+}
+
 /* --- Portrait --- */
 
 #touch-controls.portrait .dpad {
@@ -85,4 +95,11 @@
   grid-template-columns: 80px 80px 80px;
   grid-template-rows: 80px 80px;
   gap: 6px;
+}
+
+#touch-controls.portrait .btn-jump {
+  bottom: 48px;
+  right: 24px;
+  width: 80px;
+  height: 80px;
 }

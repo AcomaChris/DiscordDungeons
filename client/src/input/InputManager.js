@@ -26,7 +26,7 @@ export class InputManager {
         // Release Phaser's preventDefault captures so DOM form fields
         // receive WASD, Space, arrow keys, etc. normally.
         this.scene.input.keyboard.clearCaptures();
-        eventBus.emit(INPUT_ACTION, { moveX: 0, moveY: 0, sprint: false });
+        eventBus.emit(INPUT_ACTION, { moveX: 0, moveY: 0, sprint: false, jump: false });
       } else {
         this.scene.input.keyboard.enabled = true;
         this._restoreCaptures();
@@ -79,12 +79,13 @@ export class InputManager {
     else if (downHeld && !upHeld) moveY = 1;
 
     const sprintHeld = this.keyObjects[Actions.SPRINT]?.some((k) => k.isDown) ?? false;
-    return { moveX, moveY, sprint: sprintHeld };
+    const jumpHeld = this.keyObjects[Actions.JUMP]?.some((k) => k.isDown) ?? false;
+    return { moveX, moveY, sprint: sprintHeld, jump: jumpHeld };
   }
 
   update() {
     if (!this._gameInputActive) {
-      eventBus.emit(INPUT_ACTION, { moveX: 0, moveY: 0, sprint: false });
+      eventBus.emit(INPUT_ACTION, { moveX: 0, moveY: 0, sprint: false, jump: false });
       return;
     }
 

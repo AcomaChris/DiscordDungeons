@@ -17,6 +17,8 @@ export class Player {
     this.texturePrefix = 'player-0';
     this.color = PLAYER_COLORS[0];
     this.abilities = new AbilityManager();
+    this._isJumping = false;
+    this._jumpTween = null;
 
     this.sprite = scene.physics.add.sprite(spawnX, spawnY, 'player-0-down');
     this.sprite.setScale(1 / TEXTURE_SCALE);
@@ -60,8 +62,14 @@ export class Player {
     this.sprite.setTexture(`${this.texturePrefix}-${this.facing}`);
   }
 
-  handleInput({ moveX, moveY, sprint }) {
-    this.abilities.updateFromInput({ sprint });
+  handleInput({ moveX, moveY, sprint, jump }) {
+    this.abilities.updateFromInput({ sprint, jump });
+
+    // Trigger visual hop on jump activation
+    const jumpAbility = this.abilities.get('jump');
+    if (jumpAbility?.active && !this._isJumping) {
+      this._startJump(jumpAbility.params.heightPower);
+    }
 
     const movement = this.abilities.get('movement');
     const speed = movement?.active ? movement.params.sprintSpeed : movement?.params.walkSpeed ?? 80;
@@ -90,6 +98,40 @@ export class Player {
     }
 
     eventBus.emit(PLAYER_MOVED, this.getState());
+  }
+
+  // --- Jump ---
+  // Visual-only hop: tweens sprite upward then back down.
+  // Physics body follows the sprite during the brief arc.
+
+  _startJump(heightPower) {
+    this._isJumping = true;
+    const hopHeight = Math.min(heightPower * 0.1, 24);
+    const duration = 200;
+
+    // Shadow ellipse at ground level
+    const shadow = this.scene.add.ellipse(
+      this.sprite.x, this.sprite.y + CHAR_HEIGHT / 2 - 2,
+      CHAR_WIDTH * 0.8, 4, 0x000000, 0.3,
+    );
+    shadow.setDepth(this.sprite.depth - 1);
+
+    this._jumpTween = this.scene.tweens.add({
+      targets: this.sprite,
+      y: this.sprite.y - hopHeight,
+      duration,
+      ease: 'Sine.easeOut',
+      yoyo: true,
+      onUpdate: () => {
+        // Keep shadow under the sprite horizontally
+        shadow.setPosition(this.sprite.x, shadow.y);
+      },
+      onComplete: () => {
+        shadow.destroy();
+        this._isJumping = false;
+        this._jumpTween = null;
+      },
+    });
   }
 
   // Y-sorted depth: compare base (feet) position so objects lower on screen

@@ -40,11 +40,11 @@ describe('TouchManager', () => {
     if (el) el.remove();
   });
 
-  it('creates DOM overlay with 4 D-pad buttons on touch devices', () => {
+  it('creates DOM overlay with D-pad and jump buttons on touch devices', () => {
     const tm = new TouchManager();
     const container = document.getElementById('touch-controls');
     expect(container).not.toBeNull();
-    expect(container.querySelectorAll('button').length).toBe(4);
+    expect(container.querySelectorAll('button').length).toBe(5);
     tm.destroy();
   });
 
@@ -59,7 +59,7 @@ describe('TouchManager', () => {
 
   it('getSnapshot returns neutral state by default', () => {
     const tm = new TouchManager();
-    expect(tm.getSnapshot()).toEqual({ moveX: 0, moveY: 0, sprint: false });
+    expect(tm.getSnapshot()).toEqual({ moveX: 0, moveY: 0, sprint: false, jump: false });
     tm.destroy();
   });
 
@@ -108,6 +108,18 @@ describe('TouchManager', () => {
 
     fireTouchEvent(btn, 'touchend');
     expect(tm.getSnapshot().moveY).toBe(0);
+    tm.destroy();
+  });
+
+  it('jump button sets jump to true', () => {
+    const tm = new TouchManager();
+    const btn = document.querySelector('.btn-jump');
+
+    fireTouchEvent(btn, 'touchstart');
+    expect(tm.getSnapshot().jump).toBe(true);
+
+    fireTouchEvent(btn, 'touchend');
+    expect(tm.getSnapshot().jump).toBe(false);
     tm.destroy();
   });
 
