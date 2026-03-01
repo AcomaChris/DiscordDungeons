@@ -105,6 +105,9 @@ export class PlayerDebugPanel {
         </div>
       </div>
 
+      <div class="player-debug-section">Abilities</div>
+      <div class="player-debug-abilities" data-field="abilities"></div>
+
       <div class="player-debug-actions">
         <button class="player-debug-btn" data-action="close">Close</button>
       </div>
@@ -133,6 +136,9 @@ export class PlayerDebugPanel {
     // Name
     const nameInput = this._dialog.querySelector('[data-field="name"]');
     nameInput.addEventListener('change', () => this._updateName());
+
+    // Abilities
+    this._renderAbilities();
 
     // Close
     this._dialog.querySelector('[data-action="close"]')
@@ -200,6 +206,58 @@ export class PlayerDebugPanel {
     }
   }
 
+  // --- Abilities ---
+
+  _renderAbilities() {
+    const container = this._dialog.querySelector('[data-field="abilities"]');
+    if (!container || !this._player.abilities) return;
+
+    const state = this._player.abilities.getState();
+    container.innerHTML = '';
+
+    for (const id of state.equipped) {
+      const isActive = state.active.includes(id);
+      const params = state.params[id] || {};
+
+      const row = document.createElement('div');
+      row.className = 'player-debug-ability-row';
+      row.dataset.abilityId = id;
+
+      const dot = document.createElement('span');
+      dot.className = `player-debug-ability-dot${isActive ? ' active' : ''}`;
+
+      const name = document.createElement('span');
+      name.className = 'player-debug-ability-name';
+      name.textContent = id;
+
+      const paramText = document.createElement('span');
+      paramText.className = 'player-debug-ability-params';
+      paramText.textContent = Object.entries(params)
+        .map(([k, v]) => `${k}: ${v}`)
+        .join(', ');
+
+      row.appendChild(dot);
+      row.appendChild(name);
+      row.appendChild(paramText);
+      container.appendChild(row);
+    }
+  }
+
+  _updateAbilityIndicators() {
+    if (!this._player?.abilities) return;
+    const container = this._dialog.querySelector('[data-field="abilities"]');
+    if (!container) return;
+
+    const activeSet = new Set(this._player.abilities.getState().active);
+
+    for (const row of container.querySelectorAll('.player-debug-ability-row')) {
+      const dot = row.querySelector('.player-debug-ability-dot');
+      if (dot) {
+        dot.classList.toggle('active', activeSet.has(row.dataset.abilityId));
+      }
+    }
+  }
+
   // --- Position Updates ---
 
   _startPositionUpdates() {
@@ -209,6 +267,7 @@ export class PlayerDebugPanel {
       const posY = this._dialog.querySelector('[data-field="posY"]');
       if (posX) posX.value = Math.round(this._player.sprite.x);
       if (posY) posY.value = Math.round(this._player.sprite.y);
+      this._updateAbilityIndicators();
       this._rafId = requestAnimationFrame(update);
     };
     this._rafId = requestAnimationFrame(update);

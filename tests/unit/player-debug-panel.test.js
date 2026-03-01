@@ -42,6 +42,13 @@ describe('PlayerDebugPanel', () => {
       texturePrefix: 'player-0',
       facing: 'down',
       setColor: vi.fn(),
+      abilities: {
+        getState: vi.fn(() => ({
+          equipped: ['movement'],
+          active: [],
+          params: { movement: { walkSpeed: 80, sprintSpeed: 160 } },
+        })),
+      },
     };
 
     mockScene = {
@@ -227,6 +234,48 @@ describe('PlayerDebugPanel', () => {
 
     const backdrops = document.querySelectorAll('.player-debug-backdrop');
     expect(backdrops.length).toBe(1);
+
+    panel.close();
+  });
+
+  it('renders equipped abilities with names and params', () => {
+    const panel = new PlayerDebugPanel();
+    panel.open();
+
+    const container = document.querySelector('[data-field="abilities"]');
+    expect(container).not.toBeNull();
+
+    const rows = container.querySelectorAll('.player-debug-ability-row');
+    expect(rows.length).toBe(1);
+    expect(rows[0].dataset.abilityId).toBe('movement');
+    expect(rows[0].querySelector('.player-debug-ability-name').textContent).toBe('movement');
+    expect(rows[0].querySelector('.player-debug-ability-params').textContent).toContain('walkSpeed: 80');
+
+    panel.close();
+  });
+
+  it('shows active indicator when ability is active', () => {
+    mockPlayer.abilities.getState.mockReturnValue({
+      equipped: ['movement'],
+      active: ['movement'],
+      params: { movement: { walkSpeed: 80, sprintSpeed: 160 } },
+    });
+
+    const panel = new PlayerDebugPanel();
+    panel.open();
+
+    const dot = document.querySelector('.player-debug-ability-dot');
+    expect(dot.classList.contains('active')).toBe(true);
+
+    panel.close();
+  });
+
+  it('shows inactive indicator when ability is not active', () => {
+    const panel = new PlayerDebugPanel();
+    panel.open();
+
+    const dot = document.querySelector('.player-debug-ability-dot');
+    expect(dot.classList.contains('active')).toBe(false);
 
     panel.close();
   });
