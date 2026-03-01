@@ -4,6 +4,20 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-01 — Ability System, Jump, Modifiers, Debug Panel Refactor
+
+**Commits:** `36df948` → `bcc9731`
+
+Built out the full ability system from scratch and iterated on the debug panel to make it a proper development tool.
+
+- **Ability system** (`36df948`): Data-driven abilities with `AbilityDefs` registry and `AbilityManager` (equip/unequip, active/passive types, input-driven activation, network serialization via `getState`/`applyState`). Sprint is now the first active ability — holding SHIFT activates movement's `sprintSpeed`. Debug panel wired up for live param editing.
+- **Jump ability** (`f05f952`): SPACE triggers a visual hop tween (Y offset, not physics). Height and duration scale from `heightPower` param. Originally had aggressive caps (`Math.min(height, 24)` and `Math.min(duration, 600)`) that made param changes nearly invisible — removed both caps so future magic items can create dramatic effects.
+- **Modifier system** (`d45a93e`): Dynamic buff/debuff stacking for all ability params. Modifiers are `{ id, param, op ('add'|'mul'), value, source }` — resolution order: `(base + additives) × multiplicatives`. `getParam()` transparently resolves through modifiers (zero changes needed in Player.js). Source-based clearing for equipment/environment effects. Full network serialization with backward compat. Debug panel shows resolved values (green) and modifier breakdowns (yellow). Filed issue #3 for float ability (needs physics-based jump).
+- **Debug panel equipped-only view** (`bcc9731`): Replaced "show all abilities with checkboxes" with equipped-only display + X remove buttons + categorized Add menu. Abilities grouped by theme category (Movement/Combat/Magic/Utility). Much cleaner UX for when we have dozens of abilities.
+- **SSH key fix**: Deploy script, CLAUDE.md, and deploy skill all referenced `~/.ssh/discord_dungeons` but the actual key is `discord_dungeons_vps`. Updated all three to match.
+
+---
+
 ## 2026-02-28 — Bug Reporter, Player Debug Panel, Network Smoothing
 
 **Commits:** `61143b9` → `fdb4850`

@@ -7,7 +7,7 @@ set -e
 
 VPS_HOST="root@srv1436289.hstgr.cloud"
 VPS_PATH="/opt/discord-dungeons-ws"
-SSH_KEY="${VPS_SSH_KEY:-$HOME/.ssh/discord_dungeons}"
+SSH_KEY="${VPS_SSH_KEY:-$HOME/.ssh/discord_dungeons_vps}"
 SSH_OPTS="-i $SSH_KEY -o StrictHostKeyChecking=no"
 TARBALL=$(mktemp /tmp/discord-dungeons-ws-XXXXXX.tar.gz)
 

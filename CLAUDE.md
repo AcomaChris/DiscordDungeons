@@ -28,7 +28,7 @@
 
 ### VPS (Hostinger)
 - **Host**: `srv1436289.hstgr.cloud` (IP: 93.188.166.147)
-- **User**: `root` · **Port**: 22 · **SSH key**: `~/.ssh/discord_dungeons`
+- **User**: `root` · **Port**: 22 · **SSH key**: `~/.ssh/discord_dungeons_vps`
 - **WS server path**: `/opt/discord-dungeons-ws/`
 - **WS container**: `discord-dungeons-ws-ws-server-1` on port 3001
 
