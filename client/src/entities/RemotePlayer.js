@@ -2,10 +2,12 @@ import { CHAR_HEIGHT, TEXTURE_SCALE, PLAYER_COLORS } from '../core/Constants.js'
 import { generatePlayerTextures } from './PlayerTextureGenerator.js';
 
 // --- RemotePlayer ---
-// Renders a network-synced player. Position set from server state via lerp.
+// Renders a network-synced player. Position interpolated over the expected
+// update interval so movement looks smooth between 10Hz state broadcasts.
 // AGENT: No physics simulation — position is authoritative from the server.
 
-const LERP_FACTOR = 0.3;
+// Duration to interpolate between state updates (matches server broadcast rate)
+const INTERP_DURATION = 100; // ms
 
 export class RemotePlayer {
   constructor(scene, colorIndex, spawnX, spawnY, playerName) {
@@ -15,8 +17,11 @@ export class RemotePlayer {
 
     this.sprite = scene.add.sprite(spawnX, spawnY, `${this.texturePrefix}-down`);
     this.sprite.setScale(1 / TEXTURE_SCALE);
+    this._startX = spawnX;
+    this._startY = spawnY;
     this._targetX = spawnX;
     this._targetY = spawnY;
+    this._elapsed = INTERP_DURATION;
     this._facing = 'down';
 
     this.nameLabel = scene.add.text(spawnX, spawnY - CHAR_HEIGHT / 2 - 4, playerName || 'Player', {
@@ -38,8 +43,12 @@ export class RemotePlayer {
   }
 
   applyState({ x, y, facing, color }) {
+    // Start interpolating from current position to the new target
+    this._startX = this.sprite.x;
+    this._startY = this.sprite.y;
     this._targetX = x;
     this._targetY = y;
+    this._elapsed = 0;
 
     if (color !== undefined && color !== this.color) {
       this.setColor(color);
@@ -51,9 +60,11 @@ export class RemotePlayer {
     }
   }
 
-  update() {
-    this.sprite.x += (this._targetX - this.sprite.x) * LERP_FACTOR;
-    this.sprite.y += (this._targetY - this.sprite.y) * LERP_FACTOR;
+  update(delta) {
+    this._elapsed += delta;
+    const t = Math.min(this._elapsed / INTERP_DURATION, 1);
+    this.sprite.x = this._startX + (this._targetX - this._startX) * t;
+    this.sprite.y = this._startY + (this._targetY - this._startY) * t;
     this.nameLabel.setPosition(this.sprite.x, this.sprite.y - CHAR_HEIGHT / 2 - 4);
   }
 

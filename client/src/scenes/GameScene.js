@@ -127,7 +127,7 @@ export class GameScene extends Phaser.Scene {
 
   // --- Update Loop ---
 
-  update(_time, _delta) {
+  update(_time, delta) {
     const kbSnap = this.inputManager.getSnapshot();
     const touchSnap = this.touchManager.getSnapshot();
     const merged = mergeInputSnapshots(kbSnap, touchSnap);
@@ -136,7 +136,7 @@ export class GameScene extends Phaser.Scene {
     // Depth sorting
     this.player.updateDepth();
     for (const rp of this.remotePlayers.values()) {
-      rp.update();
+      rp.update(delta);
       rp.updateDepth();
     }
   }
