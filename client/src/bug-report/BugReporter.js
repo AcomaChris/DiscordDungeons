@@ -1,5 +1,7 @@
 import './bug-report.css';
 import { acquireInputFocus, releaseInputFocus } from '../core/InputContext.js';
+import authManager from '../auth/AuthManager.js';
+import { isDiscordActivity } from '../discord/activitySdk.js';
 
 // --- Bug Reporter ---
 // Settings cog with "File Issue" option. Opens a dialog to file GitHub issues
@@ -198,9 +200,16 @@ export class BugReporter {
         body.screenshot = this._screenshotData;
       }
 
-      // Include build metadata for triage
+      // Include build metadata and environment info for triage
       if (typeof __GIT_COMMIT__ !== 'undefined') body.commit = __GIT_COMMIT__;
       if (typeof __APP_VERSION__ !== 'undefined') body.version = __APP_VERSION__;
+      if (typeof __BUILD_TIME__ !== 'undefined') body.buildTime = __BUILD_TIME__;
+
+      body.reporter = authManager.identity?.playerName || 'Unknown';
+      body.discordId = authManager.identity?.discordId || null;
+      body.platform = isDiscordActivity ? 'discord-activity' : 'web';
+      body.device = navigator.userAgent;
+      body.resolution = `${window.innerWidth}x${window.innerHeight}`;
 
       const res = await fetch(`${API_URL}/api/issue`, {
         method: 'POST',

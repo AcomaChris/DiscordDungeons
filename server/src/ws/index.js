@@ -212,7 +212,11 @@ async function handleFileIssue(req, res) {
 
   try {
     const body = await readBody(req);
-    const { title, description, priority, screenshot, commit, version } = JSON.parse(body);
+    const {
+      title, description, priority, screenshot,
+      commit, version, buildTime,
+      reporter, discordId, platform, device, resolution,
+    } = JSON.parse(body);
 
     if (!title || !title.trim()) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -234,9 +238,14 @@ async function handleFileIssue(req, res) {
     if (screenshotUrl) bodyParts.push(`\n### Screenshot\n\n![Screenshot](${screenshotUrl})`);
 
     bodyParts.push('\n### Metadata');
+    if (reporter) bodyParts.push(`- **Reported by**: ${reporter}${discordId ? ` (${discordId})` : ''}`);
     bodyParts.push(`- **Priority**: ${priority || 'medium'}`);
+    if (platform) bodyParts.push(`- **Platform**: ${platform}`);
+    if (device) bodyParts.push(`- **Device**: ${device}`);
+    if (resolution) bodyParts.push(`- **Resolution**: ${resolution}`);
     if (version) bodyParts.push(`- **Version**: ${version}`);
     if (commit) bodyParts.push(`- **Commit**: \`${commit}\``);
+    if (buildTime) bodyParts.push(`- **Build time**: ${buildTime}`);
     bodyParts.push(`- **Filed via**: in-game bug reporter`);
 
     const labels = ['bug', 'in-game-report'];

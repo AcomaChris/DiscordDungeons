@@ -4,9 +4,25 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 // Mock the CSS import
 vi.mock('../../client/src/bug-report/bug-report.css', () => ({}));
 
+// Mock authManager singleton with a test identity
+vi.mock('../../client/src/auth/AuthManager.js', () => ({
+  default: {
+    identity: {
+      playerName: 'TestUser',
+      discordId: '123456789',
+    },
+  },
+}));
+
+// Mock Discord activity detection
+vi.mock('../../client/src/discord/activitySdk.js', () => ({
+  isDiscordActivity: false,
+}));
+
 // Stub build-time globals
 vi.stubGlobal('__GIT_COMMIT__', 'abc1234');
 vi.stubGlobal('__APP_VERSION__', '0.3.6');
+vi.stubGlobal('__BUILD_TIME__', '2026-03-01T00:00:00.000Z');
 
 describe('BugReporter', () => {
   let BugReporter;
@@ -225,6 +241,12 @@ describe('BugReporter', () => {
     expect(callBody.priority).toBe('medium');
     expect(callBody.commit).toBe('abc1234');
     expect(callBody.version).toBe('0.3.6');
+    expect(callBody.buildTime).toBe('2026-03-01T00:00:00.000Z');
+    expect(callBody.reporter).toBe('TestUser');
+    expect(callBody.discordId).toBe('123456789');
+    expect(callBody.platform).toBe('web');
+    expect(callBody.device).toBe(navigator.userAgent);
+    expect(callBody.resolution).toBe(`${window.innerWidth}x${window.innerHeight}`);
 
     reporter.destroy();
   });

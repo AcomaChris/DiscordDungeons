@@ -8,4 +8,5 @@ services:
       - WS_PORT=3001
       - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
       - DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
+      - GITHUB_API_TOKEN=${GITHUB_API_TOKEN}
       - CORS_ORIGIN=https://discorddungeons.com
