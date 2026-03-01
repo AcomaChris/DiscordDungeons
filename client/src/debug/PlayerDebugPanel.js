@@ -110,7 +110,9 @@ export class PlayerDebugPanel {
           <span class="player-debug-label">X</span>
           <input type="text" class="player-debug-input player-debug-input-small" data-field="posX" value="${Math.round(player.sprite.x)}" readonly />
           <span class="player-debug-label">Y</span>
-          <input type="text" class="player-debug-input player-debug-input-small" data-field="posY" value="${Math.round(player.sprite.y)}" readonly />
+          <input type="text" class="player-debug-input player-debug-input-small" data-field="posY" value="${Math.round(player._groundY ?? player.sprite.y)}" readonly />
+          <span class="player-debug-label">Z</span>
+          <input type="text" class="player-debug-input player-debug-input-small" data-field="posZ" value="${Math.round(player.z ?? 0)}" readonly />
         </div>
       </div>
 
@@ -473,8 +475,10 @@ export class PlayerDebugPanel {
       if (!this._dialog || !this._player) return;
       const posX = this._dialog.querySelector('[data-field="posX"]');
       const posY = this._dialog.querySelector('[data-field="posY"]');
+      const posZ = this._dialog.querySelector('[data-field="posZ"]');
       if (posX) posX.value = Math.round(this._player.sprite.x);
-      if (posY) posY.value = Math.round(this._player.sprite.y);
+      if (posY) posY.value = Math.round(this._player._groundY ?? this._player.sprite.y);
+      if (posZ) posZ.value = Math.round(this._player.z ?? 0);
       this._updateAbilityIndicators();
       this._rafId = requestAnimationFrame(update);
     };

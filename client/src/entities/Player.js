@@ -1,12 +1,18 @@
 import eventBus from '../core/EventBus.js';
 import { PLAYER_MOVED } from '../core/Events.js';
-import { CHAR_WIDTH, CHAR_HEIGHT, TEXTURE_SCALE, PLAYER_COLORS } from '../core/Constants.js';
+import { CHAR_WIDTH, CHAR_HEIGHT, TEXTURE_SCALE, PLAYER_COLORS, ELEVATION_STEP } from '../core/Constants.js';
 import { generatePlayerTextures } from './PlayerTextureGenerator.js';
 import { AbilityManager } from '../abilities/AbilityManager.js';
+import { startJump, updateJumpState } from '../physics/JumpPhysics.js';
+import { createShadow, updateShadow } from './ShadowHelper.js';
 
 // --- Player ---
 // Wraps the local player sprite, handles 4-directional input, emits state
 // for network sync. Uses a lower-body hitbox for natural 3/4 view overlap.
+//
+// Z-axis: Characters have a ground position (_groundY) and a height above
+// ground (z). Physics body stays at _groundY; sprite.y = _groundY - z.
+// Depth sorting uses _groundY so jumping doesn't change render order.
 
 const SQRT2 = Math.sqrt(2);
 
@@ -18,7 +24,12 @@ export class Player {
     this.color = PLAYER_COLORS[0];
     this.abilities = new AbilityManager();
     this._isJumping = false;
-    this._jumpTween = null;
+
+    // --- Z-axis state ---
+    this.z = 0;           // height above ground plane (px)
+    this.vz = 0;          // vertical velocity (px/sec, positive = up)
+    this.groundZ = 0;     // elevation of current ground tile (px)
+    this._groundY = spawnY; // physics ground Y (world space)
 
     this.sprite = scene.physics.add.sprite(spawnX, spawnY, 'player-0-down');
     this.sprite.setScale(1 / TEXTURE_SCALE);
@@ -31,6 +42,9 @@ export class Player {
     this.sprite.body.setSize(bodyW, bodyH);
     this.sprite.body.setOffset(0, CHAR_HEIGHT * TEXTURE_SCALE - bodyH);
 
+    // --- Shadow ---
+    this._shadow = createShadow(scene, spawnX, spawnY);
+
     this.nameLabel = scene.add.text(spawnX, spawnY - CHAR_HEIGHT / 2 - 4, playerName || 'Player', {
       fontSize: '12px',
       color: '#ffffff',
@@ -38,9 +52,19 @@ export class Player {
       strokeThickness: 2,
     }).setOrigin(0.5, 1);
 
+    // --- Phaser event hooks ---
+    // Restore ground-plane Y before physics so collisions work on the
+    // floor plane, not the visually offset sprite position.
+    this._preUpdate = () => {
+      if (this.z !== 0 || this._isJumping) {
+        this.sprite.y = this._groundY;
+      }
+      this._updateElevationCollision();
+    };
+    scene.events.on('preupdate', this._preUpdate);
+
     // Position the label after physics so it tracks the sprite's final position
-    // for the current frame. Doing this in handleInput() causes 1-frame lag
-    // because physics hasn't moved the sprite yet at that point.
+    // for the current frame. sprite.y includes Z offset at this point.
     this._postUpdate = () => {
       this.nameLabel.setPosition(
         this.sprite.x,
@@ -65,7 +89,7 @@ export class Player {
   handleInput({ moveX, moveY, sprint, jump }) {
     this.abilities.updateFromInput({ sprint, jump });
 
-    // Trigger visual hop on jump activation
+    // Trigger jump on activation (single press, not held)
     const jumpAbility = this.abilities.get('jump');
     if (jumpAbility?.active && !this._isJumping) {
       this._startJump(jumpAbility.params.heightPower);
@@ -101,45 +125,101 @@ export class Player {
   }
 
   // --- Jump ---
-  // Visual-only hop: tweens sprite upward then back down.
-  // Physics body follows the sprite during the brief arc.
 
   _startJump(heightPower) {
-    this._isJumping = true;
-    // AGENT: heightPower maps directly to hop pixels so debug panel
-    // tweaks produce visible results. Default 200 → 20px hop.
-    const hopHeight = heightPower * 0.1;
-    const duration = 150 + hopHeight * 3;
-
-    // Shadow ellipse at ground level
-    const shadow = this.scene.add.ellipse(
-      this.sprite.x, this.sprite.y + CHAR_HEIGHT / 2 - 2,
-      CHAR_WIDTH * 0.8, 4, 0x000000, 0.3,
+    if (this._isJumping) return;
+    const state = startJump(
+      { z: this.z, vz: this.vz, groundZ: this.groundZ, isJumping: this._isJumping },
+      heightPower,
     );
-    shadow.setDepth(this.sprite.depth - 1);
+    this.z = state.z;
+    this.vz = state.vz;
+    this._isJumping = state.isJumping;
+  }
 
-    this._jumpTween = this.scene.tweens.add({
-      targets: this.sprite,
-      y: this.sprite.y - hopHeight,
-      duration,
-      ease: 'Sine.easeOut',
-      yoyo: true,
-      onUpdate: () => {
-        // Keep shadow under the sprite horizontally
-        shadow.setPosition(this.sprite.x, shadow.y);
-      },
-      onComplete: () => {
-        shadow.destroy();
-        this._isJumping = false;
-        this._jumpTween = null;
-      },
-    });
+  // Called every frame from GameScene.update() after physics step.
+  updateJump(delta) {
+    if (!this._isJumping && this.z <= this.groundZ) return;
+
+    const dt = delta / 1000;
+
+    // Float ability: reduce gravity during descent
+    let gravityFactor = 1.0;
+    if (this.vz < 0) {
+      const floatAbility = this.abilities.get('float');
+      if (floatAbility) {
+        gravityFactor = floatAbility.params.gravityFactor;
+      }
+    }
+
+    const state = updateJumpState(
+      { z: this.z, vz: this.vz, groundZ: this.groundZ, isJumping: this._isJumping },
+      dt,
+      gravityFactor,
+    );
+    this.z = state.z;
+    this.vz = state.vz;
+    this._isJumping = state.isJumping;
+  }
+
+  // Called every frame after updateJump(). Reads the ground-plane Y from
+  // the physics body, queries tile elevation, then offsets sprite.y by z.
+  syncGroundPosition() {
+    // After Phaser physics resolved, sprite.y is the ground-plane position
+    this._groundY = this.sprite.y;
+
+    // Update ground elevation from tile data
+    const tm = this.scene.tileMapManager;
+    if (tm) {
+      this.groundZ = tm.getElevationAt(this.sprite.x, this._groundY);
+    }
+
+    // Apply visual Z offset
+    this.sprite.y = this._groundY - this.z;
+
+    // Update shadow
+    updateShadow(this._shadow, this.sprite.x, this._groundY, this.z, this.groundZ, this.sprite.depth);
+  }
+
+  // --- Elevation collision ---
+  // Toggle tile collision based on player Z vs tile elevation. When the
+  // player is high enough (z >= elevation), clear collision so they can
+  // walk on the platform. When too low, keep collision active.
+  _updateElevationCollision() {
+    const tm = this.scene.tileMapManager;
+    if (!tm?.elevationData || !tm.collisionLayer) return;
+
+    const map = tm.tilemap;
+    const tileW = map.tileWidth;
+    const tileH = map.tileHeight;
+
+    // Only scan tiles near the player body to avoid full-map iteration
+    const body = this.sprite.body;
+    const startX = Math.max(0, Math.floor(body.left / tileW) - 1);
+    const endX = Math.min(map.width - 1, Math.ceil(body.right / tileW) + 1);
+    const startY = Math.max(0, Math.floor(body.top / tileH) - 1);
+    const endY = Math.min(map.height - 1, Math.ceil(body.bottom / tileH) + 1);
+
+    for (let ty = startY; ty <= endY; ty++) {
+      for (let tx = startX; tx <= endX; tx++) {
+        const elev = tm.elevationData[ty * map.width + tx];
+        if (elev <= 0) continue;
+
+        const elevPx = elev * ELEVATION_STEP;
+        const tile = tm.collisionLayer.getTileAt(tx, ty);
+        if (!tile) continue;
+
+        // Player high enough → allow passage on the platform
+        tile.collides = this.z < elevPx;
+      }
+    }
   }
 
   // Y-sorted depth: compare base (feet) position so objects lower on screen
-  // render in front. sprite.y is center; feet are CHAR_HEIGHT/2 below that.
+  // render in front. Uses _groundY (not sprite.y) so jumping doesn't change
+  // render order — fixes issue #4.
   updateDepth() {
-    const feetY = this.sprite.y + CHAR_HEIGHT / 2;
+    const feetY = this._groundY + CHAR_HEIGHT / 2;
     this.sprite.setDepth(feetY);
     this.nameLabel.setDepth(feetY + 1);
   }
@@ -147,7 +227,8 @@ export class Player {
   getState() {
     return {
       x: this.sprite.x,
-      y: this.sprite.y,
+      y: this._groundY,
+      z: this.z,
       facing: this.facing,
       color: this.color,
       abilities: this.abilities.getState(),
@@ -155,7 +236,9 @@ export class Player {
   }
 
   destroy() {
+    this.scene.events.off('preupdate', this._preUpdate);
     this.scene.events.off('postupdate', this._postUpdate);
+    if (this._shadow) this._shadow.destroy();
     this.sprite.destroy();
     this.nameLabel.destroy();
   }

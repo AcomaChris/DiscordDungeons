@@ -19,13 +19,15 @@ const TILE = 16;
 const MAP_W = 30; // tiles
 const MAP_H = 20; // tiles
 
-// --- Tileset: 4 tiles in a 4×1 strip ---
-// Tile 1: dark floor, Tile 2: wall base, Tile 3: wall top, Tile 4: collision marker
+// --- Tileset: 5 tiles in a 5×1 strip ---
+// Tile 1: dark floor, Tile 2: wall base, Tile 3: wall top,
+// Tile 4: collision marker, Tile 5: elevated platform
 const TILE_COLORS = [
   '#3a3a4a', // floor (dark stone)
   '#6b5b3a', // wall (brown)
   '#8b7b5a', // wall top (lighter brown)
   '#ff00ff', // collision marker (magenta, never rendered)
+  '#4a6a8a', // elevated platform (blue-gray stone)
 ];
 
 function createTilesetPNG() {
@@ -49,6 +51,7 @@ const FLOOR = 1;
 const WALL = 2;
 const WALL_TOP = 3;
 const COLLISION = 4;
+const PLATFORM = 5;
 
 function makeLayer(name, data) {
   return {
@@ -65,9 +68,33 @@ function makeLayer(name, data) {
   };
 }
 
+// --- Elevation data ---
+// Tile index = elevation level. 0 = ground. Positive = raised platform.
+function generateElevationData() {
+  const data = new Array(MAP_W * MAP_H).fill(0);
+  // Raised platform (elevation 1 = 8px above ground) — 5×3 area
+  for (let y = 13; y <= 15; y++) {
+    for (let x = 4; x <= 8; x++) {
+      data[y * MAP_W + x] = 1;
+    }
+  }
+  // Higher inner platform (elevation 2 = 16px) — 2×2 area
+  for (let y = 14; y <= 15; y++) {
+    for (let x = 6; x <= 7; x++) {
+      data[y * MAP_W + x] = 2;
+    }
+  }
+  return data;
+}
+
 function generateGroundData() {
-  // Floor tiles everywhere
-  return new Array(MAP_W * MAP_H).fill(FLOOR);
+  const data = new Array(MAP_W * MAP_H).fill(FLOOR);
+  // Place platform visuals where elevation > 0
+  const elevation = generateElevationData();
+  for (let i = 0; i < data.length; i++) {
+    if (elevation[i] > 0) data[i] = PLATFORM;
+  }
+  return data;
 }
 
 function generateWallsData() {
@@ -123,6 +150,12 @@ function generateCollisionData() {
   for (let i = 0; i < data.length; i++) {
     if (walls[i] === WALL) data[i] = COLLISION;
   }
+  // Platform edges: elevated tiles block ground-level walking.
+  // Player._updateElevationCollision() toggles these at runtime based on Z.
+  const elevation = generateElevationData();
+  for (let i = 0; i < data.length; i++) {
+    if (elevation[i] > 0 && data[i] === 0) data[i] = COLLISION;
+  }
   return data;
 }
 
@@ -159,6 +192,7 @@ function buildMap() {
     makeLayer('WallTops', generateWallTopsData()),
     makeLayer('Overlay', new Array(MAP_W * MAP_H).fill(0)),
     makeLayer('Collision', generateCollisionData()),
+    makeLayer('Elevation', generateElevationData()),
     generateObjectLayer(),
   ];
 

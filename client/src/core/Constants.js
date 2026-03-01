@@ -26,6 +26,19 @@ export const TEXTURE_SCALE = 4;
 // Tune CAMERA_ZOOM to change how large the character looks on all devices.
 export const CAMERA_ZOOM = 3;
 
+// --- Jump Physics (Z-axis) ---
+// Custom gravity for the visual Z-axis (height above ground). Not Phaser's
+// Y-axis gravity — that stays at 0 for top-down movement. The Z-axis is
+// simulated manually each frame: vz -= JUMP_GRAVITY * dt, z += vz * dt.
+export const JUMP_GRAVITY = 1000;        // px/sec² downward
+export const JUMP_VELOCITY_SCALE = 1.0;  // heightPower × this = initial vz
+// heightPower=200 → vz₀=200 → apex=20px, total=0.4s
+
+// --- Elevation ---
+// Tile elevation levels (from the Elevation tile layer) are multiplied by
+// this to get the height in world pixels.
+export const ELEVATION_STEP = 8; // px per elevation level
+
 // --- Depth ---
 // Layers above the player (wall tops, overlay) use fixed depths above this.
 // Player/NPC depth = feet Y position; wall sprite depth = tile bottom Y.

@@ -1,4 +1,4 @@
-import { DEPTH_ABOVE_PLAYER } from '../core/Constants.js';
+import { DEPTH_ABOVE_PLAYER, ELEVATION_STEP } from '../core/Constants.js';
 
 // --- TileMapManager ---
 // Loads a Tiled JSON map and creates Phaser tilemap layers following our
@@ -7,7 +7,7 @@ import { DEPTH_ABOVE_PLAYER } from '../core/Constants.js';
 // Layer convention (depth):
 //   Ground(0), GroundDecor(1), Walls(2),
 //   WallTops(DEPTH_ABOVE_PLAYER), Overlay(DEPTH_ABOVE_PLAYER+1),
-//   Collision(not rendered), Objects(parsed, not rendered).
+//   Collision(not rendered), Elevation(not rendered), Objects(parsed, not rendered).
 
 // AGENT: layer names are case-sensitive and must match the Tiled export.
 
@@ -25,6 +25,7 @@ export class TileMapManager {
     this.tilemap = null;
     this.layers = {};
     this.collisionLayer = null;
+    this.elevationData = null;
     this.spawnPoint = null;
   }
 
@@ -77,6 +78,10 @@ export class TileMapManager {
       this.collisionLayer = collisionLayer;
     }
 
+    // Elevation layer — optional, stores per-tile height for platform system.
+    // Tile index = elevation level (0 = ground). Hidden, not rendered.
+    this._parseElevation(tilesets);
+
     // Parse object layer for spawn point and other objects
     this._parseObjects();
 
@@ -113,6 +118,32 @@ export class TileMapManager {
 
       layer.setVisible(false);
     }
+  }
+
+  _parseElevation(tilesets) {
+    const elevationLayer = this.tilemap.createLayer('Elevation', tilesets);
+    if (!elevationLayer) return;
+
+    elevationLayer.setVisible(false);
+    this.elevationData = [];
+    const w = this.tilemap.width;
+    const h = this.tilemap.height;
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const tile = elevationLayer.getTileAt(x, y);
+        // Tile index encodes elevation level; empty tiles = ground (0)
+        this.elevationData.push(tile && tile.index > 0 ? tile.index : 0);
+      }
+    }
+  }
+
+  // Returns the elevation in world pixels at a given world coordinate.
+  getElevationAt(worldX, worldY) {
+    if (!this.elevationData) return 0;
+    const tileX = Math.floor(worldX / this.tilemap.tileWidth);
+    const tileY = Math.floor(worldY / this.tilemap.tileHeight);
+    if (tileX < 0 || tileX >= this.tilemap.width || tileY < 0 || tileY >= this.tilemap.height) return 0;
+    return (this.elevationData[tileY * this.tilemap.width + tileX] || 0) * ELEVATION_STEP;
   }
 
   _parseObjects() {
@@ -161,6 +192,7 @@ export class TileMapManager {
     }
     this.layers = {};
     this.collisionLayer = null;
+    this.elevationData = null;
     this.spawnPoint = null;
   }
 }
