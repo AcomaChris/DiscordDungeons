@@ -1,8 +1,10 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
-// Define the build-time global before importing the module
+// Define the build-time globals before importing the module
 vi.stubGlobal('__GIT_COMMIT__', 'abc1234');
+vi.stubGlobal('__APP_VERSION__', '0.3.6');
+vi.stubGlobal('__BUILD_TIME__', '2026-03-01T21:00:00.000Z');
 
 // Mock the CSS import
 vi.mock('../../client/src/build-status/build-status.css', () => ({}));
@@ -41,6 +43,40 @@ describe('BuildStatusIndicator', () => {
     expect(el.querySelector('.build-status-tooltip')).not.toBeNull();
     expect(el.querySelector('.build-status-overlay')).not.toBeNull();
     expect(el.querySelector('.build-status-overlay-legend')).not.toBeNull();
+
+    indicator.destroy();
+  });
+
+  it('shows version, commit, and build time in overlay', () => {
+    vi.stubGlobal('fetch', vi.fn(() => Promise.resolve({ ok: false })));
+
+    const indicator = new BuildStatusIndicator();
+    indicator.mount();
+
+    const info = document.querySelector('.build-status-overlay-info');
+    expect(info).not.toBeNull();
+    expect(info.textContent).toContain('v0.3.6');
+    expect(info.textContent).toContain('abc1234');
+    expect(info.textContent).toContain('Built');
+
+    // Commit should be a clickable link
+    const link = info.querySelector('.build-status-commit-link');
+    expect(link).not.toBeNull();
+    expect(link.href).toContain('abc1234');
+    expect(link.target).toBe('_blank');
+
+    indicator.destroy();
+  });
+
+  it('includes version and commit in tooltip', () => {
+    vi.stubGlobal('fetch', vi.fn(() => Promise.resolve({ ok: false })));
+
+    const indicator = new BuildStatusIndicator();
+    indicator.mount();
+
+    const tooltip = document.querySelector('.build-status-tooltip');
+    expect(tooltip.textContent).toContain('v0.3.6');
+    expect(tooltip.textContent).toContain('abc1234');
 
     indicator.destroy();
   });

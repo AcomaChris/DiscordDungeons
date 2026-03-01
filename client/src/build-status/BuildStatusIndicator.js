@@ -4,8 +4,10 @@ import './build-status.css';
 // Floating DOM overlay showing deployment state as a colored circle.
 // Polls /version.json and GitHub Actions API to determine state.
 
-// AGENT: __GIT_COMMIT__ is injected by Vite at build time (vite.config.mjs `define`).
+// AGENT: these globals are injected by Vite at build time (vite.config.mjs `define`).
 const LOCAL_COMMIT = typeof __GIT_COMMIT__ !== 'undefined' ? __GIT_COMMIT__ : 'dev';
+const APP_VERSION = typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '?';
+const BUILD_TIME = typeof __BUILD_TIME__ !== 'undefined' ? __BUILD_TIME__ : null;
 
 const REPO = 'AcomaChris/DiscordDungeons';
 const VERSION_POLL_MS = 5_000;
@@ -79,10 +81,21 @@ export class BuildStatusIndicator {
     this._tooltip = document.createElement('div');
     this._tooltip.className = 'build-status-tooltip';
 
+    const commitUrl = `https://github.com/${REPO}/commit/${LOCAL_COMMIT}`;
+    const buildTimeStr = BUILD_TIME
+      ? new Date(BUILD_TIME).toLocaleString(undefined, {
+        dateStyle: 'medium', timeStyle: 'short',
+      })
+      : 'unknown';
+
     this._overlay = document.createElement('div');
     this._overlay.className = 'build-status-overlay';
     this._overlay.innerHTML = `
       <div class="build-status-overlay-title">Build Status</div>
+      <div class="build-status-overlay-info">
+        <span>v${APP_VERSION} · <a class="build-status-commit-link" href="${commitUrl}" target="_blank" rel="noopener">${LOCAL_COMMIT}</a></span>
+        <span>Built ${buildTimeStr}</span>
+      </div>
       <div class="build-status-overlay-current"></div>
       <hr class="build-status-overlay-divider">
       <div class="build-status-overlay-legend">
@@ -114,7 +127,7 @@ export class BuildStatusIndicator {
     const color = COLORS[this._state];
     this._dot.style.backgroundColor = color;
     this._dot.style.boxShadow = `0 0 6px ${color}`;
-    this._tooltip.textContent = LABELS[this._state];
+    this._tooltip.textContent = `${LABELS[this._state]} · v${APP_VERSION} · ${LOCAL_COMMIT}`;
 
     // Flashing yellow for building state
     if (this._state === STATE.BUILDING) {

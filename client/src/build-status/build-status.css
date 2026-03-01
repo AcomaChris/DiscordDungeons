@@ -79,6 +79,24 @@
   margin-bottom: 4px;
 }
 
+.build-status-overlay-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 11px;
+  color: #999;
+  margin-bottom: 6px;
+}
+
+.build-status-commit-link {
+  color: #00ccff;
+  text-decoration: none;
+}
+
+.build-status-commit-link:hover {
+  text-decoration: underline;
+}
+
 .build-status-overlay-current {
   font-size: 12px;
   margin-bottom: 8px;
