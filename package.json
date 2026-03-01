@@ -1,6 +1,6 @@
 {
   "name": "discord-dungeons",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Discord Activity dungeon game",
   "private": true,
   "scripts": {

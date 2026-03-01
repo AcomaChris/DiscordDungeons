@@ -1,13 +1,14 @@
 // --- AbilityManager ---
 // Per-player ability state. Tracks equipped abilities, activation state,
-// and provides param access + network serialization.
+// modifier stacks, and provides param access + network serialization.
 // AGENT: One instance per Player/RemotePlayer. Not shared.
 
 import { ABILITY_DEFS, AbilityType, DEFAULT_ABILITIES } from './AbilityDefs.js';
+import { resolveParam } from './ModifierStack.js';
 
 export class AbilityManager {
   constructor() {
-    // Map<abilityId, { def, params, active }>
+    // Map<abilityId, { def, params, active, modifiers: [] }>
     this._abilities = new Map();
 
     for (const id of DEFAULT_ABILITIES) {
@@ -22,6 +23,7 @@ export class AbilityManager {
       def,
       params: { ...def.params },
       active: def.type === AbilityType.PASSIVE,
+      modifiers: [],
     });
   }
 
@@ -33,13 +35,31 @@ export class AbilityManager {
     return this._abilities.has(abilityId);
   }
 
+  // Returns resolved params (base + modifiers applied)
   get(abilityId) {
     const entry = this._abilities.get(abilityId);
     if (!entry) return null;
-    return { params: entry.params, active: entry.active };
+    const resolved = {};
+    for (const paramName of Object.keys(entry.params)) {
+      resolved[paramName] = entry.modifiers.length > 0
+        ? resolveParam(entry.params[paramName], entry.modifiers, paramName)
+        : entry.params[paramName];
+    }
+    return { params: resolved, active: entry.active };
   }
 
+  // Returns resolved value (base + modifiers)
   getParam(abilityId, paramName) {
+    const entry = this._abilities.get(abilityId);
+    if (!entry) return undefined;
+    const base = entry.params[paramName];
+    if (base === undefined) return undefined;
+    if (entry.modifiers.length === 0) return base;
+    return resolveParam(base, entry.modifiers, paramName);
+  }
+
+  // Returns raw base value without modifiers
+  getBaseParam(abilityId, paramName) {
     const entry = this._abilities.get(abilityId);
     return entry?.params[paramName];
   }
@@ -47,6 +67,45 @@ export class AbilityManager {
   setParam(abilityId, paramName, value) {
     const entry = this._abilities.get(abilityId);
     if (entry) entry.params[paramName] = value;
+  }
+
+  // --- Modifiers ---
+
+  addModifier(abilityId, modifier) {
+    const entry = this._abilities.get(abilityId);
+    if (!entry) return false;
+    // Upsert: replace existing modifier with same id
+    const idx = entry.modifiers.findIndex((m) => m.id === modifier.id);
+    if (idx !== -1) {
+      entry.modifiers[idx] = { ...modifier };
+    } else {
+      entry.modifiers.push({ ...modifier });
+    }
+    return true;
+  }
+
+  removeModifier(abilityId, modifierId) {
+    const entry = this._abilities.get(abilityId);
+    if (!entry) return false;
+    const idx = entry.modifiers.findIndex((m) => m.id === modifierId);
+    if (idx === -1) return false;
+    entry.modifiers.splice(idx, 1);
+    return true;
+  }
+
+  getModifiers(abilityId) {
+    const entry = this._abilities.get(abilityId);
+    return entry?.modifiers ?? [];
+  }
+
+  clearModifiers(abilityId, source) {
+    const entry = this._abilities.get(abilityId);
+    if (!entry) return;
+    if (source) {
+      entry.modifiers = entry.modifiers.filter((m) => m.source !== source);
+    } else {
+      entry.modifiers = [];
+    }
   }
 
   // --- Input ---
@@ -67,14 +126,18 @@ export class AbilityManager {
     const equipped = [];
     const active = [];
     const params = {};
+    const modifiers = {};
 
     for (const [id, entry] of this._abilities) {
       equipped.push(id);
       if (entry.active) active.push(id);
       params[id] = { ...entry.params };
+      if (entry.modifiers.length > 0) {
+        modifiers[id] = entry.modifiers.map((m) => ({ ...m }));
+      }
     }
 
-    return { equipped, active, params };
+    return { equipped, active, params, modifiers };
   }
 
   applyState(state) {
@@ -96,6 +159,12 @@ export class AbilityManager {
       entry.active = remoteActive.has(id);
       if (state.params?.[id]) {
         entry.params = { ...entry.params, ...state.params[id] };
+      }
+      // Restore modifiers (backward-compat: field may not exist)
+      if (state.modifiers?.[id]) {
+        entry.modifiers = state.modifiers[id].map((m) => ({ ...m }));
+      } else {
+        entry.modifiers = [];
       }
     }
   }

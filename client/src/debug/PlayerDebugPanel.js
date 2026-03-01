@@ -276,11 +276,14 @@ export class PlayerDebugPanel {
     const abilities = this._player.abilities;
     if (!abilities.has(abilityId)) return;
 
-    const entry = abilities.get(abilityId);
+    const def = ABILITY_DEFS[abilityId];
     const paramsContainer = document.createElement('div');
     paramsContainer.className = 'player-debug-ability-params';
 
-    for (const [paramName, value] of Object.entries(entry.params)) {
+    for (const paramName of Object.keys(def.params)) {
+      const baseValue = abilities.getBaseParam(abilityId, paramName);
+      const resolvedValue = abilities.getParam(abilityId, paramName);
+
       const row = document.createElement('div');
       row.className = 'player-debug-ability-param-row';
 
@@ -292,7 +295,7 @@ export class PlayerDebugPanel {
       input.type = 'number';
       input.className = 'player-debug-input player-debug-input-small';
       input.dataset.abilityParam = `${abilityId}.${paramName}`;
-      input.value = value;
+      input.value = baseValue;
       input.addEventListener('input', () => {
         const val = parseFloat(input.value);
         if (!isNaN(val)) {
@@ -302,7 +305,37 @@ export class PlayerDebugPanel {
 
       row.appendChild(label);
       row.appendChild(input);
+
+      if (resolvedValue !== baseValue) {
+        const resolvedSpan = document.createElement('span');
+        resolvedSpan.className = 'player-debug-resolved-value';
+        resolvedSpan.textContent = `= ${resolvedValue}`;
+        row.appendChild(resolvedSpan);
+      }
+
       paramsContainer.appendChild(row);
+    }
+
+    // --- Modifier list ---
+    const modifiers = abilities.getModifiers(abilityId);
+    if (modifiers.length > 0) {
+      const modList = document.createElement('div');
+      modList.className = 'player-debug-modifier-list';
+
+      for (const mod of modifiers) {
+        const modRow = document.createElement('div');
+        modRow.className = 'player-debug-modifier-row';
+        const opSymbol = mod.op === 'add' ? '+' : '\u00d7';
+        modRow.textContent = `${mod.param}: ${opSymbol}${mod.value}`;
+        if (mod.source) {
+          const src = document.createElement('span');
+          src.className = 'player-debug-modifier-source';
+          src.textContent = ` (${mod.source})`;
+          modRow.appendChild(src);
+        }
+        modList.appendChild(modRow);
+      }
+      paramsContainer.appendChild(modList);
     }
 
     block.appendChild(paramsContainer);

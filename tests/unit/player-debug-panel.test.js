@@ -29,6 +29,15 @@ function createMockAbilities(initialEquipped = {}, initialActive = []) {
       if (!equipped.has(id)) return null;
       return { params: equipped.get(id), active: activeSet.has(id) };
     }),
+    getParam: vi.fn((id, paramName) => {
+      const p = equipped.get(id);
+      return p?.[paramName];
+    }),
+    getBaseParam: vi.fn((id, paramName) => {
+      const p = equipped.get(id);
+      return p?.[paramName];
+    }),
+    getModifiers: vi.fn(() => []),
     equip: vi.fn((id) => { equipped.set(id, {}); }),
     unequip: vi.fn((id) => { equipped.delete(id); }),
     setParam: vi.fn((id, paramName, value) => {

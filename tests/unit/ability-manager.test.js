@@ -143,4 +143,137 @@ describe('AbilityManager', () => {
     mgr.applyState(null);
     expect(mgr.has('movement')).toBe(true);
   });
+
+  // --- Modifiers ---
+
+  it('addModifier adds a modifier to an ability', () => {
+    const ok = mgr.addModifier('movement', { id: 'boots', param: 'walkSpeed', op: 'add', value: 20 });
+    expect(ok).toBe(true);
+    expect(mgr.getModifiers('movement')).toHaveLength(1);
+  });
+
+  it('addModifier with same id replaces existing', () => {
+    mgr.addModifier('movement', { id: 'boots', param: 'walkSpeed', op: 'add', value: 20 });
+    mgr.addModifier('movement', { id: 'boots', param: 'walkSpeed', op: 'add', value: 30 });
+    expect(mgr.getModifiers('movement')).toHaveLength(1);
+    expect(mgr.getModifiers('movement')[0].value).toBe(30);
+  });
+
+  it('addModifier returns false for unequipped ability', () => {
+    expect(mgr.addModifier('float', { id: 'x', param: 'gravityFactor', op: 'add', value: 1 })).toBe(false);
+  });
+
+  it('removeModifier removes by id', () => {
+    mgr.addModifier('movement', { id: 'boots', param: 'walkSpeed', op: 'add', value: 20 });
+    const ok = mgr.removeModifier('movement', 'boots');
+    expect(ok).toBe(true);
+    expect(mgr.getModifiers('movement')).toHaveLength(0);
+  });
+
+  it('removeModifier returns false for nonexistent modifier', () => {
+    expect(mgr.removeModifier('movement', 'nope')).toBe(false);
+  });
+
+  it('getModifiers returns empty array for ability with no modifiers', () => {
+    expect(mgr.getModifiers('movement')).toEqual([]);
+  });
+
+  it('getModifiers returns empty array for unequipped ability', () => {
+    expect(mgr.getModifiers('float')).toEqual([]);
+  });
+
+  it('clearModifiers removes all modifiers', () => {
+    mgr.addModifier('movement', { id: 'a', param: 'walkSpeed', op: 'add', value: 10 });
+    mgr.addModifier('movement', { id: 'b', param: 'sprintSpeed', op: 'mul', value: 1.5 });
+    mgr.clearModifiers('movement');
+    expect(mgr.getModifiers('movement')).toHaveLength(0);
+  });
+
+  it('clearModifiers with source only removes matching source', () => {
+    mgr.addModifier('movement', { id: 'a', param: 'walkSpeed', op: 'add', value: 10, source: 'item:boots' });
+    mgr.addModifier('movement', { id: 'b', param: 'walkSpeed', op: 'add', value: 5, source: 'env:wind' });
+    mgr.clearModifiers('movement', 'item:boots');
+    const mods = mgr.getModifiers('movement');
+    expect(mods).toHaveLength(1);
+    expect(mods[0].id).toBe('b');
+  });
+
+  it('getParam returns resolved value with modifiers', () => {
+    mgr.addModifier('movement', { id: 'boots', param: 'walkSpeed', op: 'add', value: 20 });
+    expect(mgr.getParam('movement', 'walkSpeed')).toBe(100);
+  });
+
+  it('getBaseParam returns unmodified value', () => {
+    mgr.addModifier('movement', { id: 'boots', param: 'walkSpeed', op: 'add', value: 20 });
+    expect(mgr.getBaseParam('movement', 'walkSpeed')).toBe(80);
+  });
+
+  it('get() returns resolved params object', () => {
+    mgr.addModifier('movement', { id: 'boots', param: 'walkSpeed', op: 'add', value: 20 });
+    const result = mgr.get('movement');
+    expect(result.params.walkSpeed).toBe(100);
+    expect(result.params.sprintSpeed).toBe(160); // unmodified param unchanged
+  });
+
+  it('setParam writes base value, does not affect modifiers', () => {
+    mgr.addModifier('movement', { id: 'boots', param: 'walkSpeed', op: 'add', value: 20 });
+    mgr.setParam('movement', 'walkSpeed', 90);
+    expect(mgr.getBaseParam('movement', 'walkSpeed')).toBe(90);
+    expect(mgr.getParam('movement', 'walkSpeed')).toBe(110); // 90 + 20
+  });
+
+  it('unequip clears modifiers along with ability', () => {
+    mgr.addModifier('movement', { id: 'boots', param: 'walkSpeed', op: 'add', value: 20 });
+    mgr.unequip('movement');
+    expect(mgr.getModifiers('movement')).toEqual([]);
+  });
+
+  // --- Modifier serialization ---
+
+  it('getState includes modifiers in output', () => {
+    mgr.addModifier('movement', { id: 'boots', param: 'walkSpeed', op: 'add', value: 20 });
+    const state = mgr.getState();
+    expect(state.modifiers.movement).toHaveLength(1);
+    expect(state.modifiers.movement[0].id).toBe('boots');
+  });
+
+  it('getState omits modifiers key for abilities with none', () => {
+    const state = mgr.getState();
+    expect(state.modifiers).toEqual({});
+  });
+
+  it('applyState restores modifiers', () => {
+    mgr.addModifier('movement', { id: 'boots', param: 'walkSpeed', op: 'add', value: 20 });
+    const state = mgr.getState();
+
+    const restored = new AbilityManager();
+    restored.applyState(state);
+    expect(restored.getModifiers('movement')).toHaveLength(1);
+    expect(restored.getParam('movement', 'walkSpeed')).toBe(100);
+  });
+
+  it('applyState clears modifiers when remote has none', () => {
+    mgr.addModifier('movement', { id: 'boots', param: 'walkSpeed', op: 'add', value: 20 });
+    mgr.applyState({ equipped: ['movement', 'jump'], active: [], params: {} });
+    expect(mgr.getModifiers('movement')).toHaveLength(0);
+  });
+
+  it('getState/applyState round-trips modifiers', () => {
+    mgr.addModifier('movement', { id: 'boots', param: 'walkSpeed', op: 'add', value: 20, source: 'item:boots' });
+    mgr.addModifier('jump', { id: 'ring', param: 'heightPower', op: 'mul', value: 2, source: 'item:ring' });
+
+    const state = mgr.getState();
+    const restored = new AbilityManager();
+    restored.applyState(state);
+
+    expect(restored.getParam('movement', 'walkSpeed')).toBe(100);
+    expect(restored.getParam('jump', 'heightPower')).toBe(400);
+  });
+
+  it('applyState handles missing modifiers field (backward compat)', () => {
+    mgr.addModifier('movement', { id: 'boots', param: 'walkSpeed', op: 'add', value: 20 });
+    // Simulate old-format state without modifiers field
+    mgr.applyState({ equipped: ['movement', 'jump'], active: [], params: {} });
+    expect(mgr.getModifiers('movement')).toHaveLength(0);
+  });
 });
