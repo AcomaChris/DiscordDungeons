@@ -1,12 +1,14 @@
 import Phaser from 'phaser';
 import eventBus from '../core/EventBus.js';
-import { INPUT_ACTION } from '../core/Events.js';
+import { INPUT_ACTION, INPUT_FOCUS_CHANGED } from '../core/Events.js';
 import { Actions, DEFAULT_KEY_BINDINGS } from './InputActions.js';
 import { isGameInputActive } from '../core/InputContext.js';
 
 // --- InputManager ---
 // Maps physical keyboard input to logical game actions.
 // Emits a single INPUT_ACTION event per frame with the full input snapshot.
+// Subscribes to INPUT_FOCUS_CHANGED to toggle keyboard capture immediately
+// when UI overlays acquire/release focus.
 
 export class InputManager {
   constructor(scene) {
@@ -16,6 +18,24 @@ export class InputManager {
       this.bindings[action] = [...keys];
     }
     this.keyObjects = {};
+
+    // Sync initial state in case a UI overlay is already open
+    this._gameInputActive = isGameInputActive();
+    if (!this._gameInputActive) {
+      this.scene.input.keyboard.enabled = false;
+    }
+
+    this._onFocusChanged = ({ active }) => {
+      this._gameInputActive = active;
+      if (!active) {
+        this.scene.input.keyboard.enabled = false;
+        // Emit zero immediately so the player stops on this frame
+        eventBus.emit(INPUT_ACTION, { moveX: 0, moveY: 0 });
+      } else {
+        this.scene.input.keyboard.enabled = true;
+      }
+    };
+    eventBus.on(INPUT_FOCUS_CHANGED, this._onFocusChanged);
 
     this._buildKeyObjects();
   }
@@ -48,17 +68,9 @@ export class InputManager {
   }
 
   update() {
-    // When a UI overlay has focus, suppress game input and disable Phaser's
-    // keyboard capture so form fields receive key events normally.
-    if (!isGameInputActive()) {
-      if (this.scene.input.keyboard.enabled) {
-        this.scene.input.keyboard.enabled = false;
-      }
+    if (!this._gameInputActive) {
       eventBus.emit(INPUT_ACTION, { moveX: 0, moveY: 0 });
       return;
-    }
-    if (!this.scene.input.keyboard.enabled) {
-      this.scene.input.keyboard.enabled = true;
     }
 
     eventBus.emit(INPUT_ACTION, this.getSnapshot());
@@ -80,6 +92,7 @@ export class InputManager {
   }
 
   destroy() {
+    eventBus.off(INPUT_FOCUS_CHANGED, this._onFocusChanged);
     this._destroyKeyObjects();
   }
 }

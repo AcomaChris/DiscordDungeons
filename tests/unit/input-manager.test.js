@@ -220,6 +220,7 @@ describe('InputManager', () => {
     im.update();
 
     expect(calls[0]).toEqual({ moveX: 0, moveY: 0 });
+    // Keyboard disabled by constructor (initial state sync)
     expect(scene.input.keyboard.enabled).toBe(false);
 
     im.destroy();
@@ -235,16 +236,42 @@ describe('InputManager', () => {
     const im = new InputManager(scene);
     const eventBusMod = await import('../../client/src/core/EventBus.js');
 
-    im.update(); // disables keyboard
+    im.update(); // emits zeros while suppressed
     expect(scene.input.keyboard.enabled).toBe(false);
 
+    // Event-driven: releasing focus triggers the handler immediately
     releaseInputFocus();
+    expect(scene.input.keyboard.enabled).toBe(true);
 
     const calls = [];
     eventBusMod.default.on(INPUT_ACTION, (data) => calls.push(data));
 
-    im.update(); // should re-enable
+    im.update(); // should now emit real input
     expect(scene.input.keyboard.enabled).toBe(true);
+
+    im.destroy();
+    _resetForTesting();
+  });
+
+  it('disables keyboard immediately when focus is acquired mid-session', async () => {
+    const { acquireInputFocus, _resetForTesting } = await import('../../client/src/core/InputContext.js');
+    _resetForTesting();
+
+    const scene = createMockScene();
+    const im = new InputManager(scene);
+    const eventBusMod = await import('../../client/src/core/EventBus.js');
+
+    expect(scene.input.keyboard.enabled).toBe(true);
+
+    // Simulate a UI overlay opening while game is running
+    const calls = [];
+    eventBusMod.default.on(INPUT_ACTION, (data) => calls.push(data));
+
+    acquireInputFocus();
+
+    // Handler fires immediately — keyboard disabled and zero emitted
+    expect(scene.input.keyboard.enabled).toBe(false);
+    expect(calls).toEqual([{ moveX: 0, moveY: 0 }]);
 
     im.destroy();
     _resetForTesting();

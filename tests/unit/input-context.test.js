@@ -1,14 +1,17 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {
   acquireInputFocus,
   releaseInputFocus,
   isGameInputActive,
   _resetForTesting,
 } from '../../client/src/core/InputContext.js';
+import eventBus from '../../client/src/core/EventBus.js';
+import { INPUT_FOCUS_CHANGED } from '../../client/src/core/Events.js';
 
 describe('InputContext', () => {
   beforeEach(() => {
     _resetForTesting();
+    eventBus.reset();
   });
 
   it('game input is active by default', () => {
@@ -46,5 +49,54 @@ describe('InputContext', () => {
     // One acquire should still work after extra releases
     acquireInputFocus();
     expect(isGameInputActive()).toBe(false);
+  });
+
+  // --- Event emission ---
+
+  it('emits INPUT_FOCUS_CHANGED {active:false} on first acquire', () => {
+    const calls = [];
+    eventBus.on(INPUT_FOCUS_CHANGED, (data) => calls.push(data));
+
+    acquireInputFocus();
+    expect(calls).toEqual([{ active: false }]);
+  });
+
+  it('does not emit on second acquire (already suppressed)', () => {
+    acquireInputFocus();
+
+    const calls = [];
+    eventBus.on(INPUT_FOCUS_CHANGED, (data) => calls.push(data));
+
+    acquireInputFocus();
+    expect(calls).toHaveLength(0);
+  });
+
+  it('emits INPUT_FOCUS_CHANGED {active:true} on final release', () => {
+    acquireInputFocus();
+
+    const calls = [];
+    eventBus.on(INPUT_FOCUS_CHANGED, (data) => calls.push(data));
+
+    releaseInputFocus();
+    expect(calls).toEqual([{ active: true }]);
+  });
+
+  it('does not emit on intermediate release (still suppressed)', () => {
+    acquireInputFocus();
+    acquireInputFocus();
+
+    const calls = [];
+    eventBus.on(INPUT_FOCUS_CHANGED, (data) => calls.push(data));
+
+    releaseInputFocus();
+    expect(calls).toHaveLength(0);
+  });
+
+  it('does not emit on release when counter is already zero', () => {
+    const calls = [];
+    eventBus.on(INPUT_FOCUS_CHANGED, (data) => calls.push(data));
+
+    releaseInputFocus();
+    expect(calls).toHaveLength(0);
   });
 });

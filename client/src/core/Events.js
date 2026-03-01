@@ -3,6 +3,7 @@
 
 // Input
 export const INPUT_ACTION = 'input:action';
+export const INPUT_FOCUS_CHANGED = 'input:focusChanged';
 
 // Player
 export const PLAYER_MOVED = 'player:moved';
