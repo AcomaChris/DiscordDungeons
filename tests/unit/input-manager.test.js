@@ -47,6 +47,8 @@ function createMockScene() {
           return key;
         }),
         removeKey: vi.fn(),
+        addCapture: vi.fn(),
+        clearCaptures: vi.fn(),
       },
     },
   };
@@ -272,6 +274,71 @@ describe('InputManager', () => {
     // Handler fires immediately — keyboard disabled and zero emitted
     expect(scene.input.keyboard.enabled).toBe(false);
     expect(calls).toEqual([{ moveX: 0, moveY: 0 }]);
+
+    im.destroy();
+    _resetForTesting();
+  });
+
+  // --- Key capture tests (preventDefault) ---
+  // Phaser's addKey() registers captures that call preventDefault() on DOM events.
+  // These must be cleared when UI has focus so form fields receive WASD/Space/etc.
+
+  it('clears key captures when UI acquires focus', async () => {
+    const { acquireInputFocus, _resetForTesting } = await import('../../client/src/core/InputContext.js');
+    _resetForTesting();
+
+    const scene = createMockScene();
+    const im = new InputManager(scene);
+
+    acquireInputFocus();
+
+    expect(scene.input.keyboard.clearCaptures).toHaveBeenCalled();
+
+    im.destroy();
+    _resetForTesting();
+  });
+
+  it('restores key captures when UI releases focus', async () => {
+    const { acquireInputFocus, releaseInputFocus, _resetForTesting } = await import('../../client/src/core/InputContext.js');
+    _resetForTesting();
+
+    const scene = createMockScene();
+    const im = new InputManager(scene);
+
+    acquireInputFocus();
+    scene.input.keyboard.addCapture.mockClear();
+
+    releaseInputFocus();
+
+    // Should re-add captures for all bound key codes
+    expect(scene.input.keyboard.addCapture).toHaveBeenCalled();
+    const capturedCodes = scene.input.keyboard.addCapture.mock.calls.map((c) => c[0]);
+    // All 10 bound keys: LEFT, A, RIGHT, D, UP, W, DOWN, S, E, SPACE
+    expect(capturedCodes).toContain(37);  // LEFT
+    expect(capturedCodes).toContain(65);  // A
+    expect(capturedCodes).toContain(39);  // RIGHT
+    expect(capturedCodes).toContain(68);  // D
+    expect(capturedCodes).toContain(38);  // UP
+    expect(capturedCodes).toContain(87);  // W
+    expect(capturedCodes).toContain(40);  // DOWN
+    expect(capturedCodes).toContain(83);  // S
+    expect(capturedCodes).toContain(69);  // E
+    expect(capturedCodes).toContain(32);  // SPACE
+
+    im.destroy();
+    _resetForTesting();
+  });
+
+  it('clears key captures in constructor when UI is already focused', async () => {
+    const { acquireInputFocus, _resetForTesting } = await import('../../client/src/core/InputContext.js');
+    _resetForTesting();
+    acquireInputFocus();
+
+    const scene = createMockScene();
+    const im = new InputManager(scene);
+
+    // Constructor should have cleared captures after building key objects
+    expect(scene.input.keyboard.clearCaptures).toHaveBeenCalled();
 
     im.destroy();
     _resetForTesting();

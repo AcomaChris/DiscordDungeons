@@ -19,25 +19,30 @@ export class InputManager {
     }
     this.keyObjects = {};
 
-    // Sync initial state in case a UI overlay is already open
-    this._gameInputActive = isGameInputActive();
-    if (!this._gameInputActive) {
-      this.scene.input.keyboard.enabled = false;
-    }
-
     this._onFocusChanged = ({ active }) => {
       this._gameInputActive = active;
       if (!active) {
         this.scene.input.keyboard.enabled = false;
-        // Emit zero immediately so the player stops on this frame
+        // Release Phaser's preventDefault captures so DOM form fields
+        // receive WASD, Space, arrow keys, etc. normally.
+        this.scene.input.keyboard.clearCaptures();
         eventBus.emit(INPUT_ACTION, { moveX: 0, moveY: 0 });
       } else {
         this.scene.input.keyboard.enabled = true;
+        this._restoreCaptures();
       }
     };
     eventBus.on(INPUT_FOCUS_CHANGED, this._onFocusChanged);
 
     this._buildKeyObjects();
+
+    // Sync initial state AFTER building key objects, since addKey()
+    // registers captures that must be cleared if UI is already focused.
+    this._gameInputActive = isGameInputActive();
+    if (!this._gameInputActive) {
+      this.scene.input.keyboard.enabled = false;
+      this.scene.input.keyboard.clearCaptures();
+    }
   }
 
   _buildKeyObjects() {
@@ -47,6 +52,15 @@ export class InputManager {
       this.keyObjects[action] = keyCodes.map((code) =>
         this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes[code]),
       );
+    }
+  }
+
+  // Re-register preventDefault captures for all bound keys after UI releases focus.
+  _restoreCaptures() {
+    for (const keyCodes of Object.values(this.bindings)) {
+      for (const code of keyCodes) {
+        this.scene.input.keyboard.addCapture(Phaser.Input.Keyboard.KeyCodes[code]);
+      }
     }
   }
 
