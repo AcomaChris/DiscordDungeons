@@ -112,13 +112,27 @@
 .player-debug-abilities {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
 }
 
-.player-debug-ability-row {
+.player-debug-ability-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.player-debug-ability-header {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.player-debug-ability-equip {
+  width: 14px;
+  height: 14px;
+  accent-color: #00ccff;
+  cursor: pointer;
+  flex-shrink: 0;
 }
 
 .player-debug-ability-dot {
@@ -127,6 +141,7 @@
   border-radius: 50%;
   background: #555;
   flex-shrink: 0;
+  margin-left: auto;
   transition: background 0.15s;
 }
 
@@ -142,10 +157,16 @@
 }
 
 .player-debug-ability-params {
-  color: #888;
-  font-size: 11px;
-  font-family: sans-serif;
-  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: 22px;
+}
+
+.player-debug-ability-param-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 /* --- Actions --- */

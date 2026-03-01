@@ -1,6 +1,7 @@
 import './player-debug.css';
 import { acquireInputFocus, releaseInputFocus } from '../core/InputContext.js';
 import { CHAR_HEIGHT, TEXTURE_SCALE } from '../core/Constants.js';
+import { ABILITY_DEFS } from '../abilities/AbilityDefs.js';
 
 // --- Player Debug Panel ---
 // Live-tweaking panel for player collision, color, and name.
@@ -11,6 +12,8 @@ export class PlayerDebugPanel {
     this._backdrop = null;
     this._dialog = null;
     this._rafId = null;
+    this._holdsFocus = false;
+    this._onCanvasPointerDown = null;
   }
 
   open() {
@@ -26,17 +29,23 @@ export class PlayerDebugPanel {
     this._player = scene.player;
 
     this._createDialog();
+    this._holdsFocus = true;
     acquireInputFocus();
+    this._setupFocusToggle();
     this._startPositionUpdates();
   }
 
   close() {
     this._stopPositionUpdates();
+    this._teardownFocusToggle();
     if (this._backdrop) {
       this._backdrop.remove();
       this._backdrop = null;
       this._dialog = null;
-      releaseInputFocus();
+      if (this._holdsFocus) {
+        releaseInputFocus();
+        this._holdsFocus = false;
+      }
     }
     this._scene = null;
     this._player = null;
@@ -212,35 +221,91 @@ export class PlayerDebugPanel {
     const container = this._dialog.querySelector('[data-field="abilities"]');
     if (!container || !this._player.abilities) return;
 
-    const state = this._player.abilities.getState();
+    const abilities = this._player.abilities;
     container.innerHTML = '';
 
-    for (const id of state.equipped) {
-      const isActive = state.active.includes(id);
-      const params = state.params[id] || {};
+    for (const [id, def] of Object.entries(ABILITY_DEFS)) {
+      const equipped = abilities.has(id);
+      const entry = abilities.get(id);
+      const isActive = entry?.active ?? false;
 
-      const row = document.createElement('div');
-      row.className = 'player-debug-ability-row';
-      row.dataset.abilityId = id;
+      const block = document.createElement('div');
+      block.className = 'player-debug-ability-block';
+      block.dataset.abilityId = id;
 
-      const dot = document.createElement('span');
-      dot.className = `player-debug-ability-dot${isActive ? ' active' : ''}`;
+      // --- Header: checkbox + name + active dot ---
+      const header = document.createElement('div');
+      header.className = 'player-debug-ability-header';
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.className = 'player-debug-ability-equip';
+      checkbox.checked = equipped;
+      checkbox.addEventListener('change', () => {
+        if (checkbox.checked) {
+          abilities.equip(id);
+        } else {
+          abilities.unequip(id);
+        }
+        this._renderAbilityParams(block, id);
+      });
 
       const name = document.createElement('span');
       name.className = 'player-debug-ability-name';
       name.textContent = id;
 
-      const paramText = document.createElement('span');
-      paramText.className = 'player-debug-ability-params';
-      paramText.textContent = Object.entries(params)
-        .map(([k, v]) => `${k}: ${v}`)
-        .join(', ');
+      const dot = document.createElement('span');
+      dot.className = `player-debug-ability-dot${isActive ? ' active' : ''}`;
 
-      row.appendChild(dot);
-      row.appendChild(name);
-      row.appendChild(paramText);
-      container.appendChild(row);
+      header.appendChild(checkbox);
+      header.appendChild(name);
+      header.appendChild(dot);
+      block.appendChild(header);
+
+      // --- Param inputs (only when equipped) ---
+      this._renderAbilityParams(block, id);
+
+      container.appendChild(block);
     }
+  }
+
+  _renderAbilityParams(block, abilityId) {
+    const existing = block.querySelector('.player-debug-ability-params');
+    if (existing) existing.remove();
+
+    const abilities = this._player.abilities;
+    if (!abilities.has(abilityId)) return;
+
+    const entry = abilities.get(abilityId);
+    const paramsContainer = document.createElement('div');
+    paramsContainer.className = 'player-debug-ability-params';
+
+    for (const [paramName, value] of Object.entries(entry.params)) {
+      const row = document.createElement('div');
+      row.className = 'player-debug-ability-param-row';
+
+      const label = document.createElement('span');
+      label.className = 'player-debug-label';
+      label.textContent = paramName;
+
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.className = 'player-debug-input player-debug-input-small';
+      input.dataset.abilityParam = `${abilityId}.${paramName}`;
+      input.value = value;
+      input.addEventListener('input', () => {
+        const val = parseFloat(input.value);
+        if (!isNaN(val)) {
+          abilities.setParam(abilityId, paramName, val);
+        }
+      });
+
+      row.appendChild(label);
+      row.appendChild(input);
+      paramsContainer.appendChild(row);
+    }
+
+    block.appendChild(paramsContainer);
   }
 
   _updateAbilityIndicators() {
@@ -250,11 +315,45 @@ export class PlayerDebugPanel {
 
     const activeSet = new Set(this._player.abilities.getState().active);
 
-    for (const row of container.querySelectorAll('.player-debug-ability-row')) {
-      const dot = row.querySelector('.player-debug-ability-dot');
+    for (const block of container.querySelectorAll('.player-debug-ability-block')) {
+      const dot = block.querySelector('.player-debug-ability-dot');
       if (dot) {
-        dot.classList.toggle('active', activeSet.has(row.dataset.abilityId));
+        dot.classList.toggle('active', activeSet.has(block.dataset.abilityId));
       }
+    }
+  }
+
+  // --- Focus Toggle ---
+  // Clicking the game canvas releases input focus (player can move).
+  // Clicking/focusing a panel input re-acquires it (typing stays in panel).
+
+  _setupFocusToggle() {
+    const canvas = globalThis.__PHASER_GAME__?.canvas;
+    if (canvas) {
+      this._onCanvasPointerDown = () => {
+        if (this._holdsFocus) {
+          releaseInputFocus();
+          this._holdsFocus = false;
+        }
+      };
+      canvas.addEventListener('pointerdown', this._onCanvasPointerDown);
+    }
+
+    this._dialog.addEventListener('focusin', () => {
+      if (!this._holdsFocus) {
+        acquireInputFocus();
+        this._holdsFocus = true;
+      }
+    });
+  }
+
+  _teardownFocusToggle() {
+    if (this._onCanvasPointerDown) {
+      const canvas = globalThis.__PHASER_GAME__?.canvas;
+      if (canvas) {
+        canvas.removeEventListener('pointerdown', this._onCanvasPointerDown);
+      }
+      this._onCanvasPointerDown = null;
     }
   }
 

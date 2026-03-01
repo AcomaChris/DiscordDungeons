@@ -15,6 +15,34 @@ vi.mock('../../client/src/entities/PlayerTextureGenerator.js', () => ({
   generatePlayerTextures: vi.fn(),
 }));
 
+// Helper: builds a mock AbilityManager with state-tracking methods.
+// Pass initial equipped abilities as { id: { param: value } }.
+function createMockAbilities(initialEquipped = {}, initialActive = []) {
+  const equipped = new Map();
+  const activeSet = new Set(initialActive);
+  for (const [id, params] of Object.entries(initialEquipped)) {
+    equipped.set(id, { ...params });
+  }
+  return {
+    has: vi.fn((id) => equipped.has(id)),
+    get: vi.fn((id) => {
+      if (!equipped.has(id)) return null;
+      return { params: equipped.get(id), active: activeSet.has(id) };
+    }),
+    equip: vi.fn((id) => { equipped.set(id, {}); }),
+    unequip: vi.fn((id) => { equipped.delete(id); }),
+    setParam: vi.fn((id, paramName, value) => {
+      const p = equipped.get(id);
+      if (p) p[paramName] = value;
+    }),
+    getState: vi.fn(() => ({
+      equipped: [...equipped.keys()],
+      active: [...activeSet],
+      params: Object.fromEntries(equipped),
+    })),
+  };
+}
+
 describe('PlayerDebugPanel', () => {
   let PlayerDebugPanel;
   let acquireInputFocus;
@@ -42,13 +70,7 @@ describe('PlayerDebugPanel', () => {
       texturePrefix: 'player-0',
       facing: 'down',
       setColor: vi.fn(),
-      abilities: {
-        getState: vi.fn(() => ({
-          equipped: ['movement'],
-          active: [],
-          params: { movement: { walkSpeed: 80, sprintSpeed: 160 } },
-        })),
-      },
+      abilities: createMockAbilities({ movement: { walkSpeed: 80, sprintSpeed: 160 } }),
     };
 
     mockScene = {
@@ -58,8 +80,13 @@ describe('PlayerDebugPanel', () => {
       },
     };
 
+    // Mock canvas for focus toggle tests
+    const mockCanvas = document.createElement('canvas');
+    document.body.appendChild(mockCanvas);
+
     // Expose mock game global
     globalThis.__PHASER_GAME__ = {
+      canvas: mockCanvas,
       scene: {
         getScene: vi.fn(() => mockScene),
       },
@@ -81,6 +108,9 @@ describe('PlayerDebugPanel', () => {
 
   afterEach(() => {
     for (const el of document.querySelectorAll('.player-debug-backdrop')) {
+      el.remove();
+    }
+    for (const el of document.querySelectorAll('canvas')) {
       el.remove();
     }
     delete globalThis.__PHASER_GAME__;
@@ -238,33 +268,101 @@ describe('PlayerDebugPanel', () => {
     panel.close();
   });
 
-  it('renders equipped abilities with names and params', () => {
+  it('renders all abilities with equip checkboxes', () => {
     const panel = new PlayerDebugPanel();
     panel.open();
 
-    const container = document.querySelector('[data-field="abilities"]');
-    expect(container).not.toBeNull();
+    const blocks = document.querySelectorAll('.player-debug-ability-block');
+    // ABILITY_DEFS has 3 abilities: movement, jump, float
+    expect(blocks.length).toBe(3);
 
-    const rows = container.querySelectorAll('.player-debug-ability-row');
-    expect(rows.length).toBe(1);
-    expect(rows[0].dataset.abilityId).toBe('movement');
-    expect(rows[0].querySelector('.player-debug-ability-name').textContent).toBe('movement');
-    expect(rows[0].querySelector('.player-debug-ability-params').textContent).toContain('walkSpeed: 80');
+    const names = [...blocks].map((b) => b.dataset.abilityId);
+    expect(names).toContain('movement');
+    expect(names).toContain('jump');
+    expect(names).toContain('float');
+
+    panel.close();
+  });
+
+  it('checks equip checkbox for equipped abilities', () => {
+    const panel = new PlayerDebugPanel();
+    panel.open();
+
+    const movementBlock = document.querySelector('[data-ability-id="movement"]');
+    const jumpBlock = document.querySelector('[data-ability-id="jump"]');
+
+    expect(movementBlock.querySelector('.player-debug-ability-equip').checked).toBe(true);
+    expect(jumpBlock.querySelector('.player-debug-ability-equip').checked).toBe(false);
+
+    panel.close();
+  });
+
+  it('shows param inputs for equipped abilities', () => {
+    const panel = new PlayerDebugPanel();
+    panel.open();
+
+    const movementBlock = document.querySelector('[data-ability-id="movement"]');
+    const paramInputs = movementBlock.querySelectorAll('[data-ability-param]');
+    expect(paramInputs.length).toBe(2);
+    expect(movementBlock.querySelector('[data-ability-param="movement.walkSpeed"]').value).toBe('80');
+    expect(movementBlock.querySelector('[data-ability-param="movement.sprintSpeed"]').value).toBe('160');
+
+    // Unequipped abilities should not show param inputs
+    const jumpBlock = document.querySelector('[data-ability-id="jump"]');
+    expect(jumpBlock.querySelector('.player-debug-ability-params')).toBeNull();
+
+    panel.close();
+  });
+
+  it('calls equip when checkbox is checked', () => {
+    const panel = new PlayerDebugPanel();
+    panel.open();
+
+    const jumpCheckbox = document.querySelector('[data-ability-id="jump"] .player-debug-ability-equip');
+    jumpCheckbox.checked = true;
+    jumpCheckbox.dispatchEvent(new Event('change'));
+
+    expect(mockPlayer.abilities.equip).toHaveBeenCalledWith('jump');
+
+    panel.close();
+  });
+
+  it('calls unequip when checkbox is unchecked', () => {
+    const panel = new PlayerDebugPanel();
+    panel.open();
+
+    const movementCheckbox = document.querySelector('[data-ability-id="movement"] .player-debug-ability-equip');
+    movementCheckbox.checked = false;
+    movementCheckbox.dispatchEvent(new Event('change'));
+
+    expect(mockPlayer.abilities.unequip).toHaveBeenCalledWith('movement');
+
+    panel.close();
+  });
+
+  it('calls setParam when param input changes', () => {
+    const panel = new PlayerDebugPanel();
+    panel.open();
+
+    const walkSpeedInput = document.querySelector('[data-ability-param="movement.walkSpeed"]');
+    walkSpeedInput.value = '120';
+    walkSpeedInput.dispatchEvent(new Event('input'));
+
+    expect(mockPlayer.abilities.setParam).toHaveBeenCalledWith('movement', 'walkSpeed', 120);
 
     panel.close();
   });
 
   it('shows active indicator when ability is active', () => {
-    mockPlayer.abilities.getState.mockReturnValue({
-      equipped: ['movement'],
-      active: ['movement'],
-      params: { movement: { walkSpeed: 80, sprintSpeed: 160 } },
-    });
+    mockPlayer.abilities = createMockAbilities(
+      { movement: { walkSpeed: 80, sprintSpeed: 160 } },
+      ['movement'],
+    );
 
     const panel = new PlayerDebugPanel();
     panel.open();
 
-    const dot = document.querySelector('.player-debug-ability-dot');
+    const dot = document.querySelector('[data-ability-id="movement"] .player-debug-ability-dot');
     expect(dot.classList.contains('active')).toBe(true);
 
     panel.close();
@@ -274,9 +372,56 @@ describe('PlayerDebugPanel', () => {
     const panel = new PlayerDebugPanel();
     panel.open();
 
-    const dot = document.querySelector('.player-debug-ability-dot');
+    const dot = document.querySelector('[data-ability-id="movement"] .player-debug-ability-dot');
     expect(dot.classList.contains('active')).toBe(false);
 
     panel.close();
+  });
+
+  it('releases focus when canvas is clicked', () => {
+    const panel = new PlayerDebugPanel();
+    panel.open();
+    acquireInputFocus.mockClear();
+    releaseInputFocus.mockClear();
+
+    globalThis.__PHASER_GAME__.canvas.dispatchEvent(new Event('pointerdown'));
+
+    expect(releaseInputFocus).toHaveBeenCalledTimes(1);
+
+    panel.close();
+  });
+
+  it('re-acquires focus when panel input is focused after canvas click', () => {
+    const panel = new PlayerDebugPanel();
+    panel.open();
+    acquireInputFocus.mockClear();
+    releaseInputFocus.mockClear();
+
+    // Click canvas to release focus
+    globalThis.__PHASER_GAME__.canvas.dispatchEvent(new Event('pointerdown'));
+    expect(releaseInputFocus).toHaveBeenCalledTimes(1);
+
+    // Focus a panel input to re-acquire
+    const nameInput = document.querySelector('[data-field="name"]');
+    nameInput.dispatchEvent(new Event('focusin', { bubbles: true }));
+
+    expect(acquireInputFocus).toHaveBeenCalledTimes(1);
+
+    panel.close();
+  });
+
+  it('does not double-release when closing after canvas click', () => {
+    const panel = new PlayerDebugPanel();
+    panel.open();
+    acquireInputFocus.mockClear();
+    releaseInputFocus.mockClear();
+
+    // Click canvas to release focus
+    globalThis.__PHASER_GAME__.canvas.dispatchEvent(new Event('pointerdown'));
+    expect(releaseInputFocus).toHaveBeenCalledTimes(1);
+
+    // Close panel — should not call releaseInputFocus again
+    panel.close();
+    expect(releaseInputFocus).toHaveBeenCalledTimes(1);
   });
 });
