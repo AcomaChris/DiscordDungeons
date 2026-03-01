@@ -106,8 +106,10 @@ export class Player {
 
   _startJump(heightPower) {
     this._isJumping = true;
-    const hopHeight = Math.min(heightPower * 0.1, 24);
-    const duration = 200;
+    // AGENT: heightPower maps directly to hop pixels so debug panel
+    // tweaks produce visible results. Default 200 → 20px hop.
+    const hopHeight = heightPower * 0.1;
+    const duration = 150 + hopHeight * 3;
 
     // Shadow ellipse at ground level
     const shadow = this.scene.add.ellipse(
