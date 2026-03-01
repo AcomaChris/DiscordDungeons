@@ -268,4 +268,23 @@ describe('BugReporter', () => {
     reporter.destroy();
     expect(document.querySelector('.bug-report-container')).toBeNull();
   });
+
+  it('acquires input focus on dialog open and releases on close', async () => {
+    const { isGameInputActive, _resetForTesting } = await import('../../client/src/core/InputContext.js');
+    _resetForTesting();
+
+    const reporter = new BugReporter();
+    reporter.mount();
+
+    expect(isGameInputActive()).toBe(true);
+
+    document.querySelector('.bug-report-menu-item').click();
+    expect(isGameInputActive()).toBe(false);
+
+    document.querySelector('.bug-report-btn-cancel').click();
+    expect(isGameInputActive()).toBe(true);
+
+    reporter.destroy();
+    _resetForTesting();
+  });
 });

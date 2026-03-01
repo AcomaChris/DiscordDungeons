@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import eventBus from '../core/EventBus.js';
 import { INPUT_ACTION } from '../core/Events.js';
 import { Actions, DEFAULT_KEY_BINDINGS } from './InputActions.js';
+import { isGameInputActive } from '../core/InputContext.js';
 
 // --- InputManager ---
 // Maps physical keyboard input to logical game actions.
@@ -47,6 +48,19 @@ export class InputManager {
   }
 
   update() {
+    // When a UI overlay has focus, suppress game input and disable Phaser's
+    // keyboard capture so form fields receive key events normally.
+    if (!isGameInputActive()) {
+      if (this.scene.input.keyboard.enabled) {
+        this.scene.input.keyboard.enabled = false;
+      }
+      eventBus.emit(INPUT_ACTION, { moveX: 0, moveY: 0 });
+      return;
+    }
+    if (!this.scene.input.keyboard.enabled) {
+      this.scene.input.keyboard.enabled = true;
+    }
+
     eventBus.emit(INPUT_ACTION, this.getSnapshot());
   }
 

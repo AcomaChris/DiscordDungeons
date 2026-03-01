@@ -40,6 +40,7 @@ function createMockScene() {
   return {
     input: {
       keyboard: {
+        enabled: true,
         addKey: vi.fn((code) => {
           const key = createMockKey();
           mockKeys.set(code, key);
@@ -200,5 +201,52 @@ describe('InputManager', () => {
     expect(snap).toEqual({ moveX: 1, moveY: -1 });
     expect(calls).toHaveLength(0);
     im.destroy();
+  });
+
+  it('emits zero and disables keyboard when UI has focus', async () => {
+    const { acquireInputFocus, _resetForTesting } = await import('../../client/src/core/InputContext.js');
+    _resetForTesting();
+    acquireInputFocus();
+
+    const scene = createMockScene();
+    const im = new InputManager(scene);
+    const eventBusMod = await import('../../client/src/core/EventBus.js');
+
+    im.keyObjects.moveRight[0].isDown = true;
+
+    const calls = [];
+    eventBusMod.default.on(INPUT_ACTION, (data) => calls.push(data));
+
+    im.update();
+
+    expect(calls[0]).toEqual({ moveX: 0, moveY: 0 });
+    expect(scene.input.keyboard.enabled).toBe(false);
+
+    im.destroy();
+    _resetForTesting();
+  });
+
+  it('re-enables keyboard when UI releases focus', async () => {
+    const { acquireInputFocus, releaseInputFocus, _resetForTesting } = await import('../../client/src/core/InputContext.js');
+    _resetForTesting();
+    acquireInputFocus();
+
+    const scene = createMockScene();
+    const im = new InputManager(scene);
+    const eventBusMod = await import('../../client/src/core/EventBus.js');
+
+    im.update(); // disables keyboard
+    expect(scene.input.keyboard.enabled).toBe(false);
+
+    releaseInputFocus();
+
+    const calls = [];
+    eventBusMod.default.on(INPUT_ACTION, (data) => calls.push(data));
+
+    im.update(); // should re-enable
+    expect(scene.input.keyboard.enabled).toBe(true);
+
+    im.destroy();
+    _resetForTesting();
   });
 });

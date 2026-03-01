@@ -1,4 +1,5 @@
 import './bug-report.css';
+import { acquireInputFocus, releaseInputFocus } from '../core/InputContext.js';
 
 // --- Bug Reporter ---
 // Settings cog with "File Issue" option. Opens a dialog to file GitHub issues
@@ -146,6 +147,8 @@ export class BugReporter {
     this._backdrop.appendChild(this._dialog);
     document.body.appendChild(this._backdrop);
 
+    acquireInputFocus();
+
     // Focus the title input
     this._dialog.querySelector('[data-field="title"]').focus();
   }
@@ -155,6 +158,7 @@ export class BugReporter {
       this._backdrop.remove();
       this._backdrop = null;
       this._dialog = null;
+      releaseInputFocus();
     }
     this._screenshotData = null;
   }
