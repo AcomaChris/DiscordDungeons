@@ -145,11 +145,13 @@ test.describe('Position tracking', () => {
   test('captures game console output', async ({ page }) => {
     const consoleLogs = [];
     const consoleErrors = [];
+    const pageErrors = [];
 
     page.on('console', (msg) => {
       if (msg.type() === 'error') consoleErrors.push(msg.text());
       else consoleLogs.push(`[${msg.type()}] ${msg.text()}`);
     });
+    page.on('pageerror', (err) => pageErrors.push(err.message));
 
     await bootGame(page);
 
@@ -164,10 +166,57 @@ test.describe('Position tracking', () => {
       consoleErrors.forEach((err) => console.log(`  ERROR: ${err}`));
     }
 
-    // No fatal errors should have occurred (WS errors are expected without server)
+    if (pageErrors.length > 0) {
+      console.log('--- Uncaught Exceptions ---');
+      pageErrors.forEach((err) => console.log(`  ${err}`));
+    }
+
+    // No fatal console errors (WS errors are expected without server)
     const fatalErrors = consoleErrors.filter(
       (e) => !e.includes('WebSocket') && !e.includes('net::ERR'),
     );
     expect(fatalErrors).toHaveLength(0);
+
+    // No uncaught exceptions — these crash the preupdate handler and
+    // prevent rendering (see issue #5: tile.collides read-only getter)
+    expect(pageErrors).toHaveLength(0);
+  });
+
+  test('game renders visible content (not blank screen)', async ({ page }) => {
+    await bootGame(page);
+    await page.waitForTimeout(1000);
+
+    // Sample the canvas to verify something besides the background color renders.
+    // This catches rendering failures like issue #5 where uncaught exceptions
+    // silently prevent all visual output.
+    const result = await page.evaluate(() => {
+      const game = globalThis.__PHASER_GAME__;
+      const canvas = game.canvas;
+      const dataUrl = canvas.toDataURL('image/png');
+
+      const img = new Image();
+      img.src = dataUrl;
+
+      // Use OffscreenCanvas to read pixels
+      const offscreen = new OffscreenCanvas(canvas.width, canvas.height);
+      const ctx = offscreen.getContext('2d');
+      ctx.drawImage(canvas, 0, 0);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+
+      // Count distinct colors in a sample of pixels
+      const colorSet = new Set();
+      for (let i = 0; i < data.length; i += 400) {
+        const r = data[i], g = data[i + 1], b = data[i + 2];
+        colorSet.add(`${r},${g},${b}`);
+      }
+
+      return { distinctColors: colorSet.size, width: canvas.width, height: canvas.height };
+    });
+
+    console.log(`Canvas ${result.width}×${result.height}, ${result.distinctColors} distinct colors sampled`);
+    // A blank screen has only 1 color (the background). A working game
+    // should have floor tiles, player sprite, wall sprites etc — many colors.
+    expect(result.distinctColors).toBeGreaterThan(1);
   });
 });

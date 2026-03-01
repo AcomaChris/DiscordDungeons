@@ -210,7 +210,8 @@ export class Player {
         if (!tile) continue;
 
         // Player high enough → allow passage on the platform
-        tile.collides = this.z < elevPx;
+        const shouldBlock = this.z < elevPx;
+        tile.setCollision(shouldBlock, shouldBlock, shouldBlock, shouldBlock, false);
       }
     }
   }
