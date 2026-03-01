@@ -1,6 +1,6 @@
 import eventBus from '../core/EventBus.js';
 import { PLAYER_MOVED } from '../core/Events.js';
-import { MOVE_SPEED, CHAR_HEIGHT, TEXTURE_SCALE } from '../core/Constants.js';
+import { MOVE_SPEED, CHAR_WIDTH, CHAR_HEIGHT, TEXTURE_SCALE } from '../core/Constants.js';
 
 // --- Player ---
 // Wraps the local player sprite, handles 4-directional input, emits state
@@ -17,11 +17,13 @@ export class Player {
     this.sprite = scene.physics.add.sprite(spawnX, spawnY, 'player-0-down');
     this.sprite.setScale(1 / TEXTURE_SCALE);
 
-    // Collision body covers the lower portion of the character. Full width
-    // prevents horizontal wall overlap; 14px height gives enough vertical
-    // clearance that the head doesn't visually penetrate walls above.
-    this.sprite.body.setSize(this.sprite.width, 14);
-    this.sprite.body.setOffset(0, this.sprite.height - 14);
+    // AGENT: Phaser body.setSize() works in unscaled texture space — values
+    // are multiplied by sprite.scaleX/Y internally. Multiply desired world-pixel
+    // dimensions by TEXTURE_SCALE so the final body matches the visual character.
+    const bodyW = CHAR_WIDTH * TEXTURE_SCALE;
+    const bodyH = 14 * TEXTURE_SCALE;
+    this.sprite.body.setSize(bodyW, bodyH);
+    this.sprite.body.setOffset(0, CHAR_HEIGHT * TEXTURE_SCALE - bodyH);
 
     this.nameLabel = scene.add.text(spawnX, spawnY - CHAR_HEIGHT / 2 - 4, playerName || 'Player', {
       fontSize: '12px',
