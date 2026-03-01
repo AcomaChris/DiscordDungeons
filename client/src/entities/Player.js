@@ -4,7 +4,7 @@ import { MOVE_SPEED, CHAR_HEIGHT, TEXTURE_SCALE } from '../core/Constants.js';
 
 // --- Player ---
 // Wraps the local player sprite, handles 4-directional input, emits state
-// for network sync. Uses a feet-only hitbox for natural 3/4 view overlap.
+// for network sync. Uses a lower-body hitbox for natural 3/4 view overlap.
 
 const SQRT2 = Math.sqrt(2);
 
@@ -17,10 +17,11 @@ export class Player {
     this.sprite = scene.physics.add.sprite(spawnX, spawnY, 'player-0-down');
     this.sprite.setScale(1 / TEXTURE_SCALE);
 
-    // Feet-only collision body: full width prevents horizontal wall overlap,
-    // short height lets the upper body overlap objects above (3/4 view).
-    this.sprite.body.setSize(this.sprite.width, 8);
-    this.sprite.body.setOffset(0, this.sprite.height - 8);
+    // Collision body covers the lower portion of the character. Full width
+    // prevents horizontal wall overlap; 14px height gives enough vertical
+    // clearance that the head doesn't visually penetrate walls above.
+    this.sprite.body.setSize(this.sprite.width, 14);
+    this.sprite.body.setOffset(0, this.sprite.height - 14);
 
     this.nameLabel = scene.add.text(spawnX, spawnY - CHAR_HEIGHT / 2 - 4, playerName || 'Player', {
       fontSize: '12px',
