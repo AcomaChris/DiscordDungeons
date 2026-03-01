@@ -1,5 +1,6 @@
 import { CHAR_HEIGHT, TEXTURE_SCALE, PLAYER_COLORS } from '../core/Constants.js';
 import { generatePlayerTextures } from './PlayerTextureGenerator.js';
+import { AbilityManager } from '../abilities/AbilityManager.js';
 
 // --- RemotePlayer ---
 // Renders a network-synced player. Position interpolated over the expected
@@ -23,6 +24,7 @@ export class RemotePlayer {
     this._targetY = spawnY;
     this._elapsed = INTERP_DURATION;
     this._facing = 'down';
+    this.abilities = new AbilityManager();
 
     this.nameLabel = scene.add.text(spawnX, spawnY - CHAR_HEIGHT / 2 - 4, playerName || 'Player', {
       fontSize: '12px',
@@ -42,7 +44,7 @@ export class RemotePlayer {
     this.sprite.setTexture(`${this.texturePrefix}-${this._facing}`);
   }
 
-  applyState({ x, y, facing, color }) {
+  applyState({ x, y, facing, color, abilities }) {
     // Start interpolating from current position to the new target
     this._startX = this.sprite.x;
     this._startY = this.sprite.y;
@@ -57,6 +59,10 @@ export class RemotePlayer {
     if (facing !== this._facing) {
       this._facing = facing;
       this.sprite.setTexture(`${this.texturePrefix}-${facing}`);
+    }
+
+    if (abilities) {
+      this.abilities.applyState(abilities);
     }
   }
 

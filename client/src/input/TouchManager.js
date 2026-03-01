@@ -90,7 +90,7 @@ export class TouchManager {
   // --- Snapshot ---
 
   getSnapshot() {
-    return { moveX: this._moveX, moveY: this._moveY };
+    return { moveX: this._moveX, moveY: this._moveY, sprint: false };
   }
 
   // --- Visibility ---

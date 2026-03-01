@@ -1,4 +1,6 @@
 // --- Physics / Movement ---
+// AGENT: MOVE_SPEED is the legacy base walk speed. Player movement now reads
+// speed from AbilityManager ('movement' ability). Keep for fallback/reference.
 export const MOVE_SPEED = 80; // pixels/sec (~5 tiles/sec at 16px tiles)
 
 // --- Tile ---

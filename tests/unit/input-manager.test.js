@@ -29,6 +29,7 @@ vi.mock('phaser', () => ({
           S: 83,
           E: 69,
           SPACE: 32,
+          SHIFT: 16,
         },
       },
     },
@@ -82,7 +83,7 @@ describe('InputManager', () => {
     im.update();
 
     expect(calls).toHaveLength(1);
-    expect(calls[0]).toEqual({ moveX: 0, moveY: 0 });
+    expect(calls[0]).toEqual({ moveX: 0, moveY: 0, sprint: false });
     im.destroy();
   });
 
@@ -200,7 +201,7 @@ describe('InputManager', () => {
     eventBusMod.default.on(INPUT_ACTION, (data) => calls.push(data));
 
     const snap = im.getSnapshot();
-    expect(snap).toEqual({ moveX: 1, moveY: -1 });
+    expect(snap).toEqual({ moveX: 1, moveY: -1, sprint: false });
     expect(calls).toHaveLength(0);
     im.destroy();
   });
@@ -221,7 +222,7 @@ describe('InputManager', () => {
 
     im.update();
 
-    expect(calls[0]).toEqual({ moveX: 0, moveY: 0 });
+    expect(calls[0]).toEqual({ moveX: 0, moveY: 0, sprint: false });
     // Keyboard disabled by constructor (initial state sync)
     expect(scene.input.keyboard.enabled).toBe(false);
 
@@ -273,7 +274,7 @@ describe('InputManager', () => {
 
     // Handler fires immediately — keyboard disabled and zero emitted
     expect(scene.input.keyboard.enabled).toBe(false);
-    expect(calls).toEqual([{ moveX: 0, moveY: 0 }]);
+    expect(calls).toEqual([{ moveX: 0, moveY: 0, sprint: false }]);
 
     im.destroy();
     _resetForTesting();
@@ -313,7 +314,7 @@ describe('InputManager', () => {
     // Should re-add captures for all bound key codes
     expect(scene.input.keyboard.addCapture).toHaveBeenCalled();
     const capturedCodes = scene.input.keyboard.addCapture.mock.calls.map((c) => c[0]);
-    // All 10 bound keys: LEFT, A, RIGHT, D, UP, W, DOWN, S, E, SPACE
+    // All 11 bound keys: LEFT, A, RIGHT, D, UP, W, DOWN, S, E, SPACE, SHIFT
     expect(capturedCodes).toContain(37);  // LEFT
     expect(capturedCodes).toContain(65);  // A
     expect(capturedCodes).toContain(39);  // RIGHT
@@ -324,6 +325,7 @@ describe('InputManager', () => {
     expect(capturedCodes).toContain(83);  // S
     expect(capturedCodes).toContain(69);  // E
     expect(capturedCodes).toContain(32);  // SPACE
+    expect(capturedCodes).toContain(16);  // SHIFT
 
     im.destroy();
     _resetForTesting();
@@ -342,5 +344,25 @@ describe('InputManager', () => {
 
     im.destroy();
     _resetForTesting();
+  });
+
+  it('includes sprint=true when shift is held', async () => {
+    const scene = createMockScene();
+    const im = new InputManager(scene);
+
+    im.keyObjects.sprint[0].isDown = true;
+
+    const snap = im.getSnapshot();
+    expect(snap.sprint).toBe(true);
+    im.destroy();
+  });
+
+  it('includes sprint=false when shift is not held', async () => {
+    const scene = createMockScene();
+    const im = new InputManager(scene);
+
+    const snap = im.getSnapshot();
+    expect(snap.sprint).toBe(false);
+    im.destroy();
   });
 });

@@ -1,7 +1,8 @@
 import eventBus from '../core/EventBus.js';
 import { PLAYER_MOVED } from '../core/Events.js';
-import { MOVE_SPEED, CHAR_WIDTH, CHAR_HEIGHT, TEXTURE_SCALE, PLAYER_COLORS } from '../core/Constants.js';
+import { CHAR_WIDTH, CHAR_HEIGHT, TEXTURE_SCALE, PLAYER_COLORS } from '../core/Constants.js';
 import { generatePlayerTextures } from './PlayerTextureGenerator.js';
+import { AbilityManager } from '../abilities/AbilityManager.js';
 
 // --- Player ---
 // Wraps the local player sprite, handles 4-directional input, emits state
@@ -15,6 +16,7 @@ export class Player {
     this.facing = 'down';
     this.texturePrefix = 'player-0';
     this.color = PLAYER_COLORS[0];
+    this.abilities = new AbilityManager();
 
     this.sprite = scene.physics.add.sprite(spawnX, spawnY, 'player-0-down');
     this.sprite.setScale(1 / TEXTURE_SCALE);
@@ -58,11 +60,16 @@ export class Player {
     this.sprite.setTexture(`${this.texturePrefix}-${this.facing}`);
   }
 
-  handleInput({ moveX, moveY }) {
-    let vx = moveX * MOVE_SPEED;
-    let vy = moveY * MOVE_SPEED;
+  handleInput({ moveX, moveY, sprint }) {
+    this.abilities.updateFromInput({ sprint });
 
-    // Normalize diagonal so total speed equals MOVE_SPEED
+    const movement = this.abilities.get('movement');
+    const speed = movement?.active ? movement.params.sprintSpeed : movement?.params.walkSpeed ?? 80;
+
+    let vx = moveX * speed;
+    let vy = moveY * speed;
+
+    // Normalize diagonal so total speed equals current speed
     if (moveX !== 0 && moveY !== 0) {
       vx /= SQRT2;
       vy /= SQRT2;
@@ -99,6 +106,7 @@ export class Player {
       y: this.sprite.y,
       facing: this.facing,
       color: this.color,
+      abilities: this.abilities.getState(),
     };
   }
 
