@@ -182,7 +182,8 @@ export class Player {
       // Skipped during jumps — z is determined by jump physics, not terrain.
       // Uses this.z (not groundZ) to prevent multi-frame escalation where
       // groundZ updates first and then the check erroneously passes.
-      if (!this._isJumping && newGroundZ > this.z && newGroundZ <= this.z + ELEVATION_STEP) {
+      const stepHeight = this.abilities.getParam('movement', 'stepHeight');
+      if (!this._isJumping && newGroundZ > this.z && newGroundZ <= this.z + stepHeight) {
         this.z = newGroundZ;
       }
 
@@ -228,11 +229,16 @@ export class Player {
         const tile = tm.collisionLayer.getTileAt(tx, ty);
         if (!tile) continue;
 
-        // Player high enough → allow passage on the platform.
-        // When on an elevated surface, also clear collision for tiles below
-        // the ground row — the body clips into them but shouldn't be blocked.
-        const bodyClip = this.groundZ > 0 && ty > groundTileY;
-        const shouldBlock = this.z < elevPx && !bodyClip;
+        // Step-height: allow passage when player can reach the tile's elevation
+        // (already at/above it, or within one step height of reaching it).
+        const stepHeight = this.abilities.getParam('movement', 'stepHeight');
+        const canReach = this.z >= elevPx || elevPx <= this.z + stepHeight;
+
+        // Body-clip: only clear collision for tiles below ground row that the
+        // player is already high enough to pass over — prevents the body's
+        // vertical extent from colliding with tiles in the row below.
+        const bodyClip = this.groundZ > 0 && ty > groundTileY && elevPx <= this.z;
+        const shouldBlock = !canReach && !bodyClip;
         tile.setCollision(shouldBlock, shouldBlock, shouldBlock, shouldBlock, false);
       }
     }

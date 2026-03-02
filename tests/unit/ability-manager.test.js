@@ -87,7 +87,7 @@ describe('AbilityManager', () => {
     const state = mgr.getState();
     expect(state.equipped).toEqual(['movement', 'jump']);
     expect(state.active).toEqual([]);
-    expect(state.params.movement).toEqual({ walkSpeed: 80, sprintSpeed: 160 });
+    expect(state.params.movement).toEqual({ walkSpeed: 80, sprintSpeed: 160, stepHeight: 8 });
     expect(state.params.jump).toEqual({ heightPower: 200, horizontalPower: 100 });
   });
 

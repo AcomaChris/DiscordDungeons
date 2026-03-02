@@ -34,10 +34,11 @@ describe('AbilityDefs', () => {
     }
   });
 
-  it('movement has walkSpeed and sprintSpeed params', () => {
+  it('movement has walkSpeed, sprintSpeed, and stepHeight params', () => {
     const movement = ABILITY_DEFS.movement;
     expect(movement.params.walkSpeed).toBe(80);
     expect(movement.params.sprintSpeed).toBe(160);
+    expect(movement.params.stepHeight).toBe(8);
   });
 
   it('jump has heightPower and horizontalPower params', () => {

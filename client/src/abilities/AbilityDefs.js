@@ -20,6 +20,7 @@ export const ABILITY_DEFS = {
     params: {
       walkSpeed: 80,    // px/sec (base movement)
       sprintSpeed: 160,  // px/sec (~2× walk)
+      stepHeight: 8,     // px — max elevation delta for auto-step-up (one ELEVATION_STEP)
     },
   },
 

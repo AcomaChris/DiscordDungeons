@@ -79,7 +79,7 @@ describe('PlayerDebugPanel', () => {
       texturePrefix: 'player-0',
       facing: 'down',
       setColor: vi.fn(),
-      abilities: createMockAbilities({ movement: { walkSpeed: 80, sprintSpeed: 160 } }),
+      abilities: createMockAbilities({ movement: { walkSpeed: 80, sprintSpeed: 160, stepHeight: 8 } }),
     };
 
     mockScene = {
@@ -305,9 +305,10 @@ describe('PlayerDebugPanel', () => {
 
     const movementBlock = document.querySelector('[data-ability-id="movement"]');
     const paramInputs = movementBlock.querySelectorAll('[data-ability-param]');
-    expect(paramInputs.length).toBe(2);
+    expect(paramInputs.length).toBe(3);
     expect(movementBlock.querySelector('[data-ability-param="movement.walkSpeed"]').value).toBe('80');
     expect(movementBlock.querySelector('[data-ability-param="movement.sprintSpeed"]').value).toBe('160');
+    expect(movementBlock.querySelector('[data-ability-param="movement.stepHeight"]').value).toBe('8');
 
     panel.close();
   });

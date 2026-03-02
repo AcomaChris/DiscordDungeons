@@ -1,9 +1,9 @@
 // @ts-check
 import { test, expect } from '@playwright/test';
 
-// --- E2E: Platform Movement (Issue #6) ---
-// Verifies that a player standing on an elevated platform can move
-// horizontally without being blocked by adjacent higher-elevation tiles.
+// --- E2E: Platform Movement & Step-Height Elevation ---
+// Verifies the step-height elevation system: auto-step-up within stepHeight,
+// blocking above stepHeight, and gravity-based drop-down.
 
 const GAME_URL = 'http://localhost:8081';
 
@@ -84,34 +84,108 @@ test.describe('Platform movement (issue #6)', () => {
     expect(afterLeft.z).toBe(8);
   });
 
-  test('ground player is still blocked by platform walls', async ({ page }) => {
+  test('ground player auto-steps onto elevation-1 platform', async ({ page }) => {
     await bootGame(page);
 
-    // Place player on the ground just left of the platform
-    // Platform starts at tile column 4, so place at column 3 (x=56, y=224)
-    await placeOnPlatform(page, 56, 224, 0, 0);
+    // Place on ground just left of the platform (column 3, row 13)
+    await placeOnPlatform(page, 56, 216, 0, 0);
+
+    // Walk right toward the elevation-1 platform at column 4
+    await page.keyboard.down('ArrowRight');
+    await page.waitForTimeout(500);
+    await page.keyboard.up('ArrowRight');
+
+    const after = await page.evaluate(() => {
+      const p = globalThis.__PHASER_GAME__.scene.getScene('GameScene').player;
+      return { x: p.sprite.x, z: p.z, groundZ: p.groundZ };
+    });
+
+    console.log(`After step-up: x=${after.x.toFixed(1)}, z=${after.z}, groundZ=${after.groundZ}`);
+
+    // Player should have moved right past the platform edge (column 4 = x 64)
+    expect(after.x).toBeGreaterThan(64);
+    // Player should have auto-stepped up to elevation 1 (8px)
+    expect(after.z).toBe(8);
+  });
+
+  test('ground player blocked by over-step-height elevation', async ({ page }) => {
+    await bootGame(page);
+
+    // Place on ground just right of the elevation-3 block (column 11, row 13)
+    // Elevation-3 block is at columns 9-10, rows 13-14 (24px)
+    await placeOnPlatform(page, 184, 216, 0, 0);
+
+    // Try to walk left into elevation-3 block
+    await page.keyboard.down('ArrowLeft');
+    await page.waitForTimeout(500);
+    await page.keyboard.up('ArrowLeft');
+
+    const after = await page.evaluate(() => {
+      const p = globalThis.__PHASER_GAME__.scene.getScene('GameScene').player;
+      return { x: p.sprite.x, z: p.z, groundZ: p.groundZ };
+    });
+
+    console.log(`After blocked: x=${after.x.toFixed(1)}, z=${after.z}, groundZ=${after.groundZ}`);
+
+    // Player should remain at ground level
+    expect(after.z).toBe(0);
+    // Should not have passed into the elevation-3 tile area (column 10 ends at x=176)
+    expect(after.x).toBeGreaterThan(170);
+  });
+
+  test('elevation-1 player blocked by elevation-3', async ({ page }) => {
+    await bootGame(page);
+
+    // Place on elevation-1 platform at right edge (column 8, row 13)
+    // Elevation-3 block starts at column 9
+    await placeOnPlatform(page, 136, 216, 8, 8);
 
     const startX = await page.evaluate(() => {
       return globalThis.__PHASER_GAME__.scene.getScene('GameScene').player.sprite.x;
     });
 
-    // Try to walk right into the platform
+    // Try to walk right into elevation-3 block at column 9
     await page.keyboard.down('ArrowRight');
     await page.waitForTimeout(500);
     await page.keyboard.up('ArrowRight');
 
-    const afterRight = await page.evaluate(() => {
+    const after = await page.evaluate(() => {
       const p = globalThis.__PHASER_GAME__.scene.getScene('GameScene').player;
       return { x: p.sprite.x, z: p.z, groundZ: p.groundZ };
     });
 
-    const dx = afterRight.x - startX;
-    console.log(`Moved right toward platform: dx=${dx.toFixed(1)}, z=${afterRight.z}`);
+    const dx = after.x - startX;
+    console.log(`After elev-3 block: dx=${dx.toFixed(1)}, z=${after.z}, groundZ=${after.groundZ}`);
 
-    // Player should be blocked — minimal or no rightward movement past the wall
-    // (they can move a few pixels before hitting the wall edge)
-    expect(afterRight.z).toBe(0);
-    // Should not have passed tile column 4 (x=64)
-    expect(afterRight.x).toBeLessThan(72);
+    // Player should be blocked — elevation-3 (24px) is more than stepHeight above z=8
+    // Should not pass into column 9 (x=144)
+    expect(after.x).toBeLessThan(150);
+    expect(after.z).toBe(8);
+  });
+
+  test('player drops down when walking off elevated platform', async ({ page }) => {
+    await bootGame(page);
+
+    // Place on elevation-1 platform near left edge (column 4, row 13)
+    // Ground starts at column 3
+    await placeOnPlatform(page, 72, 216, 8, 8);
+
+    // Walk left off the platform edge
+    await page.keyboard.down('ArrowLeft');
+    await page.waitForTimeout(500);
+    await page.keyboard.up('ArrowLeft');
+
+    const after = await page.evaluate(() => {
+      const p = globalThis.__PHASER_GAME__.scene.getScene('GameScene').player;
+      return { x: p.sprite.x, z: p.z, groundZ: p.groundZ };
+    });
+
+    console.log(`After drop: x=${after.x.toFixed(1)}, z=${after.z}, groundZ=${after.groundZ}`);
+
+    // Player should have moved left off the platform
+    expect(after.x).toBeLessThan(68);
+    // Player should have dropped to ground level via gravity
+    expect(after.z).toBe(0);
+    expect(after.groundZ).toBe(0);
   });
 });

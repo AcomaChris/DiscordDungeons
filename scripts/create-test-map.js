@@ -84,6 +84,12 @@ function generateElevationData() {
       data[y * MAP_W + x] = 2;
     }
   }
+  // Elevation-3 block (24px) — tests over-step-height blocking from ground/elev-1
+  for (let y = 13; y <= 14; y++) {
+    for (let x = 9; x <= 10; x++) {
+      data[y * MAP_W + x] = 3;
+    }
+  }
   return data;
 }
 
