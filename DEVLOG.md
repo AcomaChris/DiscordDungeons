@@ -4,16 +4,28 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-01 — Step-Height Elevation System (Issue #6, continued)
+
+**Commits:** `07af35c` (v0.8.3)
+
+After deploying the timing fix (v0.8.2), found a new bug: pushing down into the corner of a 16px-high platform while on an 8px platform caused position reset. The `bodyClip` condition was too aggressive — clearing collision for ALL tiles below ground row regardless of elevation.
+
+- **Step-height system** (`07af35c`): Replaced blanket bodyClip with ability-driven step-height collision. New `canReach` check: allow passage if player is at/above tile elevation OR within `stepHeight` (8px default, one elevation level). bodyClip now only clears tiles the player is already high enough to pass over. Ground players auto-step onto elevation-1 naturally.
+- **Ability param**: Added `stepHeight: 8` to movement ability — modifiable via ability system, so future items/buffs can increase step range.
+- **Test map**: Added elevation-3 block (24px) for over-step-height blocking scenarios.
+- **5 e2e tests**: Horizontal movement on platform, auto-step-up, over-step-height blocking (ground and elevation-1 player vs elevation-3), drop-down via gravity.
+
+---
+
 ## 2026-03-01 — Fix Platform Movement (Issue #6)
 
-**Commits:** `7b85273` → `HEAD`
+**Commits:** `7b85273` → `75a3500` (v0.8.2)
 
 Deep dive into why players couldn't move on elevated platforms. Root cause was more subtle than expected — a Phaser game loop timing issue.
 
 - **Body-clip fix** (`7b85273`, v0.8.1): First attempt — added `bodyClip` condition to clear collision for tiles below the player's ground row when on an elevated surface. Fixed the body-straddling issue (14px body clips into adjacent tile rows) but didn't fully solve the problem in actual gameplay.
-- **Phaser timing bug** (this commit): `syncGroundPosition()` was reading `sprite.y` in `scene.update()`, but Phaser's `body.postUpdate()` (which syncs sprite from physics body) runs on `POST_UPDATE` — **after** `scene.update()`. So `_groundY` always read the stale preupdate value, causing the body to reset to the same position every frame during jumps. Fix: moved `syncGroundPosition()` and `updateDepth()` to the player's `postupdate` handler, which runs after `body.postUpdate()`.
+- **Phaser timing bug** (`75a3500`): `syncGroundPosition()` was reading `sprite.y` in `scene.update()`, but Phaser's `body.postUpdate()` (which syncs sprite from physics body) runs on `POST_UPDATE` — **after** `scene.update()`. So `_groundY` always read the stale preupdate value, causing the body to reset to the same position every frame during jumps. Fix: moved `syncGroundPosition()` and `updateDepth()` to the player's `postupdate` handler, which runs after `body.postUpdate()`.
 - **Auto-step-up guard**: Prevented auto-step-up from triggering during jumps (z determined by jump physics, not terrain). Also fixed the step-up condition to use `this.z` instead of `this.groundZ` to prevent multi-frame escalation.
-- **Diagnostic scripts**: Created and iterated on `diagnose-platform.js` and `diagnose-jump-land.js` with frame-by-frame tracking of sprite.y, body position, velocity, and blocked state across preupdate/worldstep/postupdate phases. These were essential for identifying the timing issue.
 - **Key insight**: In Phaser 3.90, the scene lifecycle is: `preupdate` → `update` event (physics step) → `scene.update()` → `postupdate` (body.postUpdate). Game logic that reads sprite positions after physics MUST run in `postupdate`, not `scene.update()`.
 
 ---
