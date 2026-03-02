@@ -171,7 +171,15 @@ export class Player {
     // Update ground elevation from tile data
     const tm = this.scene.tileMapManager;
     if (tm) {
-      this.groundZ = tm.getElevationAt(this.sprite.x, this._groundY);
+      const newGroundZ = tm.getElevationAt(this.sprite.x, this._groundY);
+
+      // Auto-step-up: when walking onto a tile at most one step higher,
+      // snap z up so the player smoothly transitions between elevation levels.
+      if (newGroundZ > this.z && newGroundZ <= this.groundZ + ELEVATION_STEP) {
+        this.z = newGroundZ;
+      }
+
+      this.groundZ = newGroundZ;
     }
 
     // Apply visual Z offset
@@ -200,6 +208,10 @@ export class Player {
     const startY = Math.max(0, Math.floor(body.top / tileH) - 1);
     const endY = Math.min(map.height - 1, Math.ceil(body.bottom / tileH) + 1);
 
+    // The tile row the player is standing on — used to detect body-clipping
+    // into adjacent rows that shouldn't block horizontal movement.
+    const groundTileY = Math.floor(this._groundY / tileH);
+
     for (let ty = startY; ty <= endY; ty++) {
       for (let tx = startX; tx <= endX; tx++) {
         const elev = tm.elevationData[ty * map.width + tx];
@@ -209,8 +221,11 @@ export class Player {
         const tile = tm.collisionLayer.getTileAt(tx, ty);
         if (!tile) continue;
 
-        // Player high enough → allow passage on the platform
-        const shouldBlock = this.z < elevPx;
+        // Player high enough → allow passage on the platform.
+        // When on an elevated surface, also clear collision for tiles below
+        // the ground row — the body clips into them but shouldn't be blocked.
+        const bodyClip = this.groundZ > 0 && ty > groundTileY;
+        const shouldBlock = this.z < elevPx && !bodyClip;
         tile.setCollision(shouldBlock, shouldBlock, shouldBlock, shouldBlock, false);
       }
     }
