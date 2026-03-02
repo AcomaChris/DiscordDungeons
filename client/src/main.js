@@ -7,6 +7,7 @@ import { isDiscordActivity, setupDiscordActivity } from './discord/activitySdk.j
 import { BuildStatusIndicator } from './build-status/BuildStatusIndicator.js';
 import { BugReporter } from './bug-report/BugReporter.js';
 import { PlayerDebugPanel } from './debug/PlayerDebugPanel.js';
+import { WorldDebugOverlay } from './debug/WorldDebugOverlay.js';
 
 new BuildStatusIndicator().mount();
 const bugReporter = new BugReporter();
@@ -14,6 +15,12 @@ bugReporter.mount();
 
 const debugPanel = new PlayerDebugPanel();
 bugReporter.addMenuItem('Player Debug', () => debugPanel.open());
+
+const worldDebug = new WorldDebugOverlay();
+const worldDebugBtn = bugReporter.addMenuItem('World Debug', () => {
+  worldDebug.toggle();
+  worldDebugBtn.textContent = worldDebug.active ? 'World Debug \u2713' : 'World Debug';
+});
 
 // --- Game Configuration ---
 
