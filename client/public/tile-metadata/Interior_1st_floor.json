@@ -6,5 +6,562 @@
   "rows": 22,
   "tileCount": 462,
   "version": 1,
-  "tiles": {}
+  "tiles": {
+    "0": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "1": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "2": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "3": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "4": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "5": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "6": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "7": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "9": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "10": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "11": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "12": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "13": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "14": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "15": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "16": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "18": {
+      "category": "stairs",
+      "surface": "wood"
+    },
+    "19": {
+      "category": "stairs",
+      "surface": "wood"
+    },
+    "20": {
+      "category": "stairs",
+      "surface": "wood"
+    },
+    "21": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "22": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "23": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "24": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "25": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "26": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "27": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "28": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "30": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "31": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "32": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "33": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "34": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "35": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "36": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "37": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "39": {
+      "category": "stairs",
+      "surface": "wood"
+    },
+    "40": {
+      "category": "stairs",
+      "surface": "wood"
+    },
+    "41": {
+      "category": "stairs",
+      "surface": "wood"
+    },
+    "42": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "43": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "44": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "45": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "46": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "47": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "48": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "49": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "50": {
+      "category": "decor",
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "51": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "52": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "53": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "54": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "55": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "56": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "57": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "58": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "59": {
+      "category": "decor",
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "60": {
+      "category": "stairs",
+      "surface": "wood"
+    },
+    "61": {
+      "category": "stairs",
+      "surface": "wood"
+    },
+    "62": {
+      "category": "stairs",
+      "surface": "wood"
+    },
+    "63": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "64": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "65": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "66": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "67": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "68": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "69": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "70": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "71": {
+      "category": "decor",
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "72": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "73": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "74": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "75": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "76": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "77": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "78": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "79": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood"
+    },
+    "80": {
+      "category": "decor",
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "81": {
+      "category": "stairs",
+      "surface": "wood"
+    },
+    "82": {
+      "category": "stairs",
+      "surface": "wood"
+    },
+    "83": {
+      "category": "stairs",
+      "surface": "wood"
+    },
+    "84": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "85": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "86": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "87": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "88": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "89": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "90": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "91": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "92": {
+      "category": "decor",
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "93": {
+      "category": "decor",
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "94": {
+      "category": "decor",
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "95": {
+      "category": "decor",
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "96": {
+      "category": "decor",
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "97": {
+      "category": "decor",
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "98": {
+      "category": "decor",
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "99": {
+      "category": "decor",
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "100": {
+      "category": "decor",
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "101": {
+      "category": "decor",
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "102": {
+      "category": "stairs",
+      "surface": "wood"
+    },
+    "103": {
+      "category": "stairs",
+      "surface": "wood"
+    },
+    "104": {
+      "category": "stairs",
+      "surface": "wood"
+    },
+    "105": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "106": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "107": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "108": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "109": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "110": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "111": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "112": {
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "113": {
+      "category": "decor",
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "114": {
+      "category": "decor",
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "115": {
+      "category": "decor",
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "116": {
+      "category": "decor",
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "117": {
+      "category": "decor",
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "118": {
+      "category": "decor",
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "119": {
+      "category": "decor",
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "120": {
+      "category": "decor",
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "121": {
+      "category": "decor",
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "122": {
+      "category": "decor",
+      "collision": "platform",
+      "surface": "wood"
+    },
+    "123": {
+      "surface": "wood",
+      "category": "stairs"
+    },
+    "124": {
+      "surface": "wood",
+      "category": "stairs"
+    },
+    "125": {
+      "surface": "wood",
+      "category": "stairs"
+    },
+    "144": {
+      "surface": "wood",
+      "category": "stairs"
+    },
+    "145": {
+      "surface": "wood",
+      "category": "stairs"
+    },
+    "146": {
+      "surface": "wood",
+      "category": "stairs"
+    }
+  }
 }
