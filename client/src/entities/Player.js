@@ -63,9 +63,13 @@ export class Player {
     };
     scene.events.on('preupdate', this._preUpdate);
 
-    // Position the label after physics so it tracks the sprite's final position
-    // for the current frame. sprite.y includes Z offset at this point.
+    // Runs after Phaser's body.postUpdate() has synced sprite from body.
+    // AGENT: syncGroundPosition MUST run here, not in scene.update(),
+    // because body.postUpdate() fires on POST_UPDATE (after scene.update()).
+    // Reading sprite.y in scene.update() gives the stale preupdate value.
     this._postUpdate = () => {
+      this.syncGroundPosition();
+      this.updateDepth();
       this.nameLabel.setPosition(
         this.sprite.x,
         this.sprite.y - CHAR_HEIGHT / 2 - 4,
@@ -173,9 +177,12 @@ export class Player {
     if (tm) {
       const newGroundZ = tm.getElevationAt(this.sprite.x, this._groundY);
 
-      // Auto-step-up: when walking onto a tile at most one step higher,
-      // snap z up so the player smoothly transitions between elevation levels.
-      if (newGroundZ > this.z && newGroundZ <= this.groundZ + ELEVATION_STEP) {
+      // Auto-step-up: when walking onto a tile at most one step above the
+      // player's current height, snap z up for smooth elevation transitions.
+      // Skipped during jumps — z is determined by jump physics, not terrain.
+      // Uses this.z (not groundZ) to prevent multi-frame escalation where
+      // groundZ updates first and then the check erroneously passes.
+      if (!this._isJumping && newGroundZ > this.z && newGroundZ <= this.z + ELEVATION_STEP) {
         this.z = newGroundZ;
       }
 

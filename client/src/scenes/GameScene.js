@@ -133,12 +133,10 @@ export class GameScene extends Phaser.Scene {
     const merged = mergeInputSnapshots(kbSnap, touchSnap);
     eventBus.emit(INPUT_ACTION, merged);
 
-    // Z-axis physics (runs after Phaser physics step, before visual offset)
+    // Z-axis physics — velocity/height update only. syncGroundPosition and
+    // updateDepth run in the player's postupdate handler, after Phaser's
+    // body.postUpdate() has synced sprite.y from the physics body.
     this.player.updateJump(delta);
-    this.player.syncGroundPosition();
-
-    // Depth sorting (uses groundY, not visual sprite.y)
-    this.player.updateDepth();
     for (const rp of this.remotePlayers.values()) {
       rp.update(delta);
       rp.updateDepth();
