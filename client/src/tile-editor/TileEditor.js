@@ -7,6 +7,8 @@ import { TileEditorCanvas } from './TileEditorCanvas.js';
 import { TileEditorProperties } from './TileEditorProperties.js';
 import { TILE_DEFAULTS, isDefaultTile } from '../map/tile-metadata-schema.js';
 
+const API_URL = import.meta.env.VITE_AUTH_URL || 'http://localhost:3001';
+
 // AGENT: Tileset names must match filenames in client/public/tilesets/
 const PRESET_TILESETS = [
   { name: 'Interior_1st_floor', file: 'Interior_1st_floor.png' },
@@ -29,6 +31,7 @@ class TileEditor {
     this._tilesetSelect = document.getElementById('tileset-select');
     this._importJsonBtn = document.getElementById('import-json-btn');
     this._exportJsonBtn = document.getElementById('export-json-btn');
+    this._saveGithubBtn = document.getElementById('save-github-btn');
     this._statusTileset = document.getElementById('status-tileset');
     this._statusSelected = document.getElementById('status-selected');
     this._statusModified = document.getElementById('status-modified');
@@ -81,6 +84,7 @@ class TileEditor {
 
     this._importJsonBtn.addEventListener('click', () => this._importJson());
     this._exportJsonBtn.addEventListener('click', () => this._exportJson());
+    this._saveGithubBtn.addEventListener('click', () => this._saveToGitHub());
 
     // Warn on unsaved changes
     window.addEventListener('beforeunload', (e) => {
@@ -264,6 +268,44 @@ class TileEditor {
     URL.revokeObjectURL(url);
     this.modified = false;
     this._updateStatus();
+  }
+
+  // --- Save to GitHub ---
+  async _saveToGitHub() {
+    if (!this.tilesetName) {
+      alert('No tileset loaded.');
+      return;
+    }
+
+    const output = { ...this._header, tiles: this.metadata };
+    const jsonStr = JSON.stringify(output, null, 2) + '\n';
+
+    this._saveGithubBtn.disabled = true;
+    this._saveGithubBtn.textContent = 'Saving...';
+
+    try {
+      const res = await fetch(`${API_URL}/api/tile-metadata`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tileset: this.tilesetName, content: jsonStr }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(`Save failed: ${data.error || res.statusText}`);
+        return;
+      }
+
+      this.modified = false;
+      this._updateStatus();
+      this._statusModified.textContent += ` (saved ${data.sha.slice(0, 7)})`;
+    } catch (err) {
+      alert(`Save failed: ${err.message}`);
+    } finally {
+      this._saveGithubBtn.disabled = false;
+      this._saveGithubBtn.textContent = 'Save to GitHub';
+    }
   }
 
   // --- Status Bar ---
