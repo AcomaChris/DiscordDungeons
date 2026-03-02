@@ -19,15 +19,17 @@ const TILE = 16;
 const MAP_W = 30; // tiles
 const MAP_H = 20; // tiles
 
-// --- Tileset: 5 tiles in a 5×1 strip ---
-// Tile 1: dark floor, Tile 2: wall base, Tile 3: wall top,
-// Tile 4: collision marker, Tile 5: elevated platform
+// --- Tileset: 8 tiles in an 8×1 strip ---
+// Tiles 1-5: original. Tiles 6-8: floor animation frames.
 const TILE_COLORS = [
-  '#3a3a4a', // floor (dark stone)
-  '#6b5b3a', // wall (brown)
-  '#8b7b5a', // wall top (lighter brown)
-  '#ff00ff', // collision marker (magenta, never rendered)
-  '#4a6a8a', // elevated platform (blue-gray stone)
+  '#3a3a4a', // 1: floor (dark stone)
+  '#6b5b3a', // 2: wall (brown)
+  '#8b7b5a', // 3: wall top (lighter brown)
+  '#ff00ff', // 4: collision marker (magenta, never rendered)
+  '#4a6a8a', // 5: elevated platform (blue-gray stone)
+  '#4a4a5a', // 6: floor alt 1 (slightly lighter) — animation frame
+  '#2a2a3a', // 7: floor alt 2 (slightly darker) — animation frame
+  '#5a3a3a', // 8: floor alt 3 (warm tint) — animation frame
 ];
 
 function createTilesetPNG() {
@@ -233,6 +235,17 @@ function buildMap() {
         tilecount: TILE_COLORS.length,
         tileheight: TILE,
         tilewidth: TILE,
+        // Tiled animation data: floor tile cycles through color variants
+        tiles: [
+          {
+            id: 0, // floor tile (local ID 0 → GID 1)
+            animation: [
+              { tileid: 0, duration: 500 },
+              { tileid: 5, duration: 500 },
+              { tileid: 6, duration: 500 },
+            ],
+          },
+        ],
       },
     ],
   };

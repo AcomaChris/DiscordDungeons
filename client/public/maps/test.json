@@ -4329,17 +4329,36 @@
   "width": 30,
   "tilesets": [
     {
-      "columns": 5,
+      "columns": 8,
       "firstgid": 1,
       "image": "../tilesets/test-tiles.png",
       "imageheight": 16,
-      "imagewidth": 80,
+      "imagewidth": 128,
       "margin": 0,
       "name": "test-tiles",
       "spacing": 0,
-      "tilecount": 5,
+      "tilecount": 8,
       "tileheight": 16,
-      "tilewidth": 16
+      "tilewidth": 16,
+      "tiles": [
+        {
+          "id": 0,
+          "animation": [
+            {
+              "tileid": 0,
+              "duration": 500
+            },
+            {
+              "tileid": 5,
+              "duration": 500
+            },
+            {
+              "tileid": 6,
+              "duration": 500
+            }
+          ]
+        }
+      ]
     }
   ]
 }

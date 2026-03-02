@@ -133,6 +133,9 @@ export class GameScene extends Phaser.Scene {
     const merged = mergeInputSnapshots(kbSnap, touchSnap);
     eventBus.emit(INPUT_ACTION, merged);
 
+    // Tile animations — advance frame timers and swap indices
+    this.tileMapManager.update(delta);
+
     // Z-axis physics — velocity/height update only. syncGroundPosition and
     // updateDepth run in the player's postupdate handler, after Phaser's
     // body.postUpdate() has synced sprite.y from the physics body.

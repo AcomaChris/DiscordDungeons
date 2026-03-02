@@ -1,4 +1,5 @@
 import { DEPTH_ABOVE_PLAYER, ELEVATION_STEP } from '../core/Constants.js';
+import { TileAnimator } from './TileAnimator.js';
 
 // --- TileMapManager ---
 // Loads a Tiled JSON map and creates Phaser tilemap layers following our
@@ -27,6 +28,7 @@ export class TileMapManager {
     this.collisionLayer = null;
     this.elevationData = null;
     this.spawnPoint = null;
+    this.tileAnimator = null;
   }
 
   // --- Preload ---
@@ -84,6 +86,10 @@ export class TileMapManager {
 
     // Parse object layer for spawn point and other objects
     this._parseObjects();
+
+    // Tile animations — index-swapping engine driven by Tiled animation data
+    this.tileAnimator = new TileAnimator();
+    this.tileAnimator.init(this.tilemap, this.layers, this.wallSprites);
 
     return this.tilemap;
   }
@@ -172,6 +178,10 @@ export class TileMapManager {
     }
   }
 
+  update(delta) {
+    if (this.tileAnimator) this.tileAnimator.update(delta);
+  }
+
   getWorldBounds() {
     if (!this.tilemap) return { width: 0, height: 0 };
     return {
@@ -185,6 +195,11 @@ export class TileMapManager {
       s.destroy();
     }
     this.wallSprites = [];
+
+    if (this.tileAnimator) {
+      this.tileAnimator.destroy();
+      this.tileAnimator = null;
+    }
 
     if (this.tilemap) {
       this.tilemap.destroy();
