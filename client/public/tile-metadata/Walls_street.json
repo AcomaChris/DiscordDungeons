@@ -1,0 +1,10 @@
+{
+  "tileset": "Walls_street",
+  "image": "tilesets/Walls_street.png",
+  "tileSize": 16,
+  "columns": 21,
+  "rows": 18,
+  "tileCount": 378,
+  "version": 1,
+  "tiles": {}
+}

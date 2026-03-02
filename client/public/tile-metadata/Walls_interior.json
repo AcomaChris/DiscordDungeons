@@ -1,0 +1,10 @@
+{
+  "tileset": "Walls_interior",
+  "image": "tilesets/Walls_interior.png",
+  "tileSize": 16,
+  "columns": 10,
+  "rows": 18,
+  "tileCount": 180,
+  "version": 1,
+  "tiles": {}
+}

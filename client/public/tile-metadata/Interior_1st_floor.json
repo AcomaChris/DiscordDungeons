@@ -1,0 +1,10 @@
+{
+  "tileset": "Interior_1st_floor",
+  "image": "tilesets/Interior_1st_floor.png",
+  "tileSize": 16,
+  "columns": 21,
+  "rows": 22,
+  "tileCount": 462,
+  "version": 1,
+  "tiles": {}
+}

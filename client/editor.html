@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DiscordDungeons — Tile Metadata Editor</title>
+</head>
+<body>
+  <div id="editor-root">
+    <div id="editor-toolbar">
+      <label for="tileset-select">Tileset</label>
+      <select id="tileset-select"></select>
+      <div class="toolbar-sep"></div>
+      <button id="import-json-btn" class="btn">Import JSON</button>
+      <button id="export-json-btn" class="btn btn-primary">Export JSON</button>
+      <div class="toolbar-sep"></div>
+      <div id="zoom-controls">
+        <label>Zoom</label>
+        <input id="zoom-slider" type="range" min="1" max="8" value="4" step="1" />
+        <span id="zoom-label">4x</span>
+      </div>
+    </div>
+
+    <div id="editor-main">
+      <div id="canvas-panel">
+        <canvas id="tileset-canvas"></canvas>
+      </div>
+      <div id="property-panel-wrapper">
+        <div id="tile-preview"></div>
+        <div id="property-panel"></div>
+      </div>
+    </div>
+
+    <div id="editor-status-bar">
+      <span id="status-tileset">No tileset loaded</span>
+      <span id="status-selected"></span>
+      <span id="status-modified">0 tagged</span>
+    </div>
+  </div>
+
+  <script type="module" src="src/tile-editor/TileEditor.js"></script>
+</body>
+</html>

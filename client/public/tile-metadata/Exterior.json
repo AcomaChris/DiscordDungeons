@@ -1,0 +1,10 @@
+{
+  "tileset": "Exterior",
+  "image": "tilesets/Exterior.png",
+  "tileSize": 16,
+  "columns": 28,
+  "rows": 29,
+  "tileCount": 812,
+  "version": 1,
+  "tiles": {}
+}

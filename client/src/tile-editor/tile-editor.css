@@ -1,0 +1,290 @@
+/* --- Tile Metadata Editor --- */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #1a1a2e;
+  color: #e0e0e0;
+  line-height: 1.5;
+  overflow: hidden;
+}
+
+/* --- Layout --- */
+
+#editor-root {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100vh;
+}
+
+#editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background: #16213e;
+  border-bottom: 1px solid #2a2a4a;
+  flex-wrap: wrap;
+}
+
+#editor-main {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  overflow: hidden;
+}
+
+#editor-status-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 4px 16px;
+  background: #16213e;
+  border-top: 1px solid #2a2a4a;
+  font-size: 0.8rem;
+  color: #7a7aaa;
+}
+
+/* --- Canvas Panel --- */
+
+#canvas-panel {
+  overflow: auto;
+  padding: 8px;
+  position: relative;
+}
+
+#canvas-panel canvas {
+  display: block;
+  cursor: crosshair;
+}
+
+/* --- Property Panel --- */
+
+#property-panel-wrapper {
+  border-left: 1px solid #2a2a4a;
+  overflow-y: auto;
+  background: #16213e;
+  padding: 16px;
+}
+
+#property-panel {
+  /* Container for dynamically built controls */
+}
+
+#property-panel h3 {
+  color: #00ccff;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #2a2a4a;
+}
+
+/* --- Tile Preview --- */
+
+#tile-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  min-height: 48px;
+}
+
+#tile-preview canvas {
+  border: 1px solid #2a2a4a;
+  image-rendering: pixelated;
+}
+
+#tile-preview .tile-info {
+  font-size: 0.85rem;
+  color: #c0c0e0;
+}
+
+#tile-preview .tile-info .tile-index {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #00ccff;
+}
+
+/* --- Form Controls --- */
+
+.prop-group {
+  margin-bottom: 10px;
+}
+
+.prop-group label {
+  display: block;
+  font-size: 0.8rem;
+  color: #7a7aaa;
+  margin-bottom: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.prop-group select,
+.prop-group input[type="text"],
+.prop-group input[type="number"] {
+  width: 100%;
+  padding: 5px 8px;
+  background: #1a1a2e;
+  border: 1px solid #2a2a4a;
+  border-radius: 4px;
+  color: #e0e0e0;
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.prop-group select:focus,
+.prop-group input:focus {
+  border-color: #00ccff;
+}
+
+.prop-group input[type="range"] {
+  width: 100%;
+  accent-color: #00ccff;
+}
+
+.prop-group .range-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.prop-group .range-value {
+  font-size: 0.8rem;
+  color: #00ccff;
+  min-width: 28px;
+  text-align: right;
+}
+
+.prop-group .checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.prop-group .checkbox-row input[type="checkbox"] {
+  accent-color: #00ccff;
+  width: 16px;
+  height: 16px;
+}
+
+.prop-group .checkbox-row span {
+  font-size: 0.85rem;
+}
+
+/* --- Mixed indicator for multi-selection --- */
+
+.mixed-indicator {
+  color: #ff6b9d;
+  font-style: italic;
+  font-size: 0.8rem;
+}
+
+/* --- Toolbar Controls --- */
+
+#editor-toolbar label {
+  font-size: 0.8rem;
+  color: #7a7aaa;
+}
+
+#editor-toolbar select {
+  padding: 4px 8px;
+  background: #1a1a2e;
+  border: 1px solid #2a2a4a;
+  border-radius: 4px;
+  color: #e0e0e0;
+  font-size: 0.85rem;
+  outline: none;
+}
+
+#editor-toolbar select:focus {
+  border-color: #00ccff;
+}
+
+/* --- Buttons --- */
+
+.btn {
+  padding: 5px 12px;
+  border: 1px solid #2a2a4a;
+  border-radius: 4px;
+  background: #1a1a2e;
+  color: #e0e0e0;
+  font-size: 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  border-color: #00ccff;
+  color: #00ccff;
+}
+
+.btn-primary {
+  background: #00ccff;
+  color: #1a1a2e;
+  border-color: #00ccff;
+  font-weight: bold;
+}
+
+.btn-primary:hover {
+  background: #00aadd;
+  border-color: #00aadd;
+}
+
+.btn-danger {
+  border-color: #ff4444;
+  color: #ff4444;
+}
+
+.btn-danger:hover {
+  background: #ff4444;
+  color: #1a1a2e;
+}
+
+/* --- Action Buttons --- */
+
+.action-buttons {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #2a2a4a;
+}
+
+/* --- Empty State --- */
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #7a7aaa;
+  font-size: 1rem;
+  font-style: italic;
+}
+
+/* --- Zoom Controls --- */
+
+#zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: #7a7aaa;
+}
+
+#zoom-controls input[type="range"] {
+  width: 100px;
+  accent-color: #00ccff;
+}
+
+/* --- Toolbar Separator --- */
+
+.toolbar-sep {
+  width: 1px;
+  height: 20px;
+  background: #2a2a4a;
+}

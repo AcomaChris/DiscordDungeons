@@ -26,6 +26,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'client/index.html'),
         devlog: resolve(__dirname, 'client/devlog.html'),
+        editor: resolve(__dirname, 'client/editor.html'),
       },
     },
   },
