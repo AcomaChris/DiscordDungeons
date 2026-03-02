@@ -43,21 +43,23 @@ function iff(col, row) { return row * IF_COLS + col + IF_FIRST; }
 function idx(x, y) { return y * MAP_W + x; }
 
 // --- Walls_interior Tile GIDs ---
-// Wall frame pieces (half-timbered, rows 0-2, cols 1-3)
-const WALL_TOP_L  = wi(1, 0);   // Wall top, left end
-const WALL_TOP_M  = wi(2, 0);   // Wall top, middle (repeatable)
-const WALL_TOP_R  = wi(3, 0);   // Wall top, right end
-const WALL_MID_L  = wi(1, 1);   // Wall face, left end
-const WALL_MID_M  = wi(2, 1);   // Wall face, middle (repeatable)
-const WALL_MID_R  = wi(3, 1);   // Wall face, right end
+// AGENT: Verified via tile analysis pipeline (scripts/analyze-tileset.js).
 
-// Stone floor (smooth gray, rows 9-10)
-const STONE_FLOOR  = wi(0, 9);  // Primary floor tile
-const STONE_FLOOR2 = wi(1, 9);  // Floor variant for checkerboard variety
+// Wall top beam (row 0, cols 3-9 — repeating horizontal beam/plaster pattern)
+const WALL_TOP_M  = wi(4, 0);   // Wall top, repeating beam pattern
 
-// Column / pillar (cols 7-8, rows 0-2)
-const COL_TOP = wi(7, 0);
-const COL_MID = wi(7, 1);
+// Wall face (row 9 — smooth stone with decorative bracket trim at top)
+const WALL_MID_L  = wi(4, 9);   // Wall face, left
+const WALL_MID_M  = wi(5, 9);   // Wall face, middle (repeatable)
+const WALL_MID_R  = wi(6, 9);   // Wall face, right
+
+// Cobblestone floor (row 10 — large rounded flagstones with mortar)
+const STONE_FLOOR  = wi(0, 10); // Primary floor tile
+const STONE_FLOOR2 = wi(1, 10); // Floor variant for checkerboard
+
+// Column / pillar (col 1, rows 2-3 — wooden pillar from group 7)
+const COL_TOP = wi(1, 2);       // Pillar top
+const COL_MID = wi(1, 3);       // Pillar middle
 
 // --- Interior_1st_floor Tile GIDs ---
 
@@ -239,8 +241,6 @@ function generateWallTopsData() {
   for (let x = 0; x < MAP_W; x++) {
     data[idx(x, 0)] = WALL_TOP_M;
   }
-  data[idx(0, 0)] = WALL_TOP_L;
-  data[idx(MAP_W - 1, 0)] = WALL_TOP_R;
 
   // Column tops (one row above column middles at row 6)
   data[idx(1, 5)] = COL_TOP;

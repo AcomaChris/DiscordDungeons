@@ -6,5 +6,808 @@
   "rows": 18,
   "tileCount": 180,
   "version": 1,
-  "tiles": {}
+  "tiles": {
+    "1": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "3": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "4": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "5": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "6": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "7": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "8": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "9": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "10": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "11": {
+      "category": "door",
+      "collision": "solid",
+      "walkable": false
+    },
+    "12": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "13": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "14": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "16": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "17": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "18": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "19": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "20": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "21": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "22": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "23": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "24": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "26": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "27": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "28": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "29": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "30": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "31": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "32": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "33": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "34": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "36": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "37": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "38": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "39": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "40": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "41": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "42": {
+      "category": "wall",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "43": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "44": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "46": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "47": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "48": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "49": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "53": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "54": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "56": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "57": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "58": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "59": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "60": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "61": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "63": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "64": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "66": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "67": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "68": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "69": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "70": {
+      "category": "door",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "71": {
+      "category": "door",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "73": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "74": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "76": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "77": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "78": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "79": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "80": {
+      "category": "door",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "81": {
+      "category": "door",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "83": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "84": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "86": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "87": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "88": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "89": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "90": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "91": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "92": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "93": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "94": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "95": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "96": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "97": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "98": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "99": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "100": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "101": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "102": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "103": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "104": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "105": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "106": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "107": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "108": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "109": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "110": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "111": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "112": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "113": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "114": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "115": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "116": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "117": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "118": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "119": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "120": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "121": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "122": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "123": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "124": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "125": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "126": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "127": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "128": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "129": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "130": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "131": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "132": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "133": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "134": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "135": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "136": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "137": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "138": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "139": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "140": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "141": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "142": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "143": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "144": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "145": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "146": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "147": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "148": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "149": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "150": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "151": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "152": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "155": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "156": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "157": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "158": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "159": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "160": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "162": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "165": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "166": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "167": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "168": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "169": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "170": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "171": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "172": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "178": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    },
+    "179": {
+      "category": "wall",
+      "collision": "solid",
+      "walkable": false
+    }
+  }
 }

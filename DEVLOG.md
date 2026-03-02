@@ -4,6 +4,20 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-02 — Tile Analysis Pipeline & Tavern Fix (Issue #8)
+
+**Commits:** (v0.12.0)
+
+Built a 5-step AI-powered tile analysis pipeline to systematically identify tileset tiles and fix the tavern map (issue #8).
+
+- **Tile analysis pipeline** (`scripts/analyze-tileset.js`): Reusable CLI tool with 5 steps — tile size detection (grid-line variance), tile extraction with labeled catalogs, edge-similarity grouping into multi-tile objects, catalog sheet generation for AI identification, and metadata generation.
+- **Root cause of issue #8**: Tile GIDs in `create-tavern-map.js` were guessed from small tileset images and mapped to wrong tiles. Floor tiles used wall face row (row 9) instead of cobblestone row (row 10), wall face used frame/opening tiles (row 1) instead of stone face (row 9), columns used beam tiles instead of pillar tiles (group 7).
+- **Fixed tavern map**: Updated all tile constants with correct GIDs verified via the analysis pipeline, regenerated `tavern.json`.
+- **Tile metadata**: Generated metadata for 154 Walls_interior tiles (was 0) and added 251 new Interior_1st_floor tags (was 125, now 376).
+- **Caveat**: Interior_1st_floor auto-detection picks 24px (scores close: 1.07 vs 1.32) — requires `--size 16` override. Furniture tiles need in-game verification.
+
+---
+
 ## 2026-03-01 — Step-Height Elevation System (Issue #6, continued)
 
 **Commits:** `07af35c` (v0.8.3)

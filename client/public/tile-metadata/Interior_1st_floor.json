@@ -551,6 +551,85 @@
       "surface": "wood",
       "category": "stairs"
     },
+    "126": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "127": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "128": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "130": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "131": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "132": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "133": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "134": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "carpet",
+      "footstepSound": "step_carpet",
+      "walkable": false
+    },
+    "136": {
+      "category": "decor"
+    },
+    "137": {
+      "category": "decor"
+    },
+    "139": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "carpet",
+      "footstepSound": "step_carpet",
+      "walkable": false
+    },
+    "141": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "142": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
     "144": {
       "surface": "wood",
       "category": "stairs"
@@ -562,6 +641,1352 @@
     "146": {
       "surface": "wood",
       "category": "stairs"
+    },
+    "147": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "148": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "151": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "152": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "153": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "154": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "155": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "carpet",
+      "footstepSound": "step_carpet",
+      "walkable": false
+    },
+    "156": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "carpet",
+      "footstepSound": "step_carpet",
+      "walkable": false
+    },
+    "158": {
+      "category": "decor"
+    },
+    "159": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "carpet",
+      "footstepSound": "step_carpet",
+      "walkable": false
+    },
+    "160": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "carpet",
+      "footstepSound": "step_carpet",
+      "walkable": false
+    },
+    "161": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "162": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "163": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "164": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "165": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "166": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "167": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "168": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "169": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "170": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "171": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "172": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "173": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "174": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "175": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "176": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "carpet",
+      "footstepSound": "step_carpet",
+      "walkable": false
+    },
+    "177": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "carpet",
+      "footstepSound": "step_carpet",
+      "walkable": false
+    },
+    "178": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "carpet",
+      "footstepSound": "step_carpet",
+      "walkable": false
+    },
+    "179": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "carpet",
+      "footstepSound": "step_carpet",
+      "walkable": false
+    },
+    "180": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "carpet",
+      "footstepSound": "step_carpet",
+      "walkable": false
+    },
+    "181": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "carpet",
+      "footstepSound": "step_carpet",
+      "walkable": false
+    },
+    "183": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "185": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "186": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "187": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "188": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "189": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "190": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "193": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "194": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "196": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "197": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "200": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "201": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "204": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "205": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "206": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "207": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "208": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "209": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "213": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "214": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "215": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "216": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "217": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "218": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "219": {
+      "category": "decor",
+      "surface": "carpet",
+      "footstepSound": "step_carpet"
+    },
+    "220": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "221": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "222": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "223": {
+      "category": "decor",
+      "surface": "carpet",
+      "footstepSound": "step_carpet"
+    },
+    "224": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "225": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "226": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "227": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "228": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "229": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "230": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "231": {
+      "category": "decor",
+      "surface": "carpet",
+      "footstepSound": "step_carpet"
+    },
+    "235": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "238": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "239": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "242": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "243": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "246": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "256": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "259": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "260": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "261": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "262": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "263": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "264": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "265": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "266": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "267": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "water",
+      "footstepSound": "step_water",
+      "walkable": false
+    },
+    "268": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "water",
+      "footstepSound": "step_water",
+      "walkable": false
+    },
+    "269": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "water",
+      "footstepSound": "step_water",
+      "walkable": false
+    },
+    "270": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "water",
+      "footstepSound": "step_water",
+      "walkable": false
+    },
+    "271": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "water",
+      "footstepSound": "step_water",
+      "walkable": false
+    },
+    "272": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "water",
+      "footstepSound": "step_water",
+      "walkable": false
+    },
+    "273": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "274": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "275": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "276": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "277": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "278": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "279": {
+      "category": "decor",
+      "surface": "dirt",
+      "footstepSound": "step_dirt"
+    },
+    "280": {
+      "category": "decor"
+    },
+    "281": {
+      "category": "decor"
+    },
+    "282": {
+      "category": "decor"
+    },
+    "283": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "284": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "285": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "286": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "287": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "288": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "water",
+      "footstepSound": "step_water",
+      "walkable": false
+    },
+    "289": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "water",
+      "footstepSound": "step_water",
+      "walkable": false
+    },
+    "290": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "water",
+      "footstepSound": "step_water",
+      "walkable": false
+    },
+    "291": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "water",
+      "footstepSound": "step_water",
+      "walkable": false
+    },
+    "292": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "water",
+      "footstepSound": "step_water",
+      "walkable": false
+    },
+    "293": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "water",
+      "footstepSound": "step_water",
+      "walkable": false
+    },
+    "294": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "295": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "296": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "297": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "298": {
+      "category": "decor"
+    },
+    "301": {
+      "category": "decor"
+    },
+    "303": {
+      "category": "decor"
+    },
+    "304": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "305": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "306": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "307": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "309": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "water",
+      "footstepSound": "step_water",
+      "walkable": false
+    },
+    "310": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "water",
+      "footstepSound": "step_water",
+      "walkable": false
+    },
+    "311": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "water",
+      "footstepSound": "step_water",
+      "walkable": false
+    },
+    "312": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "water",
+      "footstepSound": "step_water",
+      "walkable": false
+    },
+    "313": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "water",
+      "footstepSound": "step_water",
+      "walkable": false
+    },
+    "314": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "water",
+      "footstepSound": "step_water",
+      "walkable": false
+    },
+    "315": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "316": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "317": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "320": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "323": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "326": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "327": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "328": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "330": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "333": {
+      "category": "decor"
+    },
+    "334": {
+      "category": "decor"
+    },
+    "336": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "337": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "338": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "339": {
+      "category": "decor"
+    },
+    "340": {
+      "category": "decor"
+    },
+    "341": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "342": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "343": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "344": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "345": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "346": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "347": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "348": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "349": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "351": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "353": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "354": {
+      "category": "decor",
+      "surface": "carpet",
+      "footstepSound": "step_carpet"
+    },
+    "356": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "357": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "358": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "360": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "363": {
+      "category": "decor",
+      "surface": "carpet",
+      "footstepSound": "step_carpet"
+    },
+    "364": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "365": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "366": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "367": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "368": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "369": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "370": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "372": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "373": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "375": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "376": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "378": {
+      "category": "decor"
+    },
+    "379": {
+      "category": "decor"
+    },
+    "380": {
+      "category": "decor"
+    },
+    "381": {
+      "category": "decor"
+    },
+    "382": {
+      "category": "decor",
+      "surface": "dirt",
+      "footstepSound": "step_dirt"
+    },
+    "383": {
+      "category": "decor",
+      "surface": "carpet",
+      "footstepSound": "step_carpet"
+    },
+    "384": {
+      "category": "decor",
+      "surface": "carpet",
+      "footstepSound": "step_carpet"
+    },
+    "385": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "386": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "387": {
+      "category": "decor"
+    },
+    "388": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "389": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "391": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "393": {
+      "category": "decor",
+      "surface": "metal",
+      "footstepSound": "step_metal"
+    },
+    "394": {
+      "category": "decor"
+    },
+    "396": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "397": {
+      "category": "decor"
+    },
+    "399": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "400": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "401": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "402": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "403": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "404": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "405": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "406": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "407": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "408": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "409": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "410": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "411": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "412": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "413": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "414": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "420": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "421": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "422": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "423": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "424": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "425": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "426": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "427": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "428": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "429": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "430": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "431": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "432": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "433": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "434": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "435": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "441": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "442": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "443": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "444": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "445": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "446": {
+      "category": "decor",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "447": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "448": {
+      "category": "obstacle",
+      "collision": "solid",
+      "surface": "wood",
+      "footstepSound": "step_wood",
+      "walkable": false
+    },
+    "449": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "450": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "451": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "452": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "453": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "454": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "455": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
+    },
+    "456": {
+      "category": "obstacle",
+      "collision": "platform",
+      "surface": "wood",
+      "footstepSound": "step_wood"
     }
   }
 }
