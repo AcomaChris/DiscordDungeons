@@ -38,7 +38,8 @@ async function skipMainMenu(page) {
 }
 
 async function bootGame(page) {
-  await page.goto(GAME_URL, { waitUntil: 'domcontentloaded' });
+  // Use the test map which has known spawn position and dimensions
+  await page.goto(`${GAME_URL}?map=test`, { waitUntil: 'domcontentloaded' });
   await page.waitForFunction(() => globalThis.__PHASER_GAME__, {
     timeout: 50_000,
     polling: 200,

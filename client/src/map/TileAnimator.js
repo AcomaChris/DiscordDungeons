@@ -93,28 +93,28 @@ export class TileAnimator {
 
   // --- Build Sprite Index ---
   // For Y-sorted wall sprites, track which ones need frame animation.
+  // AGENT: Sprites store _tileFirstgid (set by TileMapManager) so we can
+  // reconstruct the correct GID for multi-tileset maps.
   _buildSpriteIndex(wallSprites, tilemap) {
     if (!wallSprites || wallSprites.length === 0) return;
 
     for (const sprite of wallSprites) {
-      // Sprite frame name is the local tile ID (number).
-      // Try each tileset to find which one owns this sprite's frame.
-      for (const tileset of tilemap.tilesets) {
-        const localId = typeof sprite.frame.name === 'number'
-          ? sprite.frame.name
-          : parseInt(sprite.frame.name, 10);
-        const gid = localId + tileset.firstgid;
+      const localId = typeof sprite.frame.name === 'number'
+        ? sprite.frame.name
+        : parseInt(sprite.frame.name, 10);
 
-        if (this._animations.has(gid)) {
-          sprite._animBaseGID = gid;
-          let locs = this._tileLocations.get(gid);
-          if (!locs) {
-            locs = { tiles: [], sprites: [] };
-            this._tileLocations.set(gid, locs);
-          }
-          locs.sprites.push(sprite);
-          break;
+      // Use stored firstgid from TileMapManager, fall back to tileset[0]
+      const firstgid = sprite._tileFirstgid || tilemap.tilesets[0].firstgid;
+      const gid = localId + firstgid;
+
+      if (this._animations.has(gid)) {
+        sprite._animBaseGID = gid;
+        let locs = this._tileLocations.get(gid);
+        if (!locs) {
+          locs = { tiles: [], sprites: [] };
+          this._tileLocations.set(gid, locs);
         }
+        locs.sprites.push(sprite);
       }
     }
   }

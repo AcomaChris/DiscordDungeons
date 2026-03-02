@@ -30,7 +30,8 @@ async function skipMainMenu(page) {
 }
 
 async function bootGame(page) {
-  await page.goto(GAME_URL, { waitUntil: 'domcontentloaded' });
+  // Load the test map which has elevation/platform features
+  await page.goto(`${GAME_URL}?map=test`, { waitUntil: 'domcontentloaded' });
   await page.waitForFunction(() => globalThis.__PHASER_GAME__, {
     timeout: 30_000,
     polling: 200,

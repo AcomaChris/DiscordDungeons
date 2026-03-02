@@ -9,6 +9,13 @@ const maps = {
       { key: 'test-tiles', path: 'tilesets/test-tiles.png', tiledName: 'test-tiles', tileSize: 16 },
     ],
   },
+  tavern: {
+    jsonPath: 'maps/tavern.json',
+    tilesets: [
+      { key: 'walls-interior', path: 'tilesets/Walls_interior.png', tiledName: 'Walls_interior', tileSize: 16 },
+      { key: 'interior-1st', path: 'tilesets/Interior_1st_floor.png', tiledName: 'Interior_1st_floor', tileSize: 16 },
+    ],
+  },
 };
 
 export function getMapConfig(mapId) {

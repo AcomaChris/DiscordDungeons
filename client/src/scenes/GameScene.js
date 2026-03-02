@@ -26,22 +26,31 @@ import authManager from '../auth/AuthManager.js';
 // AGENT: WS_URL is set at build time for production, falls back to localhost for dev.
 const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:3001';
 
+// Map selection: ?map=test overrides default. Used by E2E tests.
+const DEFAULT_MAP = 'tavern';
+
+function getActiveMapId() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('map') || DEFAULT_MAP;
+}
+
 export class GameScene extends Phaser.Scene {
   constructor() {
     super({ key: 'GameScene' });
   }
 
   preload() {
-    const mapConfig = getMapConfig('test');
+    this._mapId = getActiveMapId();
+    const mapConfig = getMapConfig(this._mapId);
     this.tileMapManager = new TileMapManager(this);
-    this.tileMapManager.preload('test', mapConfig.jsonPath, mapConfig.tilesets);
+    this.tileMapManager.preload(this._mapId, mapConfig.jsonPath, mapConfig.tilesets);
   }
 
   create() {
     this.remotePlayers = new Map();
 
     // --- Tilemap ---
-    this.tileMapManager.create('test');
+    this.tileMapManager.create(this._mapId);
     const { width, height } = this.tileMapManager.getWorldBounds();
     this.physics.world.setBounds(0, 0, width, height);
 

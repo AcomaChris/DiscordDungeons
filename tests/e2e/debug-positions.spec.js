@@ -36,7 +36,8 @@ async function skipMainMenu(page) {
 
 // Boot the game and get past the menu — shared setup for all e2e tests
 async function bootGame(page) {
-  await page.goto(GAME_URL, { waitUntil: 'domcontentloaded' });
+  // Use the test map for consistent position assertions
+  await page.goto(`${GAME_URL}?map=test`, { waitUntil: 'domcontentloaded' });
   await page.waitForFunction(() => globalThis.__PHASER_GAME__, {
     timeout: 30_000,
     polling: 200,

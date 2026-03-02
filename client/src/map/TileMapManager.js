@@ -101,8 +101,6 @@ export class TileMapManager {
   _ySortWallLayers() {
     this.wallSprites = [];
     const tileHeight = this.tilemap.tileHeight;
-    const firstGid = this.tilemap.tilesets[0].firstgid;
-    const tilesetKey = this._tilesetEntries[0].key;
 
     for (const layerName of ['Walls', 'WallTops']) {
       const layer = this.layers[layerName];
@@ -111,7 +109,7 @@ export class TileMapManager {
       layer.forEachTile((tile) => {
         if (tile.index <= 0) return;
 
-        const frame = tile.index - firstGid;
+        const { tilesetKey, frame, firstgid } = this._resolveTile(tile.index);
         const sprite = this.scene.add.sprite(
           tile.pixelX + tile.width / 2,
           tile.pixelY + tile.height / 2,
@@ -119,11 +117,35 @@ export class TileMapManager {
           frame,
         );
         sprite.setDepth(tile.pixelY + tileHeight);
+        // AGENT: TileAnimator reads _tileFirstgid to reconstruct GID from local frame
+        sprite._tileFirstgid = firstgid;
         this.wallSprites.push(sprite);
       });
 
       layer.setVisible(false);
     }
+  }
+
+  // --- Resolve Tile GID ---
+  // Given a global tile ID, returns the tileset key, local frame index,
+  // and firstgid. Iterates tilesets in reverse to find the highest
+  // firstgid that is <= the GID.
+  _resolveTile(gid) {
+    for (let i = this.tilemap.tilesets.length - 1; i >= 0; i--) {
+      const ts = this.tilemap.tilesets[i];
+      if (gid >= ts.firstgid) {
+        return {
+          tilesetKey: this._tilesetEntries[i].key,
+          frame: gid - ts.firstgid,
+          firstgid: ts.firstgid,
+        };
+      }
+    }
+    return {
+      tilesetKey: this._tilesetEntries[0].key,
+      frame: gid - this.tilemap.tilesets[0].firstgid,
+      firstgid: this.tilemap.tilesets[0].firstgid,
+    };
   }
 
   _parseElevation(tilesets) {
