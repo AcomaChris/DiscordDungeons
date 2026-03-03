@@ -18,6 +18,7 @@ import { NetworkManager } from '../network/NetworkManager.js';
 import { TileMapManager } from '../map/TileMapManager.js';
 import { NPC } from '../entities/NPC.js';
 import { buildCollisionGrid } from '../ai/Pathfinder.js';
+import { NPCBrain } from '../ai/NPCBrain.js';
 import { getMapConfig } from '../map/MapRegistry.js';
 import authManager from '../auth/AuthManager.js';
 
@@ -85,6 +86,21 @@ export class GameScene extends Phaser.Scene {
         this.tileMapManager.tilemap.height,
       );
     }
+
+    // --- NPC Brain ---
+    // AGENT: __BE_PROJECT_ID__ is injected at build time via Vite define.
+    // Falls back to the default DiscordDungeons project.
+    const beProjectId = (typeof __BE_PROJECT_ID__ !== 'undefined' && __BE_PROJECT_ID__)
+      || 'proj_3AQEfXcDaTOVWwsD5vyOvA7rACg';
+    this.npcBrain = new NPCBrain(this.npc, this.player, {
+      projectId: beProjectId,
+      proxyUrl: WS_URL.replace('ws://', 'http://').replace('wss://', 'https://'),
+    });
+    this.npcBrain.setMapSize(
+      this.tileMapManager.tilemap.width,
+      this.tileMapManager.tilemap.height,
+    );
+    this.npcBrain.init();
 
     // Expose NPC for console testing (e.g. window.__NPC__.jump(), window.__NPC__.moveTo(5, 8))
     globalThis.__NPC__ = this.npc;
@@ -175,6 +191,7 @@ export class GameScene extends Phaser.Scene {
     // body.postUpdate() has synced sprite.y from the physics body.
     this.player.updateJump(delta);
     this.npc.update(delta);
+    this.npcBrain.update(delta);
     for (const rp of this.remotePlayers.values()) {
       rp.update(delta);
       rp.updateDepth();
@@ -204,6 +221,7 @@ export class GameScene extends Phaser.Scene {
     if (this.networkManager) this.networkManager.disconnect();
     this.inputManager.destroy();
     this.touchManager.destroy();
+    this.npcBrain.destroy();
     this.npc.destroy();
     this.tileMapManager.destroy();
     for (const rp of this.remotePlayers.values()) {
