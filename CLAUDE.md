@@ -61,6 +61,14 @@
 - **E2E tests** (`tests/e2e/`): gameplay, physics, positions, rendering. Run with `npx playwright test`.
 - When fixing a gameplay or rendering bug, add an e2e test that reproduces the issue and verifies the fix.
 
+## Parallel Work (Subagents)
+- **Default to parallel subagents** for multi-file or multi-task work. Spawn agents concurrently whenever tasks are independent.
+- **Isolated worktrees** (`isolation: "worktree"`) for agents that write code — each gets its own branch, preventing file collisions. Merge results back after.
+- **Shared directory** (no isolation) is fine for read-only research (Explore agents, Plan agents).
+- **When to parallelize**: independent file changes, research + implementation simultaneously, multiple bug fixes in different subsystems, exploration of multiple approaches.
+- **When NOT to parallelize**: changes that touch the same files, tasks where one depends on the output of another.
+- Keep the main thread as an orchestrator — delegate heavy work to subagents, synthesize results, handle commits/deploys.
+
 ## Context Management
 - Use subagents (Explore/Plan) for deep codebase research to keep the main context clean
 - Use `/compact` when context gets heavy during long sessions

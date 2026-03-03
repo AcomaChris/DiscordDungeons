@@ -86,6 +86,12 @@ After deploy, the activeVersionId in the n8n SQLite DB must be updated to the ne
 - **Unit tests**: pure logic, event bus, input snapshots, constants, config — anything that doesn't need a real Phaser instance
 - **E2E tests**: rendering, physics interactions, position tracking, visual regressions, anything that needs the full game loop running in a browser
 
+## Parallel Agent Strategy
+- When implementing features that span multiple independent files/subsystems, spawn subagents in parallel using isolated worktrees.
+- Each subagent should receive clear context: which files to modify, what the change is, and any constraints from this document (layer conventions, code style, etc.).
+- The main thread orchestrates: plans the work, spawns agents, reviews their output, merges results, runs tests, commits.
+- Research agents (Explore) don't need isolation — they're read-only. Code-writing agents should use `isolation: "worktree"` to avoid conflicts.
+
 ## Definition of Done
 - All tests pass (`npm test` + `npm run test:e2e`)
 - Code builds without errors
