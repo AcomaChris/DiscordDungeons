@@ -16,6 +16,7 @@ import { Player } from '../entities/Player.js';
 import { RemotePlayer } from '../entities/RemotePlayer.js';
 import { NetworkManager } from '../network/NetworkManager.js';
 import { TileMapManager } from '../map/TileMapManager.js';
+import { NPC } from '../entities/NPC.js';
 import { getMapConfig } from '../map/MapRegistry.js';
 import authManager from '../auth/AuthManager.js';
 
@@ -63,6 +64,20 @@ export class GameScene extends Phaser.Scene {
     if (this.tileMapManager.collisionLayer) {
       this.physics.add.collider(this.player.sprite, this.tileMapManager.collisionLayer);
     }
+
+    // --- NPC ---
+    this.npc = new NPC(this, 160, 200, {
+      npcId: 'greta',
+      name: 'Greta',
+      color: 0x8B4513,
+    });
+    if (this.tileMapManager.collisionLayer) {
+      this.physics.add.collider(this.npc.sprite, this.tileMapManager.collisionLayer);
+    }
+    this.physics.add.collider(this.player.sprite, this.npc.sprite);
+
+    // Expose NPC for console testing (e.g. window.__NPC__.jump())
+    globalThis.__NPC__ = this.npc;
 
     // --- Input ---
     this.inputManager = new InputManager(this);
@@ -146,9 +161,10 @@ export class GameScene extends Phaser.Scene {
     this.tileMapManager.update(delta);
 
     // Z-axis physics — velocity/height update only. syncGroundPosition and
-    // updateDepth run in the player's postupdate handler, after Phaser's
+    // updateDepth run in the entity's postupdate handler, after Phaser's
     // body.postUpdate() has synced sprite.y from the physics body.
     this.player.updateJump(delta);
+    this.npc.update(delta);
     for (const rp of this.remotePlayers.values()) {
       rp.update(delta);
       rp.updateDepth();
@@ -178,6 +194,7 @@ export class GameScene extends Phaser.Scene {
     if (this.networkManager) this.networkManager.disconnect();
     this.inputManager.destroy();
     this.touchManager.destroy();
+    this.npc.destroy();
     this.tileMapManager.destroy();
     for (const rp of this.remotePlayers.values()) {
       rp.destroy();
