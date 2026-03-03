@@ -17,6 +17,7 @@ import { RemotePlayer } from '../entities/RemotePlayer.js';
 import { NetworkManager } from '../network/NetworkManager.js';
 import { TileMapManager } from '../map/TileMapManager.js';
 import { NPC } from '../entities/NPC.js';
+import { buildCollisionGrid } from '../ai/Pathfinder.js';
 import { getMapConfig } from '../map/MapRegistry.js';
 import authManager from '../auth/AuthManager.js';
 
@@ -76,7 +77,16 @@ export class GameScene extends Phaser.Scene {
     }
     this.physics.add.collider(this.player.sprite, this.npc.sprite);
 
-    // Expose NPC for console testing (e.g. window.__NPC__.jump())
+    // Pass collision grid for A* pathfinding
+    if (this.tileMapManager.collisionLayer) {
+      this.npc._collisionGrid = buildCollisionGrid(
+        this.tileMapManager.collisionLayer,
+        this.tileMapManager.tilemap.width,
+        this.tileMapManager.tilemap.height,
+      );
+    }
+
+    // Expose NPC for console testing (e.g. window.__NPC__.jump(), window.__NPC__.moveTo(5, 8))
     globalThis.__NPC__ = this.npc;
 
     // --- Input ---

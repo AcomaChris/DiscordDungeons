@@ -3,11 +3,13 @@
 // shadow, Y-sorted depth, Z-axis jump) but movement is controlled by AI brain
 // via moveTo() rather than player input.
 
-import { CHAR_WIDTH, CHAR_HEIGHT, TEXTURE_SCALE } from '../core/Constants.js';
+import { CHAR_WIDTH, CHAR_HEIGHT, TEXTURE_SCALE, TILE_SIZE } from '../core/Constants.js';
 import { generatePlayerTextures } from './PlayerTextureGenerator.js';
 import { startJump, updateJumpState } from '../physics/JumpPhysics.js';
 import { createShadow, updateShadow } from './ShadowHelper.js';
 import { SpeechBubble } from './SpeechBubble.js';
+import { findPath } from '../ai/Pathfinder.js';
+import { PathFollower } from '../ai/PathFollower.js';
 
 const NPC_WALK_SPEED = 60;   // px/sec (slower than player's 80)
 const NPC_JUMP_POWER = 200;  // same as player default
@@ -59,6 +61,10 @@ export class NPC {
     // --- Speech bubble ---
     this.speechBubble = new SpeechBubble(scene);
 
+    // --- Pathfinding ---
+    this._pathFollower = new PathFollower(NPC_WALK_SPEED);
+    this._collisionGrid = null; // set by GameScene after map load
+
     // --- Action callback (set by NPCBrain) ---
     this.onActionComplete = null;
 
@@ -89,6 +95,32 @@ export class NPC {
     this.sprite.setTexture(`${this.texturePrefix}-${this.facing}`);
   }
 
+  // Walk to a tile position using A* pathfinding.
+  // Returns true if a path was found and movement started, false otherwise.
+  moveTo(tileX, tileY) {
+    if (!this._collisionGrid) return false;
+
+    const startTX = Math.floor(this.sprite.x / TILE_SIZE);
+    const startTY = Math.floor(this._groundY / TILE_SIZE);
+
+    const path = findPath(this._collisionGrid, { tx: startTX, ty: startTY }, { tx: tileX, ty: tileY });
+    if (!path) return false;
+
+    if (path.length === 0) {
+      // Already at destination
+      if (this.onActionComplete) this.onActionComplete({ status: 'completed', action: 'move_to' });
+      return true;
+    }
+
+    this._pathFollower.startPath(path);
+    return true;
+  }
+
+  stopMoving() {
+    this._pathFollower.cancel();
+    this.sprite.setVelocity(0, 0);
+  }
+
   // --- Jump ---
 
   jump() {
@@ -106,6 +138,22 @@ export class NPC {
 
   update(delta) {
     this._updateJump(delta);
+    this._updatePathFollowing();
+  }
+
+  _updatePathFollowing() {
+    if (!this._pathFollower.isFollowing) return;
+
+    const { vx, vy, facing, arrived } = this._pathFollower.update(this.sprite.x, this._groundY);
+
+    if (arrived) {
+      this.sprite.setVelocity(0, 0);
+      if (this.onActionComplete) this.onActionComplete({ status: 'completed', action: 'move_to' });
+      return;
+    }
+
+    this.sprite.setVelocity(vx, vy);
+    if (facing) this.setFacing(facing);
   }
 
   _updateJump(delta) {
@@ -156,6 +204,7 @@ export class NPC {
   // --- Cleanup ---
 
   destroy() {
+    this._pathFollower.cancel();
     this.scene.events.off('preupdate', this._preUpdate);
     this.scene.events.off('postupdate', this._postUpdate);
     this.speechBubble.destroy();

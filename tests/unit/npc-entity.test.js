@@ -197,4 +197,59 @@ describe('NPC', () => {
     expect(npc.speechBubble).toBeDefined();
     expect(typeof npc.speechBubble.show).toBe('function');
   });
+
+  // --- Pathfinding ---
+
+  it('moveTo() returns false without collision grid', () => {
+    expect(npc.moveTo(5, 5)).toBe(false);
+  });
+
+  it('moveTo() finds path and starts following', () => {
+    // 10x10 open grid (false = walkable)
+    npc._collisionGrid = Array.from({ length: 15 }, () => new Array(15).fill(false));
+    // NPC is at (100, 200) → tile (6, 12) at 16px tile size
+    const result = npc.moveTo(8, 12);
+    expect(result).toBe(true);
+    expect(npc._pathFollower.isFollowing).toBe(true);
+  });
+
+  it('moveTo() returns false for blocked destination', () => {
+    const grid = Array.from({ length: 15 }, () => new Array(15).fill(false));
+    grid[5][5] = true; // block destination
+    npc._collisionGrid = grid;
+    expect(npc.moveTo(5, 5)).toBe(false);
+  });
+
+  it('moveTo() calls onActionComplete when already at destination', () => {
+    const callback = vi.fn();
+    npc.onActionComplete = callback;
+    npc._collisionGrid = Array.from({ length: 15 }, () => new Array(15).fill(false));
+    // NPC at (100, 200) → tile (6, 12)
+    npc.moveTo(6, 12);
+    expect(callback).toHaveBeenCalledWith({ status: 'completed', action: 'move_to' });
+  });
+
+  it('stopMoving() cancels path following', () => {
+    npc._collisionGrid = Array.from({ length: 15 }, () => new Array(15).fill(false));
+    npc.moveTo(8, 12);
+    expect(npc._pathFollower.isFollowing).toBe(true);
+    npc.stopMoving();
+    expect(npc._pathFollower.isFollowing).toBe(false);
+  });
+
+  it('_updatePathFollowing calls onActionComplete on arrival', () => {
+    const callback = vi.fn();
+    npc.onActionComplete = callback;
+    npc._collisionGrid = Array.from({ length: 15 }, () => new Array(15).fill(false));
+
+    // Move to an adjacent tile
+    npc.moveTo(7, 12);
+
+    // Simulate being at the waypoint center (tile 7, row 12 → x=120, y=200)
+    npc.sprite.x = 120;
+    npc._groundY = 200;
+    npc._updatePathFollowing();
+
+    expect(callback).toHaveBeenCalledWith({ status: 'completed', action: 'move_to' });
+  });
 });
