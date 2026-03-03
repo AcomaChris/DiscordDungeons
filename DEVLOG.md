@@ -4,6 +4,21 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-02 — Bartender NPC Agent (v0.19.0)
+
+**Commits:** 086f7ba, 61e0504, 42758b5
+
+- **NPC entity** (`NPC.js`): AI-driven bartender "Greta" spawns in the tavern. Shares Player's rendering pipeline (physics sprite, shadow, Z-axis jump, Y-sorted depth) but with immovable body — players bounce off instead of pushing.
+- **Speech bubbles** (`SpeechBubble.js`): Floating text above NPC head with auto-fade. Background rectangle auto-sized to text bounds, repositions each frame.
+- **A* pathfinding** (`Pathfinder.js`): Grid-based search on the collision layer, 4-directional. Pure functions, no Phaser dependency.
+- **Path following** (`PathFollower.js`): Converts tile waypoints to frame-by-frame velocity with automatic facing updates and arrival detection.
+- **AI brain** (`NPCBrain.js`): State machine (init → idle → thinking → acting → idle) driven by Behavior Engine API. Triggers: idle timer (8-15s), player proximity changes. Actions: move_to, speak, jump, idle — each with completion/failure callbacks.
+- **Perceptions** (`Perceptions.js`): Text-based world description for LLM — NPC position, player location/distance/direction, previous action outcomes, map size.
+- **59 new tests**: NPC entity (21), speech bubble (10), pathfinder (12), path-follower (13), perceptions (12), brain state machine (16). Total: 431 tests.
+- Console testing: `window.__NPC__.jump()`, `window.__NPC__.moveTo(5, 8)`, `window.__NPC__.speechBubble.show('Hello!')`.
+
+---
+
 ## 2026-03-02 — Issue #11: Collider & Group Fixes
 
 **Commits:** (v0.18.1)
