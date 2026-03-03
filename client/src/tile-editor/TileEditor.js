@@ -16,6 +16,7 @@ import { TILE_DEFAULTS, isDefaultTile } from '../map/tile-metadata-schema.js';
 import { OBJECT_DEFAULTS } from '../map/object-def-schema.js';
 import { analyzeTileset } from './TilesetAnalyzer.js';
 import { enrichAll } from './AutoEnricher.js';
+import { CategoryPainter } from './CategoryPainter.js';
 
 const API_URL = import.meta.env.VITE_AUTH_URL || 'http://localhost:3001';
 
@@ -62,6 +63,7 @@ class TileEditor {
     this._objectListPanel = document.getElementById('object-list-panel');
     this._autoDetectBtn = document.getElementById('auto-detect-btn');
     this._dimAssignedBtn = document.getElementById('dim-assigned-btn');
+    this._paintCategoriesBtn = document.getElementById('paint-categories-btn');
     this._objectToolbar = document.getElementById('object-toolbar');
 
     // --- Tile mode components ---
@@ -119,6 +121,7 @@ class TileEditor {
     document.getElementById('zoom-slider').title = 'Adjust canvas zoom (1x\u20138x)';
     this._autoDetectBtn.title = 'Analyze tileset pixels and auto-detect object boundaries, categories, and enrichments';
     this._dimAssignedBtn.title = 'Dim tiles already assigned to objects to see unassigned tiles clearly';
+    this._paintCategoriesBtn.title = 'Paint mode: select a category and click objects to assign it';
 
     // --- Bug Reporter ---
     this._bugReporter = new BugReporter(null);
@@ -142,6 +145,14 @@ class TileEditor {
     // Toggle object list panel and toolbar
     this._objectListPanel.classList.toggle('hidden', mode !== 'object');
     this._objectToolbar.classList.toggle('hidden', mode !== 'object');
+
+    // Exit paint mode when switching away from object mode
+    if (mode === 'tile' && this.objectCanvas.isInPaintMode()) {
+      this.objectCanvas.setPaintMode(null);
+      if (this._categoryPainter) this._categoryPainter.deactivate();
+      this._categoryPainter = null;
+      this._paintCategoriesBtn.classList.remove('active');
+    }
 
     // Swap active canvas component
     this.tileCanvas.setActive(mode === 'tile');
@@ -200,6 +211,7 @@ class TileEditor {
     this._saveGithubBtn.addEventListener('click', () => this._saveToGitHub());
     this._autoDetectBtn.addEventListener('click', () => this._autoDetectObjects());
     this._dimAssignedBtn.addEventListener('click', () => this._toggleDimAssigned());
+    this._paintCategoriesBtn.addEventListener('click', () => this._togglePaintMode());
 
     // Warn on unsaved changes
     window.addEventListener('beforeunload', (e) => {
@@ -663,6 +675,37 @@ class TileEditor {
     const enabled = !this.objectCanvas.isDimAssigned();
     this.objectCanvas.setDimAssigned(enabled);
     this._dimAssignedBtn.classList.toggle('active', enabled);
+  }
+
+  _togglePaintMode() {
+    if (this.objectCanvas.isInPaintMode()) {
+      // Exit paint mode — restore property panel
+      this.objectCanvas.setPaintMode(null);
+      this._categoryPainter.deactivate();
+      this._categoryPainter = null;
+      this._paintCategoriesBtn.classList.remove('active');
+      this.objectProperties.updateSelection(
+        this.objectCanvas.selectedObjectId, this.objectDefs, this.objectCanvas,
+      );
+    } else {
+      // Enter paint mode — replace property panel with category palette
+      this._categoryPainter = new CategoryPainter(
+        document.getElementById('property-panel'),
+        this.objectDefs,
+        (objectId) => this._onPaintCategory(objectId),
+      );
+      this._categoryPainter.activate();
+      this.objectCanvas.setPaintMode(this._categoryPainter);
+      this._paintCategoriesBtn.classList.add('active');
+    }
+  }
+
+  _onPaintCategory(objectId) {
+    // Category was already set on the def by the painter; just mark as modified
+    this._objectDefsModified = true;
+    this.objectList.refreshObject(objectId);
+    this._categoryPainter.render();
+    this._updateStatus();
   }
 
   _showToast(message) {

@@ -65,6 +65,10 @@ export class ObjectEditorCanvas {
     // Dim assigned tiles overlay
     this._dimAssigned = false;
 
+    // Paint mode — click/drag assigns category via CategoryPainter
+    this._paintMode = false;
+    this._painter = null;
+
     // Track whether this canvas is active (controls rendering + events)
     this._active = false;
     this._boundMouseMove = (e) => this._onMouseMove(e);
@@ -215,6 +219,19 @@ export class ObjectEditorCanvas {
     return this._dimAssigned;
   }
 
+  // --- Paint mode ---
+
+  setPaintMode(painter) {
+    this._paintMode = !!painter;
+    this._painter = painter || null;
+    this.canvas.style.cursor = this._paintMode ? 'pointer' : 'crosshair';
+    if (this._active) this.render();
+  }
+
+  isInPaintMode() {
+    return this._paintMode;
+  }
+
   // --- Internal: build tile → object lookup ---
   _buildTileToObjectMap() {
     this._tileToObject.clear();
@@ -286,6 +303,9 @@ export class ObjectEditorCanvas {
     // 8. Mode banners
     if (this._reassignMode) this._drawModeBanner(`Draw new tiles for: ${this._reassignObjectId}`, '#ff9f43');
     if (this._wizardMode) this._drawModeBanner('Draw a rectangle to select object tiles', '#00ccff');
+    if (this._paintMode && this._painter?.activeBrush) {
+      this._drawModeBanner(`Painting: ${this._painter.activeBrush} — click objects to assign`, '#10ac84');
+    }
   }
 
   _drawGrid() {
@@ -333,8 +353,8 @@ export class ObjectEditorCanvas {
 
       const color = CATEGORY_COLORS[def.category] || '#888888';
 
-      // Draw semi-transparent fill over each tile
-      ctx.fillStyle = this._hexToRgba(color, 0.15);
+      // Draw semi-transparent fill over each tile (stronger in paint mode)
+      ctx.fillStyle = this._hexToRgba(color, this._paintMode ? 0.35 : 0.15);
       for (const row of def.grid.tiles) {
         for (const tileIdx of row) {
           if (tileIdx === null || tileIdx === undefined) continue;
@@ -570,6 +590,12 @@ export class ObjectEditorCanvas {
   _onMouseMove(e) {
     const { id, col, row } = this._getTileAt(e);
 
+    // Paint mode: drag-paint on mousemove while button is held
+    if (this._paintMode && this._isPainting && id >= 0) {
+      this._tryPaint(id);
+      return;
+    }
+
     if (this._isDragging) {
       this._dragCurrent = { col, row };
       this.render();
@@ -585,6 +611,13 @@ export class ObjectEditorCanvas {
   _onMouseDown(e) {
     const { id, col, row } = this._getTileAt(e);
     if (id < 0) return;
+
+    // Paint mode: click to assign category
+    if (this._paintMode) {
+      this._isPainting = true;
+      this._tryPaint(id);
+      return;
+    }
 
     // Reassign or wizard mode: any click starts drag
     if (this._reassignMode || this._wizardMode) {
@@ -616,7 +649,17 @@ export class ObjectEditorCanvas {
     }
   }
 
+  _tryPaint(tileId) {
+    if (!this._painter) return;
+    const changed = this._painter.paintObjectAtTile(tileId, this._tileToObject);
+    if (changed) this.render();
+  }
+
   _onMouseUp(e) {
+    if (this._isPainting) {
+      this._isPainting = false;
+      return;
+    }
     if (!this._isDragging) return;
 
     const { col, row } = this._getTileAt(e);

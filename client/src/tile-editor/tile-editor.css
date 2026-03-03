@@ -814,3 +814,67 @@ body {
   from { transform: translateX(-50%) translateY(20px); opacity: 0; }
   to { transform: translateX(-50%) translateY(0); opacity: 1; }
 }
+
+/* --- Category Painter --- */
+
+.category-painter .painter-title {
+  color: #00ccff;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #2a2a4a;
+}
+
+.category-painter .painter-hint {
+  font-size: 0.78rem;
+  color: #7a7aaa;
+  margin-bottom: 12px;
+}
+
+.painter-category-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid #2a2a4a;
+  border-radius: 4px;
+  background: #1a1a2e;
+  color: #e0e0e0;
+  font-size: 0.82rem;
+  cursor: pointer;
+  margin-bottom: 4px;
+  text-transform: capitalize;
+}
+
+.painter-category-btn:hover {
+  border-color: #00ccff;
+}
+
+.painter-category-btn.active {
+  border-color: #00ccff;
+  background: rgba(0, 204, 255, 0.1);
+  font-weight: bold;
+}
+
+.painter-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.painter-label {
+  flex: 1;
+  text-align: left;
+}
+
+.painter-count {
+  font-size: 0.75rem;
+  color: #7a7aaa;
+  min-width: 20px;
+  text-align: right;
+}
