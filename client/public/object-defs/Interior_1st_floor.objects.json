@@ -8461,6 +8461,17 @@
       },
       "colliders": [
         {
+          "id": "base",
+          "shape": "rect",
+          "x": 4,
+          "y": 16,
+          "width": 56,
+          "height": 16,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": false
+        },
+        {
           "id": "surface",
           "shape": "rect",
           "x": 0,

@@ -96,59 +96,89 @@ function generateGroundData() {
   return data;
 }
 
-// --- Walls Layer ---
-// Wall faces and furniture — converted to Y-sorted sprites by TileMapManager.
-// Furniture uses ObjectPlacer; structural elements use direct GIDs.
-function generateWallsData() {
-  const data = new Array(MAP_W * MAP_H).fill(0);
+// --- Walls + Collision Layers ---
+// Walls: wall faces and furniture — converted to Y-sorted sprites by TileMapManager.
+// Collision: invisible layer — any non-zero tile blocks movement.
+// AGENT: Built together so ObjectPlacer writes both tile data and collision.
+function generateWallsAndCollision() {
+  const walls = new Array(MAP_W * MAP_H).fill(0);
+  const collision = new Array(MAP_W * MAP_H).fill(0);
+  const SOLID = 1;
 
   // --- North wall face (row 1) ---
   for (let x = 0; x < MAP_W; x++) {
-    data[idx(x, 1)] = WALL_MID_M;
+    walls[idx(x, 1)] = WALL_MID_M;
   }
-  data[idx(0, 1)] = WALL_MID_L;
-  data[idx(MAP_W - 1, 1)] = WALL_MID_R;
+  walls[idx(0, 1)] = WALL_MID_L;
+  walls[idx(MAP_W - 1, 1)] = WALL_MID_R;
 
   // --- Bar area (against north wall) ---
   // Bottle shelves (rows 2-3) — four 2×2 shelf units
-  placer.place('shelf_unit_2x2', 3, 2).applyTo(data, null, MAP_W);
-  placer.place('shelf_unit_2x2', 5, 2).applyTo(data, null, MAP_W);
-  placer.place('shelf_unit_2x2', 7, 2).applyTo(data, null, MAP_W);
-  placer.place('shelf_unit_2x2', 9, 2).applyTo(data, null, MAP_W);
+  placer.place('shelf_unit_2x2', 3, 2).applyTo(walls, collision, MAP_W);
+  placer.place('shelf_unit_2x2', 5, 2).applyTo(walls, collision, MAP_W);
+  placer.place('shelf_unit_2x2', 7, 2).applyTo(walls, collision, MAP_W);
+  placer.place('shelf_unit_2x2', 9, 2).applyTo(walls, collision, MAP_W);
 
   // Bar counter (rows 4-5, cols 2-13) — stretched: left + 10×middle + right
-  placer.place('bar_counter_3x2', 2, 4, { stretch: 10 }).applyTo(data, null, MAP_W);
+  placer.place('bar_counter_3x2', 2, 4, { stretch: 10 }).applyTo(walls, collision, MAP_W);
 
   // --- Seating area ---
   // Table group 1: large table with chairs (left side)
-  placer.place('large_table_4x2', 2, 7).applyTo(data, null, MAP_W);
-  placer.place('chair_red_2x2', 2, 9).applyTo(data, null, MAP_W);
-  placer.place('chair_red_2x2', 4, 9).applyTo(data, null, MAP_W);
+  placer.place('large_table_4x2', 2, 7).applyTo(walls, collision, MAP_W);
+  placer.place('chair_red_2x2', 2, 9).applyTo(walls, collision, MAP_W);
+  placer.place('chair_red_2x2', 4, 9).applyTo(walls, collision, MAP_W);
 
   // Table group 2: medium table (center)
-  placer.place('small_table_2x2', 9, 7).applyTo(data, null, MAP_W);
+  placer.place('small_table_2x2', 9, 7).applyTo(walls, collision, MAP_W);
 
   // Table group 3: medium table (right side)
-  placer.place('small_table_2x2', 14, 7).applyTo(data, null, MAP_W);
-  placer.place('small_table_2x2', 14, 9).applyTo(data, null, MAP_W);
+  placer.place('small_table_2x2', 14, 7).applyTo(walls, collision, MAP_W);
+  placer.place('small_table_2x2', 14, 9).applyTo(walls, collision, MAP_W);
 
   // Table group 4: large table near door (bottom-left)
-  placer.place('large_table_4x2', 2, 11).applyTo(data, null, MAP_W);
+  placer.place('large_table_4x2', 2, 11).applyTo(walls, collision, MAP_W);
 
   // --- Barrels (bottom-right corner) ---
-  placer.place('barrel_single', 17, 11).applyTo(data, null, MAP_W);
-  placer.place('barrel_single', 18, 11).applyTo(data, null, MAP_W);
-  placer.place('barrel_single', 17, 12).applyTo(data, null, MAP_W);
+  placer.place('barrel_single', 17, 11).applyTo(walls, collision, MAP_W);
+  placer.place('barrel_single', 18, 11).applyTo(walls, collision, MAP_W);
+  placer.place('barrel_single', 17, 12).applyTo(walls, collision, MAP_W);
 
   // --- Decorative elements (no object defs) ---
-  data[idx(15, 3)] = PLANT_1;
-  data[idx(17, 3)] = PLANT_2;
+  walls[idx(15, 3)] = PLANT_1;
+  walls[idx(17, 3)] = PLANT_2;
 
   // Columns flanking the main area
-  data[idx(1, 6)] = COL_MID;
-  data[idx(MAP_W - 2, 6)] = COL_MID;
+  walls[idx(1, 6)] = COL_MID;
+  walls[idx(MAP_W - 2, 6)] = COL_MID;
 
-  return data;
+  // --- Manual collision (elements without object defs) ---
+
+  // North wall + wall tops (rows 0-1)
+  for (let x = 0; x < MAP_W; x++) {
+    collision[idx(x, 0)] = SOLID;
+    collision[idx(x, 1)] = SOLID;
+  }
+
+  // Side walls
+  for (let y = 0; y < MAP_H; y++) {
+    collision[idx(0, y)] = SOLID;
+    collision[idx(MAP_W - 1, y)] = SOLID;
+  }
+
+  // South boundary (row 15)
+  for (let x = 0; x < MAP_W; x++) {
+    collision[idx(x, MAP_H - 1)] = SOLID;
+  }
+
+  // Plants behind counter
+  collision[idx(15, 3)] = SOLID;
+  collision[idx(17, 3)] = SOLID;
+
+  // Columns
+  collision[idx(1, 6)] = SOLID;
+  collision[idx(MAP_W - 2, 6)] = SOLID;
+
+  return { walls, collision };
 }
 
 // --- WallTops Layer ---
@@ -164,59 +194,6 @@ function generateWallTopsData() {
   // Column tops (one row above column middles at row 6)
   data[idx(1, 5)] = COL_TOP;
   data[idx(MAP_W - 2, 5)] = COL_TOP;
-
-  return data;
-}
-
-// --- Collision Layer ---
-// Invisible layer — any non-zero tile blocks movement
-function generateCollisionData() {
-  const data = new Array(MAP_W * MAP_H).fill(0);
-  const SOLID = 1; // Any non-zero value
-
-  // North wall + wall tops (rows 0-1)
-  for (let x = 0; x < MAP_W; x++) {
-    data[idx(x, 0)] = SOLID;
-    data[idx(x, 1)] = SOLID;
-  }
-
-  // Side walls
-  for (let y = 0; y < MAP_H; y++) {
-    data[idx(0, y)] = SOLID;
-    data[idx(MAP_W - 1, y)] = SOLID;
-  }
-
-  // South boundary (row 15)
-  for (let x = 0; x < MAP_W; x++) {
-    data[idx(x, MAP_H - 1)] = SOLID;
-  }
-
-  // Bar shelves (rows 2-3, cols 3-10)
-  for (let y = 2; y <= 3; y++) {
-    for (let x = 3; x <= 10; x++) {
-      data[idx(x, y)] = SOLID;
-    }
-  }
-
-  // Bar counter (rows 4-5, cols 2-13)
-  for (let y = 4; y <= 5; y++) {
-    for (let x = 2; x <= 13; x++) {
-      data[idx(x, y)] = SOLID;
-    }
-  }
-
-  // Plants behind counter
-  data[idx(15, 3)] = SOLID;
-  data[idx(17, 3)] = SOLID;
-
-  // Barrels
-  data[idx(17, 11)] = SOLID;
-  data[idx(18, 11)] = SOLID;
-  data[idx(17, 12)] = SOLID;
-
-  // Columns
-  data[idx(1, 6)] = SOLID;
-  data[idx(MAP_W - 2, 6)] = SOLID;
 
   return data;
 }
@@ -248,13 +225,15 @@ function generateObjectLayer() {
 
 // --- Build Map JSON ---
 function buildMap() {
+  const { walls, collision } = generateWallsAndCollision();
+
   const layers = [
     makeLayer('Ground', generateGroundData()),
     makeLayer('GroundDecor', new Array(MAP_W * MAP_H).fill(0)),
-    makeLayer('Walls', generateWallsData()),
+    makeLayer('Walls', walls),
     makeLayer('WallTops', generateWallTopsData()),
     makeLayer('Overlay', new Array(MAP_W * MAP_H).fill(0)),
-    makeLayer('Collision', generateCollisionData()),
+    makeLayer('Collision', collision),
     generateObjectLayer(),
   ];
 

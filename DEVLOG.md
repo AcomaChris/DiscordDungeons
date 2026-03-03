@@ -4,6 +4,33 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-02 — Fix Tavern Collision (Issues #9, #10)
+
+**Commits:** (v0.15.1)
+
+Fixed missing furniture collision in the tavern map. Player could walk through all tables, chairs, and stretched bar counter.
+
+- **Root cause**: `create-tavern-map.js` passed `null` for the collision parameter in all `applyTo()` calls, so ObjectPlacer never wrote collision data for placed objects. Manual `generateCollisionData()` only covered walls/boundaries/plants/columns — skipped all tables and chairs entirely.
+- **Merged wall+collision generation**: Replaced separate `generateWallsData()` + `generateCollisionData()` with unified `generateWallsAndCollision()` that passes the collision array through ObjectPlacer. Manual entries kept for walls, boundaries, plants, and columns (no object defs for these).
+- **`large_table_4x2` fix**: Had only an `elevation: 1, type: "platform"` collider (table surface). Added ground-level `elevation: 0, type: "solid"` collider for the table base. ObjectPlacer skips elevation > 0 colliders.
+- **Stretchable collider scaling**: `ObjectPlacer._resolveCollision` didn't scale collider width for stretched objects. Bar counter with `stretch: 10` (12 columns) only got 3 tiles of collision. Fixed by scaling `effectiveWidth` by `placedCols / origCols` when `collider.stretchable === true`.
+- **Result**: Collision layer now has 155 solid tiles (up from ~100). All furniture blocks player movement.
+
+---
+
+## 2026-03-02 — Object Definition Editor (v0.15.0)
+
+**Commits:** `7400e4a`
+
+Added Object Definition Editor mode to the tileset editor for visual editing of multi-tile object definitions.
+
+- **ObjectEditorList**: Filterable object list with composited thumbnails, category badges, text search, and validation indicators.
+- **ObjectEditorProperties**: Full property form with collapsible sections for Basic, Grid, Rendering, Colliders, Nodes, Parts, and WFC data.
+- **TileEditor orchestrator rewrite**: Mode toggle (Tiles/Objects) with dual canvas components sharing the same DOM element via `setActive()`. Import/export/save dispatch to mode-specific handlers.
+- **Server endpoint**: `POST /api/object-defs` for saving object definitions to GitHub via the WS server.
+
+---
+
 ## 2026-03-02 — Enrichment, ObjectPlacer & Tavern Refactor
 
 **Commits:** (v0.14.0)

@@ -138,17 +138,24 @@ export class ObjectPlacer {
     }
 
     // For ground-level solid colliders, mark covered tiles
+    const origCols = def.grid ? def.grid.cols : placedCols;
+
     for (const collider of def.colliders) {
       if (collider.elevation > 0) continue; // only ground-level collision
       if (collider.type !== 'solid') continue;
 
+      // Scale stretchable colliders to match the placed object width
+      let effectiveWidth = collider.width;
+      if (collider.stretchable && placedCols !== origCols) {
+        effectiveWidth = collider.width * (placedCols / origCols);
+      }
+
       // Convert pixel rect to tile positions
       const startCol = Math.floor(collider.x / TILE_SIZE);
       const startRow = Math.floor(collider.y / TILE_SIZE);
-      const endCol = Math.ceil((collider.x + collider.width) / TILE_SIZE);
+      const endCol = Math.ceil((collider.x + effectiveWidth) / TILE_SIZE);
       const endRow = Math.ceil((collider.y + collider.height) / TILE_SIZE);
 
-      // Adjust for stretched objects
       const maxCol = Math.min(endCol, placedCols);
       const maxRow = Math.min(endRow, placedRows);
 
