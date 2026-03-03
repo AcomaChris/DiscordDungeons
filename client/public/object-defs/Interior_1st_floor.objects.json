@@ -62,21 +62,45 @@
           "stretchable": true
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "items_center",
+          "type": "item_placement",
+          "x": 32,
+          "y": 16,
+          "elevation": 1
+        },
+        {
+          "id": "sit_south_left",
+          "type": "sit",
+          "x": 8,
+          "y": 56,
+          "elevation": 0,
+          "facing": "up"
+        },
+        {
+          "id": "sit_south_right",
+          "type": "sit",
+          "x": 56,
+          "y": 56,
+          "elevation": 0,
+          "facing": "up"
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
-          "south": 1,
+          "south": 2,
           "east": 1,
           "west": 1
         },
@@ -148,21 +172,45 @@
           "stretchable": true
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "items_center",
+          "type": "item_placement",
+          "x": 32,
+          "y": 16,
+          "elevation": 1
+        },
+        {
+          "id": "sit_south_left",
+          "type": "sit",
+          "x": 8,
+          "y": 56,
+          "elevation": 0,
+          "facing": "up"
+        },
+        {
+          "id": "sit_south_right",
+          "type": "sit",
+          "x": 56,
+          "y": 56,
+          "elevation": 0,
+          "facing": "up"
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
-          "south": 1,
+          "south": 2,
           "east": 1,
           "west": 1
         },
@@ -311,7 +359,15 @@
           "stretchable": true
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "interact_1",
+          "type": "interact",
+          "x": 32,
+          "y": 64,
+          "elevation": 0
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
@@ -335,6 +391,48 @@
           "carpet"
         ],
         "weight": 1
+      },
+      "parts": {
+        "layout": [
+          [
+            "left_end",
+            "middle",
+            "middle",
+            "right_end"
+          ],
+          [
+            "left_end",
+            "middle",
+            "middle",
+            "right_end"
+          ],
+          [
+            "left_end",
+            "middle",
+            "middle",
+            "right_end"
+          ],
+          [
+            "left_end",
+            "middle",
+            "middle",
+            "right_end"
+          ]
+        ],
+        "roles": {
+          "left_end": {
+            "required": true
+          },
+          "middle": {
+            "required": false,
+            "repeatable": true,
+            "minRepeat": 0,
+            "maxRepeat": 4
+          },
+          "right_end": {
+            "required": true
+          }
+        }
       }
     },
     "wooden_staircase": {
@@ -583,17 +681,25 @@
         ]
       },
       "colliders": [],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "sit_1",
+          "type": "sit",
+          "x": 16,
+          "y": 8,
+          "elevation": 0
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
@@ -631,17 +737,25 @@
         ]
       },
       "colliders": [],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "sit_1",
+          "type": "sit",
+          "x": 16,
+          "y": 8,
+          "elevation": 0
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
@@ -699,21 +813,38 @@
           "stretchable": false
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "serve_1",
+          "type": "item_placement",
+          "x": 8,
+          "y": 4,
+          "elevation": 1,
+          "partRole": "left_end"
+        },
+        {
+          "id": "serve_2",
+          "type": "item_placement",
+          "x": 24,
+          "y": 4,
+          "elevation": 1,
+          "partRole": "right_end"
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "counter_mid",
+          "south": "counter_mid",
+          "east": "counter_end",
+          "west": "counter_end"
         },
         "clearance": {
           "north": 1,
-          "south": 1,
+          "south": 2,
           "east": 1,
           "west": 1
         },
@@ -746,21 +877,30 @@
         ]
       },
       "colliders": [],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "serve_1",
+          "type": "item_placement",
+          "x": 8,
+          "y": 4,
+          "elevation": 1,
+          "partRole": "left_end"
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "counter_mid",
+          "south": "counter_mid",
+          "east": "counter_end",
+          "west": "counter_end"
         },
         "clearance": {
           "north": 1,
-          "south": 1,
+          "south": 2,
           "east": 1,
           "west": 1
         },
@@ -894,21 +1034,62 @@
           "stretchable": true
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "serve_1",
+          "type": "item_placement",
+          "x": 8,
+          "y": 4,
+          "elevation": 1,
+          "partRole": "left_end"
+        },
+        {
+          "id": "serve_2",
+          "type": "item_placement",
+          "x": 24,
+          "y": 4,
+          "elevation": 1,
+          "partRole": "middle"
+        },
+        {
+          "id": "serve_3",
+          "type": "item_placement",
+          "x": 40,
+          "y": 4,
+          "elevation": 1,
+          "partRole": "middle"
+        },
+        {
+          "id": "serve_4",
+          "type": "item_placement",
+          "x": 56,
+          "y": 4,
+          "elevation": 1,
+          "partRole": "middle"
+        },
+        {
+          "id": "serve_5",
+          "type": "item_placement",
+          "x": 72,
+          "y": 4,
+          "elevation": 1,
+          "partRole": "right_end"
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "counter_mid",
+          "south": "counter_mid",
+          "east": "counter_end",
+          "west": "counter_end"
         },
         "clearance": {
           "north": 1,
-          "south": 1,
+          "south": 2,
           "east": 1,
           "west": 1
         },
@@ -980,21 +1161,45 @@
           "stretchable": true
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "items_center",
+          "type": "item_placement",
+          "x": 32,
+          "y": 16,
+          "elevation": 1
+        },
+        {
+          "id": "sit_south_left",
+          "type": "sit",
+          "x": 8,
+          "y": 56,
+          "elevation": 0,
+          "facing": "up"
+        },
+        {
+          "id": "sit_south_right",
+          "type": "sit",
+          "x": 56,
+          "y": 56,
+          "elevation": 0,
+          "facing": "up"
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
-          "south": 1,
+          "south": 2,
           "east": 1,
           "west": 1
         },
@@ -1004,6 +1209,42 @@
           "carpet"
         ],
         "weight": 1
+      },
+      "parts": {
+        "layout": [
+          [
+            "left_end",
+            "middle",
+            "middle",
+            "right_end"
+          ],
+          [
+            "left_end",
+            "middle",
+            "middle",
+            "right_end"
+          ],
+          [
+            "left_end",
+            "middle",
+            "middle",
+            "right_end"
+          ]
+        ],
+        "roles": {
+          "left_end": {
+            "required": true
+          },
+          "middle": {
+            "required": false,
+            "repeatable": true,
+            "minRepeat": 0,
+            "maxRepeat": 4
+          },
+          "right_end": {
+            "required": true
+          }
+        }
       }
     },
     "dining_table_chairs_b": {
@@ -1066,21 +1307,45 @@
           "stretchable": true
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "items_center",
+          "type": "item_placement",
+          "x": 32,
+          "y": 16,
+          "elevation": 1
+        },
+        {
+          "id": "sit_south_left",
+          "type": "sit",
+          "x": 8,
+          "y": 56,
+          "elevation": 0,
+          "facing": "up"
+        },
+        {
+          "id": "sit_south_right",
+          "type": "sit",
+          "x": 56,
+          "y": 56,
+          "elevation": 0,
+          "facing": "up"
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
-          "south": 1,
+          "south": 2,
           "east": 1,
           "west": 1
         },
@@ -1090,6 +1355,42 @@
           "carpet"
         ],
         "weight": 1
+      },
+      "parts": {
+        "layout": [
+          [
+            "left_end",
+            "middle",
+            "middle",
+            "right_end"
+          ],
+          [
+            "left_end",
+            "middle",
+            "middle",
+            "right_end"
+          ],
+          [
+            "left_end",
+            "middle",
+            "middle",
+            "right_end"
+          ]
+        ],
+        "roles": {
+          "left_end": {
+            "required": true
+          },
+          "middle": {
+            "required": false,
+            "repeatable": true,
+            "minRepeat": 0,
+            "maxRepeat": 4
+          },
+          "right_end": {
+            "required": true
+          }
+        }
       }
     },
     "stair_treads": {
@@ -1196,21 +1497,46 @@
           "stretchable": true
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "serve_1",
+          "type": "item_placement",
+          "x": 8,
+          "y": 4,
+          "elevation": 1,
+          "partRole": "left_end"
+        },
+        {
+          "id": "serve_2",
+          "type": "item_placement",
+          "x": 24,
+          "y": 4,
+          "elevation": 1,
+          "partRole": "middle"
+        },
+        {
+          "id": "serve_3",
+          "type": "item_placement",
+          "x": 40,
+          "y": 4,
+          "elevation": 1,
+          "partRole": "right_end"
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "counter_mid",
+          "south": "counter_mid",
+          "east": "counter_end",
+          "west": "counter_end"
         },
         "clearance": {
           "north": 1,
-          "south": 1,
+          "south": 2,
           "east": 1,
           "west": 1
         },
@@ -1220,6 +1546,29 @@
           "carpet"
         ],
         "weight": 1
+      },
+      "parts": {
+        "layout": [
+          [
+            "left_end",
+            "middle",
+            "right_end"
+          ]
+        ],
+        "roles": {
+          "left_end": {
+            "required": true
+          },
+          "middle": {
+            "required": false,
+            "repeatable": true,
+            "minRepeat": 0,
+            "maxRepeat": 4
+          },
+          "right_end": {
+            "required": true
+          }
+        }
       }
     },
     "stair_treads_b": {
@@ -1332,21 +1681,86 @@
           "stretchable": true
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "serve_1",
+          "type": "item_placement",
+          "x": 8,
+          "y": 4,
+          "elevation": 1,
+          "partRole": "left_end"
+        },
+        {
+          "id": "serve_2",
+          "type": "item_placement",
+          "x": 24,
+          "y": 4,
+          "elevation": 1,
+          "partRole": "middle"
+        },
+        {
+          "id": "serve_3",
+          "type": "item_placement",
+          "x": 40,
+          "y": 4,
+          "elevation": 1,
+          "partRole": "middle"
+        },
+        {
+          "id": "serve_4",
+          "type": "item_placement",
+          "x": 56,
+          "y": 4,
+          "elevation": 1,
+          "partRole": "middle"
+        },
+        {
+          "id": "serve_5",
+          "type": "item_placement",
+          "x": 72,
+          "y": 4,
+          "elevation": 1,
+          "partRole": "middle"
+        },
+        {
+          "id": "serve_6",
+          "type": "item_placement",
+          "x": 88,
+          "y": 4,
+          "elevation": 1,
+          "partRole": "middle"
+        },
+        {
+          "id": "serve_7",
+          "type": "item_placement",
+          "x": 104,
+          "y": 4,
+          "elevation": 1,
+          "partRole": "middle"
+        },
+        {
+          "id": "serve_8",
+          "type": "item_placement",
+          "x": 120,
+          "y": 4,
+          "elevation": 1,
+          "partRole": "right_end"
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "counter_mid",
+          "south": "counter_mid",
+          "east": "counter_end",
+          "west": "counter_end"
         },
         "clearance": {
           "north": 1,
-          "south": 1,
+          "south": 2,
           "east": 1,
           "west": 1
         },
@@ -1356,6 +1770,34 @@
           "carpet"
         ],
         "weight": 1
+      },
+      "parts": {
+        "layout": [
+          [
+            "left_end",
+            "middle",
+            "middle",
+            "middle",
+            "middle",
+            "middle",
+            "middle",
+            "right_end"
+          ]
+        ],
+        "roles": {
+          "left_end": {
+            "required": true
+          },
+          "middle": {
+            "required": false,
+            "repeatable": true,
+            "minRepeat": 0,
+            "maxRepeat": 4
+          },
+          "right_end": {
+            "required": true
+          }
+        }
       }
     },
     "stair_railing": {
@@ -1407,10 +1849,10 @@
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "wall_face",
+          "south": "stair_entry",
+          "east": "wall_face",
+          "west": "wall_face"
         },
         "clearance": {
           "north": 1,
@@ -1550,21 +1992,45 @@
           "stretchable": false
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "items_center",
+          "type": "item_placement",
+          "x": 16,
+          "y": 10,
+          "elevation": 1
+        },
+        {
+          "id": "sit_south_left",
+          "type": "sit",
+          "x": 8,
+          "y": 40,
+          "elevation": 0,
+          "facing": "up"
+        },
+        {
+          "id": "sit_south_right",
+          "type": "sit",
+          "x": 24,
+          "y": 40,
+          "elevation": 0,
+          "facing": "up"
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
-          "south": 1,
+          "south": 2,
           "east": 1,
           "west": 1
         },
@@ -1597,7 +2063,15 @@
         ]
       },
       "colliders": [],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "sit_1",
+          "type": "sit",
+          "x": 8,
+          "y": 8,
+          "elevation": 0
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
@@ -1657,17 +2131,25 @@
           "stretchable": false
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "interact_1",
+          "type": "interact",
+          "x": 16,
+          "y": 12,
+          "elevation": 0
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
@@ -1717,17 +2199,25 @@
           "stretchable": false
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "interact_1",
+          "type": "interact",
+          "x": 16,
+          "y": 12,
+          "elevation": 0
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
@@ -1796,21 +2286,70 @@
           "stretchable": true
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "sit_1",
+          "type": "sit",
+          "x": 8,
+          "y": 24,
+          "elevation": 0,
+          "facing": "down"
+        },
+        {
+          "id": "sit_2",
+          "type": "sit",
+          "x": 24,
+          "y": 24,
+          "elevation": 0,
+          "facing": "down"
+        },
+        {
+          "id": "sit_3",
+          "type": "sit",
+          "x": 40,
+          "y": 24,
+          "elevation": 0,
+          "facing": "down"
+        },
+        {
+          "id": "sit_4",
+          "type": "sit",
+          "x": 56,
+          "y": 24,
+          "elevation": 0,
+          "facing": "down"
+        },
+        {
+          "id": "sit_5",
+          "type": "sit",
+          "x": 72,
+          "y": 24,
+          "elevation": 0,
+          "facing": "down"
+        },
+        {
+          "id": "sit_6",
+          "type": "sit",
+          "x": 88,
+          "y": 24,
+          "elevation": 0,
+          "facing": "down"
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
-          "south": 1,
+          "south": 2,
           "east": 1,
           "west": 1
         },
@@ -1956,17 +2495,25 @@
           "stretchable": true
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "interact_1",
+          "type": "interact",
+          "x": 24,
+          "y": 44,
+          "elevation": 0
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
@@ -2020,17 +2567,25 @@
           "stretchable": false
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "interact_1",
+          "type": "interact",
+          "x": 16,
+          "y": 28,
+          "elevation": 0
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
@@ -2085,17 +2640,25 @@
           "stretchable": false
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "interact_1",
+          "type": "interact",
+          "x": 16,
+          "y": 28,
+          "elevation": 0
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
@@ -2208,21 +2771,54 @@
           "stretchable": true
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "sit_1",
+          "type": "sit",
+          "x": 8,
+          "y": 16,
+          "elevation": 0,
+          "facing": "down"
+        },
+        {
+          "id": "sit_2",
+          "type": "sit",
+          "x": 24,
+          "y": 16,
+          "elevation": 0,
+          "facing": "down"
+        },
+        {
+          "id": "sit_3",
+          "type": "sit",
+          "x": 40,
+          "y": 16,
+          "elevation": 0,
+          "facing": "down"
+        },
+        {
+          "id": "sit_4",
+          "type": "sit",
+          "x": 56,
+          "y": 16,
+          "elevation": 0,
+          "facing": "down"
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
-          "south": 1,
+          "south": 2,
           "east": 1,
           "west": 1
         },
@@ -2232,6 +2828,36 @@
           "carpet"
         ],
         "weight": 1
+      },
+      "parts": {
+        "layout": [
+          [
+            "left_end",
+            "middle",
+            "middle",
+            "right_end"
+          ],
+          [
+            "left_end",
+            "middle",
+            "middle",
+            "right_end"
+          ]
+        ],
+        "roles": {
+          "left_end": {
+            "required": true
+          },
+          "middle": {
+            "required": false,
+            "repeatable": true,
+            "minRepeat": 0,
+            "maxRepeat": 4
+          },
+          "right_end": {
+            "required": true
+          }
+        }
       }
     },
     "round_table_small": {
@@ -2283,21 +2909,45 @@
           "stretchable": false
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "items_center",
+          "type": "item_placement",
+          "x": 16,
+          "y": 10,
+          "elevation": 1
+        },
+        {
+          "id": "sit_south_left",
+          "type": "sit",
+          "x": 8,
+          "y": 40,
+          "elevation": 0,
+          "facing": "up"
+        },
+        {
+          "id": "sit_south_right",
+          "type": "sit",
+          "x": 24,
+          "y": 40,
+          "elevation": 0,
+          "facing": "up"
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
-          "south": 1,
+          "south": 2,
           "east": 1,
           "west": 1
         },
@@ -2330,17 +2980,25 @@
         ]
       },
       "colliders": [],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "sit_1",
+          "type": "sit",
+          "x": 16,
+          "y": 8,
+          "elevation": 0
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
@@ -2411,21 +3069,45 @@
           "stretchable": true
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "items_center",
+          "type": "item_placement",
+          "x": 24,
+          "y": 16,
+          "elevation": 1
+        },
+        {
+          "id": "sit_south_left",
+          "type": "sit",
+          "x": 8,
+          "y": 56,
+          "elevation": 0,
+          "facing": "up"
+        },
+        {
+          "id": "sit_south_right",
+          "type": "sit",
+          "x": 40,
+          "y": 56,
+          "elevation": 0,
+          "facing": "up"
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
-          "south": 1,
+          "south": 2,
           "east": 1,
           "west": 1
         },
@@ -2494,21 +3176,45 @@
           "stretchable": true
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "items_center",
+          "type": "item_placement",
+          "x": 24,
+          "y": 16,
+          "elevation": 1
+        },
+        {
+          "id": "sit_south_left",
+          "type": "sit",
+          "x": 8,
+          "y": 56,
+          "elevation": 0,
+          "facing": "up"
+        },
+        {
+          "id": "sit_south_right",
+          "type": "sit",
+          "x": 40,
+          "y": 56,
+          "elevation": 0,
+          "facing": "up"
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
-          "south": 1,
+          "south": 2,
           "east": 1,
           "west": 1
         },
@@ -2577,21 +3283,45 @@
           "stretchable": true
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "items_center",
+          "type": "item_placement",
+          "x": 24,
+          "y": 16,
+          "elevation": 1
+        },
+        {
+          "id": "sit_south_left",
+          "type": "sit",
+          "x": 8,
+          "y": 56,
+          "elevation": 0,
+          "facing": "up"
+        },
+        {
+          "id": "sit_south_right",
+          "type": "sit",
+          "x": 40,
+          "y": 56,
+          "elevation": 0,
+          "facing": "up"
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
-          "south": 1,
+          "south": 2,
           "east": 1,
           "west": 1
         },
@@ -2660,21 +3390,45 @@
           "stretchable": true
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "items_center",
+          "type": "item_placement",
+          "x": 24,
+          "y": 16,
+          "elevation": 1
+        },
+        {
+          "id": "sit_south_left",
+          "type": "sit",
+          "x": 8,
+          "y": 56,
+          "elevation": 0,
+          "facing": "up"
+        },
+        {
+          "id": "sit_south_right",
+          "type": "sit",
+          "x": 40,
+          "y": 56,
+          "elevation": 0,
+          "facing": "up"
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
-          "south": 1,
+          "south": 2,
           "east": 1,
           "west": 1
         },
@@ -2739,21 +3493,54 @@
           "stretchable": true
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "sit_1",
+          "type": "sit",
+          "x": 8,
+          "y": 16,
+          "elevation": 0,
+          "facing": "down"
+        },
+        {
+          "id": "sit_2",
+          "type": "sit",
+          "x": 24,
+          "y": 16,
+          "elevation": 0,
+          "facing": "down"
+        },
+        {
+          "id": "sit_3",
+          "type": "sit",
+          "x": 40,
+          "y": 16,
+          "elevation": 0,
+          "facing": "down"
+        },
+        {
+          "id": "sit_4",
+          "type": "sit",
+          "x": 56,
+          "y": 16,
+          "elevation": 0,
+          "facing": "down"
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
-          "south": 1,
+          "south": 2,
           "east": 1,
           "west": 1
         },
@@ -2763,6 +3550,36 @@
           "carpet"
         ],
         "weight": 1
+      },
+      "parts": {
+        "layout": [
+          [
+            "left_end",
+            "middle",
+            "middle",
+            "right_end"
+          ],
+          [
+            "left_end",
+            "middle",
+            "middle",
+            "right_end"
+          ]
+        ],
+        "roles": {
+          "left_end": {
+            "required": true
+          },
+          "middle": {
+            "required": false,
+            "repeatable": true,
+            "minRepeat": 0,
+            "maxRepeat": 4
+          },
+          "right_end": {
+            "required": true
+          }
+        }
       }
     },
     "sack_bag": {
@@ -2926,10 +3743,10 @@
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "nature_edge",
+          "south": "nature_edge",
+          "east": "nature_edge",
+          "west": "nature_edge"
         },
         "clearance": {
           "north": 1,
@@ -2972,10 +3789,10 @@
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "nature_edge",
+          "south": "nature_edge",
+          "east": "nature_edge",
+          "west": "nature_edge"
         },
         "clearance": {
           "north": 1,
@@ -3018,10 +3835,10 @@
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "nature_edge",
+          "south": "nature_edge",
+          "east": "nature_edge",
+          "west": "nature_edge"
         },
         "clearance": {
           "north": 1,
@@ -3389,10 +4206,10 @@
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
@@ -3440,7 +4257,7 @@
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
+          "north": "wall_face",
           "south": "open_floor",
           "east": "open_floor",
           "west": "open_floor"
@@ -3491,7 +4308,7 @@
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
+          "north": "wall_face",
           "south": "open_floor",
           "east": "open_floor",
           "west": "open_floor"
@@ -3581,10 +4398,10 @@
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "nature_edge",
+          "south": "nature_edge",
+          "east": "nature_edge",
+          "west": "nature_edge"
         },
         "clearance": {
           "north": 1,
@@ -3627,10 +4444,10 @@
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "nature_edge",
+          "south": "nature_edge",
+          "east": "nature_edge",
+          "west": "nature_edge"
         },
         "clearance": {
           "north": 1,
@@ -3673,10 +4490,10 @@
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "nature_edge",
+          "south": "nature_edge",
+          "east": "nature_edge",
+          "west": "nature_edge"
         },
         "clearance": {
           "north": 1,
@@ -4220,7 +5037,15 @@
         ]
       },
       "colliders": [],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "interact_1",
+          "type": "interact",
+          "x": 8,
+          "y": 12,
+          "elevation": 0
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
@@ -4723,10 +5548,10 @@
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "nature_edge",
+          "south": "nature_edge",
+          "east": "nature_edge",
+          "west": "nature_edge"
         },
         "clearance": {
           "north": 1,
@@ -6092,10 +6917,10 @@
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "nature_edge",
+          "south": "nature_edge",
+          "east": "nature_edge",
+          "west": "nature_edge"
         },
         "clearance": {
           "north": 1,
@@ -6138,10 +6963,10 @@
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "nature_edge",
+          "south": "nature_edge",
+          "east": "nature_edge",
+          "west": "nature_edge"
         },
         "clearance": {
           "north": 1,
@@ -6272,10 +7097,10 @@
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "nature_edge",
+          "south": "nature_edge",
+          "east": "nature_edge",
+          "west": "nature_edge"
         },
         "clearance": {
           "north": 1,
@@ -6546,10 +7371,10 @@
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "nature_edge",
+          "south": "nature_edge",
+          "east": "nature_edge",
+          "west": "nature_edge"
         },
         "clearance": {
           "north": 1,
@@ -6613,14 +7438,38 @@
           "stretchable": true
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "items_center",
+          "type": "item_placement",
+          "x": 32,
+          "y": 16,
+          "elevation": 1
+        },
+        {
+          "id": "sit_south_left",
+          "type": "sit",
+          "x": 8,
+          "y": 56,
+          "elevation": 0,
+          "facing": "up"
+        },
+        {
+          "id": "sit_south_right",
+          "type": "sit",
+          "x": 56,
+          "y": 56,
+          "elevation": 0,
+          "facing": "up"
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
+          "north": "wall_face",
           "south": "open_floor",
           "east": "open_floor",
           "west": "open_floor"
@@ -6687,14 +7536,38 @@
           "stretchable": true
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "items_center",
+          "type": "item_placement",
+          "x": 32,
+          "y": 16,
+          "elevation": 1
+        },
+        {
+          "id": "sit_south_left",
+          "type": "sit",
+          "x": 8,
+          "y": 56,
+          "elevation": 0,
+          "facing": "up"
+        },
+        {
+          "id": "sit_south_right",
+          "type": "sit",
+          "x": 56,
+          "y": 56,
+          "elevation": 0,
+          "facing": "up"
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
+          "north": "wall_face",
           "south": "open_floor",
           "east": "open_floor",
           "west": "open_floor"
@@ -6773,21 +7646,45 @@
           "stretchable": true
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "items_center",
+          "type": "item_placement",
+          "x": 32,
+          "y": 16,
+          "elevation": 1
+        },
+        {
+          "id": "sit_south_left",
+          "type": "sit",
+          "x": 8,
+          "y": 56,
+          "elevation": 0,
+          "facing": "up"
+        },
+        {
+          "id": "sit_south_right",
+          "type": "sit",
+          "x": 56,
+          "y": 56,
+          "elevation": 0,
+          "facing": "up"
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
-          "south": 1,
+          "south": 2,
           "east": 1,
           "west": 1
         },
@@ -6797,6 +7694,42 @@
           "carpet"
         ],
         "weight": 1
+      },
+      "parts": {
+        "layout": [
+          [
+            "left_end",
+            "middle",
+            "middle",
+            "right_end"
+          ],
+          [
+            "left_end",
+            "middle",
+            "middle",
+            "right_end"
+          ],
+          [
+            "left_end",
+            "middle",
+            "middle",
+            "right_end"
+          ]
+        ],
+        "roles": {
+          "left_end": {
+            "required": true
+          },
+          "middle": {
+            "required": false,
+            "repeatable": true,
+            "minRepeat": 0,
+            "maxRepeat": 4
+          },
+          "right_end": {
+            "required": true
+          }
+        }
       }
     },
     "long_table_benches": {
@@ -6858,21 +7791,45 @@
           "stretchable": true
         }
       ],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "items_center",
+          "type": "item_placement",
+          "x": 32,
+          "y": 16,
+          "elevation": 1
+        },
+        {
+          "id": "sit_south_left",
+          "type": "sit",
+          "x": 8,
+          "y": 56,
+          "elevation": 0,
+          "facing": "up"
+        },
+        {
+          "id": "sit_south_right",
+          "type": "sit",
+          "x": 56,
+          "y": 56,
+          "elevation": 0,
+          "facing": "up"
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
-          "south": 1,
+          "south": 2,
           "east": 1,
           "west": 1
         },
@@ -6882,6 +7839,42 @@
           "carpet"
         ],
         "weight": 1
+      },
+      "parts": {
+        "layout": [
+          [
+            "left_end",
+            "middle",
+            "middle",
+            "right_end"
+          ],
+          [
+            "left_end",
+            "middle",
+            "middle",
+            "right_end"
+          ],
+          [
+            "left_end",
+            "middle",
+            "middle",
+            "right_end"
+          ]
+        ],
+        "roles": {
+          "left_end": {
+            "required": true
+          },
+          "middle": {
+            "required": false,
+            "repeatable": true,
+            "minRepeat": 0,
+            "maxRepeat": 4
+          },
+          "right_end": {
+            "required": true
+          }
+        }
       }
     },
     "bench_pair_a": {
@@ -6907,21 +7900,29 @@
         ]
       },
       "colliders": [],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "sit_1",
+          "type": "sit",
+          "x": 16,
+          "y": 8,
+          "elevation": 0
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
-          "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
-          "south": 1,
+          "south": 2,
           "east": 1,
           "west": 1
         },
@@ -6956,21 +7957,560 @@
         ]
       },
       "colliders": [],
-      "nodes": [],
+      "nodes": [
+        {
+          "id": "sit_1",
+          "type": "sit",
+          "x": 16,
+          "y": 8,
+          "elevation": 0
+        }
+      ],
       "rendering": {
         "layer": "Walls",
         "depthMode": "ysort"
       },
       "wfc": {
         "edges": {
-          "north": "open_floor",
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 2,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "small_table_2x2": {
+      "id": "small_table_2x2",
+      "sourceGroupId": null,
+      "name": "Small Table",
+      "description": "A small wooden dining table for two.",
+      "category": "furniture",
+      "tags": [
+        "table",
+        "wood",
+        "dining",
+        "tavern"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 2,
+        "rows": 2,
+        "tiles": [
+          [
+            4,
+            5
+          ],
+          [
+            25,
+            26
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "base",
+          "shape": "rect",
+          "x": 2,
+          "y": 18,
+          "width": 28,
+          "height": 14,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": false
+        },
+        {
+          "id": "surface",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 32,
+          "elevation": 1,
+          "type": "platform",
+          "stretchable": false
+        }
+      ],
+      "nodes": [
+        {
+          "id": "items_center",
+          "type": "item_placement",
+          "x": 16,
+          "y": 10,
+          "elevation": 1
+        },
+        {
+          "id": "sit_south_left",
+          "type": "sit",
+          "x": 8,
+          "y": 40,
+          "elevation": 0,
+          "facing": "up"
+        },
+        {
+          "id": "sit_south_right",
+          "type": "sit",
+          "x": 24,
+          "y": 40,
+          "elevation": 0,
+          "facing": "up"
+        }
+      ],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 2,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "shelf_unit_2x2": {
+      "id": "shelf_unit_2x2",
+      "sourceGroupId": null,
+      "name": "Shelf Unit",
+      "description": "A wall-mounted bottle display shelf behind a bar counter.",
+      "category": "structure",
+      "tags": [
+        "shelf",
+        "bar",
+        "bottle",
+        "wood",
+        "tavern"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 2,
+        "rows": 2,
+        "tiles": [
+          [
+            9,
+            10
+          ],
+          [
+            30,
+            31
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 32,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": false
+        }
+      ],
+      "nodes": [
+        {
+          "id": "serve_1",
+          "type": "item_placement",
+          "x": 8,
+          "y": 4,
+          "elevation": 1,
+          "partRole": "left_end"
+        },
+        {
+          "id": "serve_2",
+          "type": "item_placement",
+          "x": 24,
+          "y": 4,
+          "elevation": 1,
+          "partRole": "right_end"
+        }
+      ],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
           "south": "open_floor",
-          "east": "open_floor",
-          "west": "open_floor"
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 0,
+          "south": 1,
+          "east": 0,
+          "west": 0
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      }
+    },
+    "bar_counter_3x2": {
+      "id": "bar_counter_3x2",
+      "sourceGroupId": null,
+      "name": "Bar Counter",
+      "description": "A wooden bar counter section with hooks and storage underneath. Can be stretched by repeating the middle section.",
+      "category": "furniture",
+      "tags": [
+        "counter",
+        "bar",
+        "wood",
+        "tavern"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 3,
+        "rows": 2,
+        "tiles": [
+          [
+            11,
+            12,
+            13
+          ],
+          [
+            32,
+            33,
+            34
+          ]
+        ]
+      },
+      "parts": {
+        "layout": [
+          [
+            "left_end",
+            "middle",
+            "right_end"
+          ],
+          [
+            "left_end",
+            "middle",
+            "right_end"
+          ]
+        ],
+        "roles": {
+          "left_end": {
+            "required": true
+          },
+          "middle": {
+            "required": false,
+            "repeatable": true,
+            "minRepeat": 0,
+            "maxRepeat": 10
+          },
+          "right_end": {
+            "required": true
+          }
+        }
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 48,
+          "height": 32,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        }
+      ],
+      "nodes": [
+        {
+          "id": "serve_1",
+          "type": "item_placement",
+          "x": 24,
+          "y": 4,
+          "elevation": 1,
+          "partRole": "middle"
+        }
+      ],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "counter_mid",
+          "south": "counter_mid",
+          "east": "counter_end",
+          "west": "counter_end"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 2,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      }
+    },
+    "chair_red_2x2": {
+      "id": "chair_red_2x2",
+      "sourceGroupId": null,
+      "name": "Red Padded Chair",
+      "description": "A pair of red upholstered chairs with wooden frames.",
+      "category": "furniture",
+      "tags": [
+        "chair",
+        "wood",
+        "tavern"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 2,
+        "rows": 2,
+        "tiles": [
+          [
+            47,
+            48
+          ],
+          [
+            68,
+            69
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 2,
+          "y": 4,
+          "width": 28,
+          "height": 28,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": false
+        }
+      ],
+      "nodes": [
+        {
+          "id": "sit_1",
+          "type": "sit",
+          "x": 8,
+          "y": 16,
+          "elevation": 0,
+          "facing": "up"
+        },
+        {
+          "id": "sit_2",
+          "type": "sit",
+          "x": 24,
+          "y": 16,
+          "elevation": 0,
+          "facing": "up"
+        }
+      ],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
         },
         "clearance": {
           "north": 1,
           "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "barrel_single": {
+      "id": "barrel_single",
+      "sourceGroupId": null,
+      "name": "Barrel",
+      "description": "A single wooden storage barrel.",
+      "category": "container",
+      "tags": [
+        "barrel",
+        "wood",
+        "storage",
+        "tavern"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            63
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "ellipse",
+          "x": 2,
+          "y": 4,
+          "width": 12,
+          "height": 8,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": false
+        }
+      ],
+      "nodes": [
+        {
+          "id": "interact_1",
+          "type": "interact",
+          "x": 8,
+          "y": 12,
+          "elevation": 0
+        }
+      ],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
+        },
+        "clearance": {
+          "north": 0,
+          "south": 1,
+          "east": 0,
+          "west": 0
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      }
+    },
+    "large_table_4x2": {
+      "id": "large_table_4x2",
+      "sourceGroupId": null,
+      "name": "Large Table 4x2",
+      "description": "Wide rectangular dining table, 4 tiles across and 2 tiles deep",
+      "category": "furniture",
+      "tags": [
+        "table",
+        "dining",
+        "wood"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 4,
+        "rows": 2,
+        "tiles": [
+          [
+            0,
+            1,
+            2,
+            3
+          ],
+          [
+            21,
+            22,
+            23,
+            24
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "surface",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 64,
+          "height": 32,
+          "elevation": 1,
+          "type": "platform",
+          "stretchable": true
+        }
+      ],
+      "nodes": [
+        {
+          "id": "items_center",
+          "type": "item_placement",
+          "x": 32,
+          "y": 10,
+          "elevation": 1
+        },
+        {
+          "id": "sit_south_left",
+          "type": "sit",
+          "x": 8,
+          "y": 40,
+          "elevation": 0,
+          "facing": "up"
+        },
+        {
+          "id": "sit_south_right",
+          "type": "sit",
+          "x": 56,
+          "y": 40,
+          "elevation": 0,
+          "facing": "up"
+        }
+      ],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 2,
           "east": 1,
           "west": 1
         },

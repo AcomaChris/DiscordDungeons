@@ -4,6 +4,20 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-02 — Enrichment, ObjectPlacer & Tavern Refactor
+
+**Commits:** (v0.14.0)
+
+Enriched all 153 object definitions with WFC edges, parts, and nodes. Built ObjectPlacer module and refactored the tavern map to use it.
+
+- **Enrichment script** (`scripts/enrich-object-defs.js`): Idempotent CLI that auto-populates WFC edges (tag-based rules), parts (stretchable left/middle/right for cols≥3), and nodes (sit, interact, item_placement based on category). Interior_1st_floor: 47 edges, 9 parts, 37 nodes enriched. Walls_interior: 2 door nodes added.
+- **ObjectPlacer** (`scripts/lib/ObjectPlacer.js`): Converts object defs + positions into Tiled GID writes. Handles stretch via parts roles (repeatable middle columns). 11 unit tests.
+- **Tavern refactor**: Replaced 4 placement helpers + manual counter/barrel loops with 15 `placer.place()` calls. Bar counter uses `stretch: 10` for 12-column counter. Output verified identical to baseline via layer-by-layer diff.
+- **New objects**: Added `large_table_4x2`, `small_table_2x2`, `shelf_unit_2x2`, `bar_counter_3x2`, `chair_red_2x2`, `barrel_single` — tavern-specific objects the analysis pipeline missed due to aggressive grouping.
+- **Key decision**: Collision layer kept manual for exact baseline match; ObjectPlacer collision handling to be refined later with stretchable collider scaling.
+
+---
+
 ## 2026-03-02 — Object Definition System (WFC Prep)
 
 **Commits:** (v0.13.0)
