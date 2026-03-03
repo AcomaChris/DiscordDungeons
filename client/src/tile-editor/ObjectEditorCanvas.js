@@ -62,6 +62,9 @@ export class ObjectEditorCanvas {
     // Wizard mode — selecting tiles for the creation wizard
     this._wizardMode = false;
 
+    // Dim assigned tiles overlay
+    this._dimAssigned = false;
+
     // Track whether this canvas is active (controls rendering + events)
     this._active = false;
     this._boundMouseMove = (e) => this._onMouseMove(e);
@@ -201,6 +204,17 @@ export class ObjectEditorCanvas {
     return this._wizardMode;
   }
 
+  // --- Dim assigned toggle ---
+
+  setDimAssigned(enabled) {
+    this._dimAssigned = enabled;
+    if (this._active) this.render();
+  }
+
+  isDimAssigned() {
+    return this._dimAssigned;
+  }
+
   // --- Internal: build tile → object lookup ---
   _buildTileToObjectMap() {
     this._tileToObject.clear();
@@ -246,13 +260,16 @@ export class ObjectEditorCanvas {
     ctx.imageSmoothingEnabled = false;
     ctx.drawImage(this.image, 0, 0, canvas.width, canvas.height);
 
-    // 2. Object outlines (all objects)
+    // 2. Dim assigned tiles (darkens tiles already in an object)
+    if (this._dimAssigned) this._drawDimOverlay();
+
+    // 3. Object outlines (all objects)
     this._drawObjectOutlines();
 
-    // 3. Grid
+    // 4. Grid
     this._drawGrid();
 
-    // 4. Selected object detail overlays
+    // 5. Selected object detail overlays
     if (this.selectedObjectId && this.objectDefs[this.selectedObjectId]) {
       const def = this.objectDefs[this.selectedObjectId];
       this._drawSelectedHighlight(def);
@@ -260,13 +277,13 @@ export class ObjectEditorCanvas {
       this._drawNodes(def);
     }
 
-    // 5. Drag rect
+    // 6. Drag rect
     this._drawDragRect();
 
-    // 6. Hover
+    // 7. Hover
     this._drawHover();
 
-    // 7. Mode banners
+    // 8. Mode banners
     if (this._reassignMode) this._drawModeBanner(`Draw new tiles for: ${this._reassignObjectId}`, '#ff9f43');
     if (this._wizardMode) this._drawModeBanner('Draw a rectangle to select object tiles', '#00ccff');
   }
@@ -287,6 +304,22 @@ export class ObjectEditorCanvas {
       ctx.moveTo(0, y * s + 0.5);
       ctx.lineTo(columns * s, y * s + 0.5);
       ctx.stroke();
+    }
+  }
+
+  _drawDimOverlay() {
+    const { ctx, columns, rows, zoom } = this;
+    const s = TILE_SIZE * zoom;
+
+    // Darken every tile that's assigned to an object
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < columns; col++) {
+        const idx = row * columns + col;
+        if (this._tileToObject.has(idx)) {
+          ctx.fillRect(col * s, row * s, s, s);
+        }
+      }
     }
   }
 

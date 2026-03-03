@@ -14,6 +14,8 @@ import { ObjectEditorProperties } from './ObjectEditorProperties.js';
 import { ObjectCreationWizard } from './ObjectCreationWizard.js';
 import { TILE_DEFAULTS, isDefaultTile } from '../map/tile-metadata-schema.js';
 import { OBJECT_DEFAULTS } from '../map/object-def-schema.js';
+import { analyzeTileset } from './TilesetAnalyzer.js';
+import { enrichAll } from './AutoEnricher.js';
 
 const API_URL = import.meta.env.VITE_AUTH_URL || 'http://localhost:3001';
 
@@ -58,6 +60,9 @@ class TileEditor {
     this._modeTileBtn = document.getElementById('mode-tile-btn');
     this._modeObjectBtn = document.getElementById('mode-object-btn');
     this._objectListPanel = document.getElementById('object-list-panel');
+    this._autoDetectBtn = document.getElementById('auto-detect-btn');
+    this._dimAssignedBtn = document.getElementById('dim-assigned-btn');
+    this._objectToolbar = document.getElementById('object-toolbar');
 
     // --- Tile mode components ---
     this.tileCanvas = new TileEditorCanvas(
@@ -112,6 +117,8 @@ class TileEditor {
     this._exportJsonBtn.title = 'Download current metadata/definitions as JSON';
     this._saveGithubBtn.title = 'Save changes to the GitHub repository';
     document.getElementById('zoom-slider').title = 'Adjust canvas zoom (1x\u20138x)';
+    this._autoDetectBtn.title = 'Analyze tileset pixels and auto-detect object boundaries, categories, and enrichments';
+    this._dimAssignedBtn.title = 'Dim tiles already assigned to objects to see unassigned tiles clearly';
 
     // --- Bug Reporter ---
     this._bugReporter = new BugReporter(null);
@@ -132,8 +139,9 @@ class TileEditor {
     this._modeTileBtn.classList.toggle('active', mode === 'tile');
     this._modeObjectBtn.classList.toggle('active', mode === 'object');
 
-    // Toggle object list panel
+    // Toggle object list panel and toolbar
     this._objectListPanel.classList.toggle('hidden', mode !== 'object');
+    this._objectToolbar.classList.toggle('hidden', mode !== 'object');
 
     // Swap active canvas component
     this.tileCanvas.setActive(mode === 'tile');
@@ -190,6 +198,8 @@ class TileEditor {
     this._importJsonBtn.addEventListener('click', () => this._importJson());
     this._exportJsonBtn.addEventListener('click', () => this._exportJson());
     this._saveGithubBtn.addEventListener('click', () => this._saveToGitHub());
+    this._autoDetectBtn.addEventListener('click', () => this._autoDetectObjects());
+    this._dimAssignedBtn.addEventListener('click', () => this._toggleDimAssigned());
 
     // Warn on unsaved changes
     window.addEventListener('beforeunload', (e) => {
@@ -512,6 +522,164 @@ class TileEditor {
     this.objectList.loadDefs(this.objectDefs, this._tilesetImage, this._tilesetColumns);
     this._onObjectSelect(def.id);
     this._updateStatus();
+  }
+
+  // --- Auto-Detect Objects ---
+
+  _autoDetectObjects() {
+    if (!this._tilesetImage) {
+      alert('Load a tileset first.');
+      return;
+    }
+
+    const existingCount = Object.keys(this.objectDefs).length;
+    if (existingCount > 0 && !confirm(`${existingCount} objects already exist. Auto-detect will add new objects for unassigned tiles. Continue?`)) {
+      return;
+    }
+
+    // Run pixel analysis
+    const { groups, cols } = analyzeTileset(this._tilesetImage, TILE_SIZE);
+
+    // Build set of tiles already assigned to existing objects
+    const assignedTiles = new Set();
+    for (const def of Object.values(this.objectDefs)) {
+      if (!def.grid || !def.grid.tiles) continue;
+      for (const row of def.grid.tiles) {
+        for (const tileIdx of row) {
+          if (tileIdx !== null && tileIdx !== undefined) {
+            assignedTiles.add(tileIdx);
+          }
+        }
+      }
+    }
+
+    // Create object defs from unassigned groups
+    let addedCount = 0;
+    const categoryCounts = {};
+
+    for (const group of groups) {
+      // Skip groups where all tiles are already assigned
+      const unassigned = group.tiles.filter(t => !assignedTiles.has(t));
+      if (unassigned.length === 0) continue;
+
+      // Build object ID from grid position
+      const id = `obj_${group.topLeft.col}_${group.topLeft.row}`;
+      if (this.objectDefs[id]) continue;
+
+      // Build tile grid (2D array relative to the group's bounding box)
+      const tileSet = new Set(group.tiles);
+      const tileGrid = [];
+      for (let r = 0; r < group.rows; r++) {
+        const row = [];
+        for (let c = 0; c < group.cols; c++) {
+          const idx = (group.topLeft.row + r) * cols + (group.topLeft.col + c);
+          row.push(tileSet.has(idx) ? idx : null);
+        }
+        tileGrid.push(row);
+      }
+
+      const category = group.category || 'decoration';
+
+      // Create the object def with defaults + WFC bootstrap
+      this.objectDefs[id] = {
+        ...structuredClone(OBJECT_DEFAULTS),
+        id,
+        name: id.replace(/_/g, ' '),
+        category,
+        grid: { cols: group.cols, rows: group.rows, tiles: tileGrid },
+        wfc: {
+          edges: { north: 'open_floor', south: 'open_floor', east: 'open_floor', west: 'open_floor' },
+          clearance: { north: 1, south: 1, east: 1, west: 1 },
+          allowedFloors: ['stone', 'wood'],
+          weight: 1,
+        },
+      };
+
+      // Apply collision preset by category
+      this._applyCollisionPreset(this.objectDefs[id]);
+
+      categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+      addedCount++;
+    }
+
+    // Run auto-enrichment on all objects (edges, parts, nodes)
+    const enrichSummary = enrichAll(this.objectDefs);
+
+    this._objectDefsModified = true;
+
+    // Refresh UI
+    this.objectCanvas.loadDefs(this.objectDefs);
+    this.objectList.loadDefs(this.objectDefs, this._tilesetImage, this._tilesetColumns);
+    this.objectProperties.updateSelection(null, this.objectDefs, this.objectCanvas);
+    this._updateStatus();
+
+    // Show summary toast
+    const categoryList = Object.entries(categoryCounts)
+      .map(([cat, n]) => `${n} ${cat}`)
+      .join(', ');
+    const enrichParts = [];
+    if (enrichSummary.edgeChanges) enrichParts.push(`${enrichSummary.edgeChanges} edges`);
+    if (enrichSummary.partsChanges) enrichParts.push(`${enrichSummary.partsChanges} parts`);
+    if (enrichSummary.nodeChanges) enrichParts.push(`${enrichSummary.nodeChanges} nodes`);
+    const enrichText = enrichParts.length > 0 ? ` Enriched: ${enrichParts.join(', ')}.` : '';
+    this._showToast(`Detected ${addedCount} objects (${categoryList}).${enrichText} Review categories and collision.`);
+  }
+
+  // Collision presets applied during auto-detect, by category.
+  _applyCollisionPreset(def) {
+    const pixelW = def.grid.cols * TILE_SIZE;
+    const pixelH = def.grid.rows * TILE_SIZE;
+
+    switch (def.category) {
+    case 'furniture':
+      // Bottom-half rect — walkable top for Y-sorted objects
+      def.colliders = [{
+        id: 'main', shape: 'rect', type: 'solid',
+        x: 0, y: Math.floor(pixelH / 2), width: pixelW, height: Math.ceil(pixelH / 2), elevation: 0,
+      }];
+      break;
+    case 'structure':
+    case 'container':
+      // Full solid rect
+      def.colliders = [{
+        id: 'main', shape: 'rect', type: 'solid',
+        x: 0, y: 0, width: pixelW, height: pixelH, elevation: 0,
+      }];
+      break;
+    case 'nature':
+      // Full solid rect
+      def.colliders = [{
+        id: 'main', shape: 'rect', type: 'solid',
+        x: 0, y: 0, width: pixelW, height: pixelH, elevation: 0,
+      }];
+      break;
+    default:
+      // decoration, lighting, effect — no collider
+      break;
+    }
+  }
+
+  _toggleDimAssigned() {
+    const enabled = !this.objectCanvas.isDimAssigned();
+    this.objectCanvas.setDimAssigned(enabled);
+    this._dimAssignedBtn.classList.toggle('active', enabled);
+  }
+
+  _showToast(message) {
+    // Remove existing toast
+    const existing = document.querySelector('.toast-notification');
+    if (existing) existing.remove();
+
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.textContent = message;
+    document.getElementById('editor-root').appendChild(toast);
+
+    // Auto-dismiss after 6 seconds
+    setTimeout(() => {
+      toast.classList.add('toast-fade');
+      setTimeout(() => toast.remove(), 400);
+    }, 6000);
   }
 
   // --- Import JSON ---
