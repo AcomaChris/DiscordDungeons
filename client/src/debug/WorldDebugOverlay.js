@@ -90,19 +90,20 @@ export class WorldDebugOverlay {
     if (this._panel) return;
 
     const panel = document.createElement('div');
+    // Top-left to avoid overlapping the BugReporter cog (top-right, z-index 9999)
     panel.style.cssText = `
       position: fixed;
       top: 8px;
-      right: 8px;
-      background: rgba(0, 0, 0, 0.80);
+      left: 8px;
+      background: rgba(0, 0, 0, 0.85);
       color: #e0e0e0;
       padding: 8px 12px 10px;
       border-radius: 4px;
       font-family: monospace;
       font-size: 12px;
-      z-index: 9999;
+      z-index: 10001;
       user-select: none;
-      min-width: 160px;
+      min-width: 180px;
       line-height: 1.4;
     `;
 
@@ -111,8 +112,9 @@ export class WorldDebugOverlay {
     title.style.cssText = 'font-weight: bold; margin-bottom: 8px; color: #ffffff; border-bottom: 1px solid #444; padding-bottom: 4px;';
     panel.appendChild(title);
 
-    // --- Height Debug section (collapsible via native <details>) ---
+    // --- Height Debug section (open by default so users see it immediately) ---
     const details = document.createElement('details');
+    details.setAttribute('open', '');
     details.style.cssText = 'margin-top: 4px;';
 
     const summary = document.createElement('summary');
@@ -138,11 +140,19 @@ export class WorldDebugOverlay {
     label.appendChild(checkbox);
     label.appendChild(labelText);
     checkboxRow.appendChild(label);
+
+    // Status line shown when checkbox is on but current map has no elevation tiles
+    const status = document.createElement('div');
+    status.style.cssText = 'margin-top: 3px; color: #888; font-size: 10px; display: none;';
+    status.textContent = 'No height tiles in this map';
+    checkboxRow.appendChild(status);
+
     details.appendChild(checkboxRow);
     panel.appendChild(details);
 
     this._panel = panel;
     this._checkbox = checkbox;
+    this._statusEl = status;
     document.body.appendChild(panel);
   }
 
@@ -159,7 +169,11 @@ export class WorldDebugOverlay {
     const scene = this._getScene();
 
     if (enabled && scene) {
-      this._createLabels(scene);
+      const count = this._createLabels(scene);
+      // Warn when the current map has no elevation tiles at all
+      if (this._statusEl) {
+        this._statusEl.style.display = count === 0 ? 'block' : 'none';
+      }
       // Destroy labels when the scene restarts; user can re-check to rebuild
       if (!this._onShutdown) {
         this._onShutdown = () => {
@@ -170,6 +184,7 @@ export class WorldDebugOverlay {
       }
     } else {
       this._destroyLabels();
+      if (this._statusEl) this._statusEl.style.display = 'none';
       if (scene && this._onShutdown) {
         scene.events.off('shutdown', this._onShutdown);
         this._onShutdown = null;
@@ -184,11 +199,12 @@ export class WorldDebugOverlay {
     return game?.scene?.getScene('GameScene');
   }
 
+  // Returns the number of labels created (0 = map has no elevation tiles).
   _createLabels(scene) {
     this._destroyLabels();
 
     const tm = scene.tileMapManager;
-    if (!tm.elevationData || !tm.tilemap) return;
+    if (!tm.elevationData || !tm.tilemap) return 0;
 
     const map = tm.tilemap;
     const tw = map.tileWidth;
@@ -198,7 +214,7 @@ export class WorldDebugOverlay {
 
     // Normalize color range against the actual min/max levels in this map
     const nonZero = tm.elevationData.filter(v => v > 0);
-    if (nonZero.length === 0) return;
+    if (nonZero.length === 0) return 0;
     const minLevel = Math.min(...nonZero);
     const maxLevel = Math.max(...nonZero);
     const range = maxLevel - minLevel || 1;  // avoid divide-by-zero when all same level
@@ -229,6 +245,8 @@ export class WorldDebugOverlay {
         this._textObjects.push(text);
       }
     }
+
+    return this._textObjects.length;
   }
 
   _destroyLabels() {

@@ -116,12 +116,15 @@ describe('WorldDebugOverlay', () => {
 
   // --- Height Debug section ---
 
-  it('panel contains a Height Debug collapsible section', () => {
+  it('panel contains a Height Debug collapsible section open by default', () => {
     const overlay = new WorldDebugOverlay();
     overlay.show();
-    const summary = document.querySelector('summary');
-    expect(summary).not.toBeNull();
+    const details = document.querySelector('details');
+    expect(details).not.toBeNull();
+    const summary = details.querySelector('summary');
     expect(summary.textContent).toBe('Height Debug');
+    // Open by default so users see the checkbox immediately
+    expect(details.hasAttribute('open')).toBe(true);
   });
 
   it('Height Debug section contains a Show Height Data checkbox', () => {
@@ -132,6 +135,31 @@ describe('WorldDebugOverlay', () => {
     const cb = details.querySelector('input[type="checkbox"]');
     expect(cb).not.toBeNull();
     expect(cb.type).toBe('checkbox');
+  });
+
+  it('shows no-data status when checkbox ticked but map has no elevation tiles', () => {
+    mockScene = createMockScene([0, 0, 0, 0, 0, 0]);
+    globalThis.__PHASER_GAME__.scene.getScene = vi.fn(() => mockScene);
+
+    const overlay = new WorldDebugOverlay();
+    overlay.show();
+    tickHeightCheckbox(true);
+
+    // Find the status element (last child of checkboxRow, after the label)
+    const checkboxRow = document.querySelector('details > div');
+    const statusEl = checkboxRow.lastElementChild;
+    expect(statusEl.style.display).not.toBe('none');
+    expect(statusEl.textContent).toBe('No height tiles in this map');
+  });
+
+  it('hides no-data status when elevation tiles exist', () => {
+    const overlay = new WorldDebugOverlay();
+    overlay.show();
+    tickHeightCheckbox(true);
+
+    const checkboxRow = document.querySelector('details > div');
+    const statusEl = checkboxRow.lastElementChild;
+    expect(statusEl.style.display).toBe('none');
   });
 
   it('ticking Show Height Data creates text for elevated tiles only', () => {
