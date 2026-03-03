@@ -114,12 +114,22 @@ describe('WorldDebugOverlay', () => {
     expect(overlay.active).toBe(false);
   });
 
-  // --- Show Height Data checkbox ---
+  // --- Height Debug section ---
 
-  it('panel contains a Show Height Data checkbox', () => {
+  it('panel contains a Height Debug collapsible section', () => {
     const overlay = new WorldDebugOverlay();
     overlay.show();
-    const cb = document.querySelector('input[type="checkbox"]');
+    const summary = document.querySelector('summary');
+    expect(summary).not.toBeNull();
+    expect(summary.textContent).toBe('Height Debug');
+  });
+
+  it('Height Debug section contains a Show Height Data checkbox', () => {
+    const overlay = new WorldDebugOverlay();
+    overlay.show();
+    const details = document.querySelector('details');
+    expect(details).not.toBeNull();
+    const cb = details.querySelector('input[type="checkbox"]');
     expect(cb).not.toBeNull();
     expect(cb.type).toBe('checkbox');
   });

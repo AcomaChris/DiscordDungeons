@@ -111,6 +111,18 @@ export class WorldDebugOverlay {
     title.style.cssText = 'font-weight: bold; margin-bottom: 8px; color: #ffffff; border-bottom: 1px solid #444; padding-bottom: 4px;';
     panel.appendChild(title);
 
+    // --- Height Debug section (collapsible via native <details>) ---
+    const details = document.createElement('details');
+    details.style.cssText = 'margin-top: 4px;';
+
+    const summary = document.createElement('summary');
+    summary.textContent = 'Height Debug';
+    summary.style.cssText = 'cursor: pointer; color: #cccccc; padding: 2px 0;';
+    details.appendChild(summary);
+
+    const checkboxRow = document.createElement('div');
+    checkboxRow.style.cssText = 'padding: 4px 0 0 14px;';
+
     const label = document.createElement('label');
     label.style.cssText = 'display: flex; align-items: center; gap: 6px; cursor: pointer;';
 
@@ -125,7 +137,9 @@ export class WorldDebugOverlay {
 
     label.appendChild(checkbox);
     label.appendChild(labelText);
-    panel.appendChild(label);
+    checkboxRow.appendChild(label);
+    details.appendChild(checkboxRow);
+    panel.appendChild(details);
 
     this._panel = panel;
     this._checkbox = checkbox;
