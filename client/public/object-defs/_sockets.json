@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "description": "Shared WFC edge socket type vocabulary. Socket types define what can be adjacent on each side of an object or tile.",
+  "sockets": {
+    "open_floor": {
+      "description": "Empty walkable floor space",
+      "compatible": ["open_floor", "furniture_edge", "nature_edge"]
+    },
+    "wall_face": {
+      "description": "Wall surface — objects placed against walls",
+      "compatible": ["wall_face", "shelf_mount"]
+    },
+    "shelf_mount": {
+      "description": "Wall-mounted shelf or decoration attachment point",
+      "compatible": ["wall_face"]
+    },
+    "counter_end": {
+      "description": "Bar counter connection point for extending counters",
+      "compatible": ["counter_end", "counter_mid"]
+    },
+    "counter_mid": {
+      "description": "Bar counter middle section connection",
+      "compatible": ["counter_end", "counter_mid"]
+    },
+    "furniture_edge": {
+      "description": "Edge of a furniture piece (table, bench) — needs floor nearby",
+      "compatible": ["open_floor"]
+    },
+    "nature_edge": {
+      "description": "Edge of natural feature (plant, water) — needs floor nearby",
+      "compatible": ["open_floor"]
+    },
+    "stair_entry": {
+      "description": "Staircase entry/exit point",
+      "compatible": ["open_floor"]
+    },
+    "void": {
+      "description": "Edge that must not connect to anything (map boundary)",
+      "compatible": []
+    }
+  }
+}

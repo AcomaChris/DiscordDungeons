@@ -1,0 +1,6986 @@
+{
+  "version": 1,
+  "tileset": "Interior_1st_floor",
+  "objects": {
+    "large_table": {
+      "id": "large_table",
+      "sourceGroupId": 0,
+      "name": "Large Table",
+      "description": "Large wooden dining table (4x3) with visible legs",
+      "category": "furniture",
+      "tags": [
+        "table",
+        "wood",
+        "dining"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 4,
+        "rows": 3,
+        "tiles": [
+          [
+            0,
+            1,
+            2,
+            3
+          ],
+          [
+            21,
+            22,
+            23,
+            24
+          ],
+          [
+            42,
+            43,
+            null,
+            null
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "base",
+          "shape": "rect",
+          "x": 0,
+          "y": 28,
+          "width": 64,
+          "height": 19,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        },
+        {
+          "id": "surface",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 64,
+          "height": 48,
+          "elevation": 1,
+          "type": "platform",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "medium_table": {
+      "id": "medium_table",
+      "sourceGroupId": 1,
+      "name": "Medium Table",
+      "description": "Medium wooden dining table (4x3) with legs",
+      "category": "furniture",
+      "tags": [
+        "table",
+        "wood",
+        "dining"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 4,
+        "rows": 3,
+        "tiles": [
+          [
+            4,
+            5,
+            6,
+            7
+          ],
+          [
+            25,
+            26,
+            27,
+            28
+          ],
+          [
+            null,
+            null,
+            48,
+            49
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "base",
+          "shape": "rect",
+          "x": 0,
+          "y": 28,
+          "width": 64,
+          "height": 19,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        },
+        {
+          "id": "surface",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 64,
+          "height": 48,
+          "elevation": 1,
+          "type": "platform",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "bar_shelf_bottles": {
+      "id": "bar_shelf_bottles",
+      "sourceGroupId": 2,
+      "name": "Bar Shelf Bottles",
+      "description": "Bar shelf unit with bottles and potions display (4x4)",
+      "category": "structure",
+      "tags": [
+        "shelf",
+        "bar",
+        "bottle",
+        "potion"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 4,
+        "rows": 4,
+        "tiles": [
+          [
+            9,
+            10,
+            11,
+            12
+          ],
+          [
+            null,
+            null,
+            null,
+            33
+          ],
+          [
+            null,
+            null,
+            null,
+            54
+          ],
+          [
+            72,
+            73,
+            74,
+            75
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 64,
+          "height": 64,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "large_bookshelf": {
+      "id": "large_bookshelf",
+      "sourceGroupId": 3,
+      "name": "Large Bookshelf",
+      "description": "Tall wooden bookshelf (4x4)",
+      "category": "structure",
+      "tags": [
+        "shelf",
+        "bookshelf",
+        "wood"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 4,
+        "rows": 4,
+        "tiles": [
+          [
+            13,
+            14,
+            15,
+            16
+          ],
+          [
+            34,
+            35,
+            36,
+            37
+          ],
+          [
+            55,
+            56,
+            57,
+            58
+          ],
+          [
+            76,
+            77,
+            78,
+            79
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 64,
+          "height": 64,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "wooden_staircase": {
+      "id": "wooden_staircase",
+      "sourceGroupId": 4,
+      "name": "Wooden Staircase",
+      "description": "Wooden staircase (3x3)",
+      "category": "structure",
+      "tags": [
+        "staircase",
+        "wood"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 3,
+        "rows": 3,
+        "tiles": [
+          [
+            18,
+            19,
+            20
+          ],
+          [
+            39,
+            40,
+            41
+          ],
+          [
+            60,
+            61,
+            62
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "base",
+          "shape": "rect",
+          "x": 0,
+          "y": 28,
+          "width": 48,
+          "height": 19,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        },
+        {
+          "id": "surface",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 48,
+          "height": 48,
+          "elevation": 1,
+          "type": "platform",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "bottle_potion_a": {
+      "id": "bottle_potion_a",
+      "sourceGroupId": 5,
+      "name": "Bottle Potion A",
+      "description": "Single bottle/potion on shelf",
+      "category": "decoration",
+      "tags": [
+        "shelf",
+        "bottle",
+        "potion"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            30
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "bottle_potion_b": {
+      "id": "bottle_potion_b",
+      "sourceGroupId": 6,
+      "name": "Bottle Potion B",
+      "description": "Single potion bottle (blue/green)",
+      "category": "decoration",
+      "tags": [
+        "bottle",
+        "potion"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            31
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "bottle_potion_c": {
+      "id": "bottle_potion_c",
+      "sourceGroupId": 7,
+      "name": "Bottle Potion C",
+      "description": "Single potion bottle variant",
+      "category": "decoration",
+      "tags": [
+        "bottle",
+        "potion"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            32
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "wooden_stool_pair_a": {
+      "id": "wooden_stool_pair_a",
+      "sourceGroupId": 8,
+      "name": "Wooden Stool Pair A",
+      "description": "Pair of small wooden stools",
+      "category": "decoration",
+      "tags": [
+        "stool",
+        "wood"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 2,
+        "rows": 1,
+        "tiles": [
+          [
+            44,
+            45
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "wooden_stool_pair_b": {
+      "id": "wooden_stool_pair_b",
+      "sourceGroupId": 9,
+      "name": "Wooden Stool Pair B",
+      "description": "Another pair of wooden stools",
+      "category": "decoration",
+      "tags": [
+        "stool",
+        "wood"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 2,
+        "rows": 1,
+        "tiles": [
+          [
+            46,
+            47
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "bar_counter_corner": {
+      "id": "bar_counter_corner",
+      "sourceGroupId": 10,
+      "name": "Bar Counter Corner",
+      "description": "L-shaped bar counter corner piece (2x3)",
+      "category": "furniture",
+      "tags": [
+        "counter",
+        "bar"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 2,
+        "rows": 3,
+        "tiles": [
+          [
+            50,
+            null
+          ],
+          [
+            71,
+            null
+          ],
+          [
+            92,
+            93
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 48,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": false
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "counter_bottle": {
+      "id": "counter_bottle",
+      "sourceGroupId": 11,
+      "name": "Counter Bottle",
+      "description": "Bottle on counter surface",
+      "category": "decoration",
+      "tags": [
+        "counter",
+        "bottle"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            51
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "shelf_bottles_small": {
+      "id": "shelf_bottles_small",
+      "sourceGroupId": 12,
+      "name": "Shelf Bottles Small",
+      "description": "Small shelf with assorted bottles (2x1)",
+      "category": "decoration",
+      "tags": [
+        "shelf",
+        "bottle"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 2,
+        "rows": 1,
+        "tiles": [
+          [
+            52,
+            53
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "base",
+          "shape": "rect",
+          "x": 0,
+          "y": 9,
+          "width": 32,
+          "height": 6,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": false
+        },
+        {
+          "id": "surface",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 16,
+          "elevation": 1,
+          "type": "platform",
+          "stretchable": false
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "bar_counter_section": {
+      "id": "bar_counter_section",
+      "sourceGroupId": 13,
+      "name": "Bar Counter Section",
+      "description": "Large bar counter section with hooks and shelving (5x3)",
+      "category": "furniture",
+      "tags": [
+        "counter",
+        "bar"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 5,
+        "rows": 3,
+        "tiles": [
+          [
+            null,
+            null,
+            null,
+            null,
+            59
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            80
+          ],
+          [
+            97,
+            98,
+            99,
+            100,
+            101
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 80,
+          "height": 48,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "dining_table_chairs_a": {
+      "id": "dining_table_chairs_a",
+      "sourceGroupId": 14,
+      "name": "Dining Table Chairs A",
+      "description": "Long dining table with chairs (4x3)",
+      "category": "furniture",
+      "tags": [
+        "table",
+        "chair",
+        "dining"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 4,
+        "rows": 3,
+        "tiles": [
+          [
+            63,
+            64,
+            65,
+            66
+          ],
+          [
+            84,
+            85,
+            86,
+            87
+          ],
+          [
+            105,
+            106,
+            107,
+            108
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "base",
+          "shape": "rect",
+          "x": 0,
+          "y": 28,
+          "width": 64,
+          "height": 19,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        },
+        {
+          "id": "surface",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 64,
+          "height": 48,
+          "elevation": 1,
+          "type": "platform",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "dining_table_chairs_b": {
+      "id": "dining_table_chairs_b",
+      "sourceGroupId": 15,
+      "name": "Dining Table Chairs B",
+      "description": "Long dining table with chairs variant (4x3)",
+      "category": "furniture",
+      "tags": [
+        "table",
+        "chair",
+        "dining"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 4,
+        "rows": 3,
+        "tiles": [
+          [
+            67,
+            68,
+            69,
+            70
+          ],
+          [
+            88,
+            89,
+            90,
+            91
+          ],
+          [
+            109,
+            110,
+            111,
+            112
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "base",
+          "shape": "rect",
+          "x": 0,
+          "y": 28,
+          "width": 64,
+          "height": 19,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        },
+        {
+          "id": "surface",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 64,
+          "height": 48,
+          "elevation": 1,
+          "type": "platform",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "stair_treads": {
+      "id": "stair_treads",
+      "sourceGroupId": 16,
+      "name": "Stair Treads",
+      "description": "Stair tread pieces (3x1)",
+      "category": "structure",
+      "tags": [],
+      "surface": "wood",
+      "grid": {
+        "cols": 3,
+        "rows": 1,
+        "tiles": [
+          [
+            81,
+            82,
+            83
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "base",
+          "shape": "rect",
+          "x": 0,
+          "y": 9,
+          "width": 48,
+          "height": 6,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        },
+        {
+          "id": "surface",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 48,
+          "height": 16,
+          "elevation": 1,
+          "type": "platform",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "counter_segment": {
+      "id": "counter_segment",
+      "sourceGroupId": 17,
+      "name": "Counter Segment",
+      "description": "Bar counter middle segment (3x1)",
+      "category": "furniture",
+      "tags": [
+        "counter",
+        "bar"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 3,
+        "rows": 1,
+        "tiles": [
+          [
+            94,
+            95,
+            96
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 48,
+          "height": 16,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "stair_treads_b": {
+      "id": "stair_treads_b",
+      "sourceGroupId": 18,
+      "name": "Stair Treads B",
+      "description": "Additional stair tread pieces (3x1)",
+      "category": "structure",
+      "tags": [],
+      "surface": "wood",
+      "grid": {
+        "cols": 3,
+        "rows": 1,
+        "tiles": [
+          [
+            102,
+            103,
+            104
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "base",
+          "shape": "rect",
+          "x": 0,
+          "y": 9,
+          "width": 48,
+          "height": 6,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        },
+        {
+          "id": "surface",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 48,
+          "height": 16,
+          "elevation": 1,
+          "type": "platform",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "long_counter_shelf": {
+      "id": "long_counter_shelf",
+      "sourceGroupId": 19,
+      "name": "Long Counter Shelf",
+      "description": "Long horizontal bar counter/shelf strip (8x1)",
+      "category": "furniture",
+      "tags": [
+        "shelf",
+        "counter",
+        "bar"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 8,
+        "rows": 1,
+        "tiles": [
+          [
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 128,
+          "height": 16,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "stair_railing": {
+      "id": "stair_railing",
+      "sourceGroupId": 20,
+      "name": "Stair Railing",
+      "description": "Stair railing pieces (2x1)",
+      "category": "decoration",
+      "tags": [],
+      "surface": "wood",
+      "grid": {
+        "cols": 2,
+        "rows": 1,
+        "tiles": [
+          [
+            121,
+            122
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "base",
+          "shape": "rect",
+          "x": 0,
+          "y": 9,
+          "width": 32,
+          "height": 6,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": false
+        },
+        {
+          "id": "surface",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 16,
+          "elevation": 1,
+          "type": "platform",
+          "stretchable": false
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "staircase_section": {
+      "id": "staircase_section",
+      "sourceGroupId": 21,
+      "name": "Staircase Section",
+      "description": "Staircase section (3x2)",
+      "category": "structure",
+      "tags": [
+        "staircase"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 3,
+        "rows": 2,
+        "tiles": [
+          [
+            123,
+            124,
+            125
+          ],
+          [
+            144,
+            145,
+            146
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "base",
+          "shape": "rect",
+          "x": 0,
+          "y": 19,
+          "width": 48,
+          "height": 12,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        },
+        {
+          "id": "surface",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 48,
+          "height": 32,
+          "elevation": 1,
+          "type": "platform",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "tablecloth_table_small": {
+      "id": "tablecloth_table_small",
+      "sourceGroupId": 22,
+      "name": "Tablecloth Table Small",
+      "description": "Small table with white tablecloth (2x2)",
+      "category": "furniture",
+      "tags": [
+        "table"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 2,
+        "rows": 2,
+        "tiles": [
+          [
+            126,
+            127
+          ],
+          [
+            147,
+            148
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "base",
+          "shape": "rect",
+          "x": 0,
+          "y": 19,
+          "width": 32,
+          "height": 12,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": false
+        },
+        {
+          "id": "surface",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 32,
+          "elevation": 1,
+          "type": "platform",
+          "stretchable": false
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "stool_single": {
+      "id": "stool_single",
+      "sourceGroupId": 23,
+      "name": "Stool Single",
+      "description": "Single wooden stool",
+      "category": "decoration",
+      "tags": [
+        "stool",
+        "wood"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            128
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "barrel_arch_top": {
+      "id": "barrel_arch_top",
+      "sourceGroupId": 24,
+      "name": "Barrel Arch Top",
+      "description": "Barrel arch top pieces (2x1)",
+      "category": "furniture",
+      "tags": [
+        "barrel",
+        "bar"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 2,
+        "rows": 1,
+        "tiles": [
+          [
+            130,
+            131
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 16,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": false
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "barrel_arch_front": {
+      "id": "barrel_arch_front",
+      "sourceGroupId": 25,
+      "name": "Barrel Arch Front",
+      "description": "Barrel front view arch (2x1)",
+      "category": "furniture",
+      "tags": [
+        "barrel",
+        "bar"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 2,
+        "rows": 1,
+        "tiles": [
+          [
+            132,
+            133
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 16,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": false
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "red_sofa_set": {
+      "id": "red_sofa_set",
+      "sourceGroupId": 26,
+      "name": "Red Sofa Set",
+      "description": "Large red upholstered sofa/couch set (6x3)",
+      "category": "furniture",
+      "tags": [
+        "sofa"
+      ],
+      "surface": "carpet",
+      "grid": {
+        "cols": 6,
+        "rows": 3,
+        "tiles": [
+          [
+            134,
+            null,
+            null,
+            null,
+            null,
+            139
+          ],
+          [
+            155,
+            156,
+            null,
+            null,
+            159,
+            160
+          ],
+          [
+            176,
+            177,
+            178,
+            179,
+            180,
+            181
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 96,
+          "height": 48,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "smoke_effect_a": {
+      "id": "smoke_effect_a",
+      "sourceGroupId": 27,
+      "name": "Smoke Effect A",
+      "description": "Small smoke or steam particle",
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            136
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "smoke_effect_b": {
+      "id": "smoke_effect_b",
+      "sourceGroupId": 28,
+      "name": "Smoke Effect B",
+      "description": "Small smoke or steam variant",
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            137
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "barrel_large": {
+      "id": "barrel_large",
+      "sourceGroupId": 29,
+      "name": "Barrel Large",
+      "description": "Large wooden barrel (3x3)",
+      "category": "furniture",
+      "tags": [
+        "barrel",
+        "bar",
+        "wood"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 3,
+        "rows": 3,
+        "tiles": [
+          [
+            null,
+            141,
+            142
+          ],
+          [
+            161,
+            162,
+            163
+          ],
+          [
+            null,
+            183,
+            null
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 48,
+          "height": 48,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "barrel_front": {
+      "id": "barrel_front",
+      "sourceGroupId": 30,
+      "name": "Barrel Front",
+      "description": "Barrel front view (2x2)",
+      "category": "furniture",
+      "tags": [
+        "barrel",
+        "bar"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 2,
+        "rows": 2,
+        "tiles": [
+          [
+            151,
+            152
+          ],
+          [
+            172,
+            173
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 32,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": false
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "barrel_banded": {
+      "id": "barrel_banded",
+      "sourceGroupId": 31,
+      "name": "Barrel Banded",
+      "description": "Banded wooden barrel (2x2)",
+      "category": "furniture",
+      "tags": [
+        "barrel",
+        "bar",
+        "wood"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 2,
+        "rows": 2,
+        "tiles": [
+          [
+            153,
+            154
+          ],
+          [
+            174,
+            175
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 32,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": false
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "smoke_wisp": {
+      "id": "smoke_wisp",
+      "sourceGroupId": 32,
+      "name": "Smoke Wisp",
+      "description": "Smoke wisp or steam effect",
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            158
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "long_bench": {
+      "id": "long_bench",
+      "sourceGroupId": 33,
+      "name": "Long Bench",
+      "description": "Long wooden bench/plank (4x2)",
+      "category": "furniture",
+      "tags": [
+        "bench",
+        "wood"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 4,
+        "rows": 2,
+        "tiles": [
+          [
+            164,
+            165,
+            166,
+            167
+          ],
+          [
+            185,
+            186,
+            187,
+            188
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "base",
+          "shape": "rect",
+          "x": 0,
+          "y": 19,
+          "width": 64,
+          "height": 12,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        },
+        {
+          "id": "surface",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 64,
+          "height": 32,
+          "elevation": 1,
+          "type": "platform",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "round_table_small": {
+      "id": "round_table_small",
+      "sourceGroupId": 34,
+      "name": "Round Table Small",
+      "description": "Small round wooden table (2x2)",
+      "category": "furniture",
+      "tags": [
+        "table",
+        "wood"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 2,
+        "rows": 2,
+        "tiles": [
+          [
+            168,
+            169
+          ],
+          [
+            189,
+            190
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "base",
+          "shape": "rect",
+          "x": 0,
+          "y": 19,
+          "width": 32,
+          "height": 12,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": false
+        },
+        {
+          "id": "surface",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 32,
+          "elevation": 1,
+          "type": "platform",
+          "stretchable": false
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "stool_pair_small": {
+      "id": "stool_pair_small",
+      "sourceGroupId": 35,
+      "name": "Stool Pair Small",
+      "description": "Pair of small stools (2x1)",
+      "category": "decoration",
+      "tags": [
+        "stool"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 2,
+        "rows": 1,
+        "tiles": [
+          [
+            170,
+            171
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "round_table_cloth": {
+      "id": "round_table_cloth",
+      "sourceGroupId": 36,
+      "name": "Round Table Cloth",
+      "description": "Round table with white tablecloth (3x3)",
+      "category": "furniture",
+      "tags": [
+        "table"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 3,
+        "rows": 3,
+        "tiles": [
+          [
+            null,
+            193,
+            194
+          ],
+          [
+            213,
+            214,
+            215
+          ],
+          [
+            null,
+            235,
+            null
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "base",
+          "shape": "rect",
+          "x": 0,
+          "y": 28,
+          "width": 48,
+          "height": 19,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        },
+        {
+          "id": "surface",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 48,
+          "height": 48,
+          "elevation": 1,
+          "type": "platform",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "round_table_stools_a": {
+      "id": "round_table_stools_a",
+      "sourceGroupId": 37,
+      "name": "Round Table Stools A",
+      "description": "Round wooden table with stools (3x3)",
+      "category": "furniture",
+      "tags": [
+        "table",
+        "stool",
+        "wood"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 3,
+        "rows": 3,
+        "tiles": [
+          [
+            null,
+            196,
+            197
+          ],
+          [
+            216,
+            217,
+            218
+          ],
+          [
+            null,
+            238,
+            239
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "base",
+          "shape": "rect",
+          "x": 0,
+          "y": 28,
+          "width": 48,
+          "height": 19,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        },
+        {
+          "id": "surface",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 48,
+          "height": 48,
+          "elevation": 1,
+          "type": "platform",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "round_table_stools_b": {
+      "id": "round_table_stools_b",
+      "sourceGroupId": 38,
+      "name": "Round Table Stools B",
+      "description": "Round wooden table with stools variant (3x3)",
+      "category": "furniture",
+      "tags": [
+        "table",
+        "stool",
+        "wood"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 3,
+        "rows": 3,
+        "tiles": [
+          [
+            null,
+            200,
+            201
+          ],
+          [
+            220,
+            221,
+            222
+          ],
+          [
+            null,
+            242,
+            243
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "base",
+          "shape": "rect",
+          "x": 0,
+          "y": 28,
+          "width": 48,
+          "height": 19,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        },
+        {
+          "id": "surface",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 48,
+          "height": 48,
+          "elevation": 1,
+          "type": "platform",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "round_table_stools_c": {
+      "id": "round_table_stools_c",
+      "sourceGroupId": 39,
+      "name": "Round Table Stools C",
+      "description": "Round wooden table with stools variant (3x3)",
+      "category": "furniture",
+      "tags": [
+        "table",
+        "stool",
+        "wood"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 3,
+        "rows": 3,
+        "tiles": [
+          [
+            null,
+            204,
+            205
+          ],
+          [
+            224,
+            225,
+            226
+          ],
+          [
+            null,
+            246,
+            null
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "base",
+          "shape": "rect",
+          "x": 0,
+          "y": 28,
+          "width": 48,
+          "height": 19,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        },
+        {
+          "id": "surface",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 48,
+          "height": 48,
+          "elevation": 1,
+          "type": "platform",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "long_bench_wide": {
+      "id": "long_bench_wide",
+      "sourceGroupId": 40,
+      "name": "Long Bench Wide",
+      "description": "Wide wooden bench/sign board (4x2)",
+      "category": "furniture",
+      "tags": [
+        "bench",
+        "wood"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 4,
+        "rows": 2,
+        "tiles": [
+          [
+            206,
+            207,
+            208,
+            209
+          ],
+          [
+            227,
+            228,
+            229,
+            230
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "base",
+          "shape": "rect",
+          "x": 0,
+          "y": 19,
+          "width": 64,
+          "height": 12,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        },
+        {
+          "id": "surface",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 64,
+          "height": 32,
+          "elevation": 1,
+          "type": "platform",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "sack_bag": {
+      "id": "sack_bag",
+      "sourceGroupId": 41,
+      "name": "Sack Bag",
+      "description": "Canvas sack or bag",
+      "category": "decoration",
+      "tags": [],
+      "surface": "carpet",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            219
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "sack_bag_b": {
+      "id": "sack_bag_b",
+      "sourceGroupId": 42,
+      "name": "Sack Bag B",
+      "description": "Canvas sack variant",
+      "category": "decoration",
+      "tags": [],
+      "surface": "carpet",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            223
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "coin_purse": {
+      "id": "coin_purse",
+      "sourceGroupId": 43,
+      "name": "Coin Purse",
+      "description": "Small coin purse or money bag",
+      "category": "decoration",
+      "tags": [
+        "coin"
+      ],
+      "surface": "carpet",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            231
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "plant_potted_a": {
+      "id": "plant_potted_a",
+      "sourceGroupId": 44,
+      "name": "Plant Potted A",
+      "description": "Potted green plant",
+      "category": "decoration",
+      "tags": [
+        "plant"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            256
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "plant_potted_b": {
+      "id": "plant_potted_b",
+      "sourceGroupId": 45,
+      "name": "Plant Potted B",
+      "description": "Potted plant variant",
+      "category": "decoration",
+      "tags": [
+        "plant"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            259
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "plant_sprout": {
+      "id": "plant_sprout",
+      "sourceGroupId": 46,
+      "name": "Plant Sprout",
+      "description": "Small green plant/sprout",
+      "category": "decoration",
+      "tags": [
+        "plant"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            260
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "vegetable": {
+      "id": "vegetable",
+      "sourceGroupId": 47,
+      "name": "Vegetable",
+      "description": "Root vegetable or turnip",
+      "category": "decoration",
+      "tags": [
+        "table"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            261
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "bottle_tall_green": {
+      "id": "bottle_tall_green",
+      "sourceGroupId": 48,
+      "name": "Bottle Tall Green",
+      "description": "Tall green bottle (1x3 vertical)",
+      "category": "decoration",
+      "tags": [
+        "bottle"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 3,
+        "tiles": [
+          [
+            262
+          ],
+          [
+            283
+          ],
+          [
+            304
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "bottle_brown": {
+      "id": "bottle_brown",
+      "sourceGroupId": 49,
+      "name": "Bottle Brown",
+      "description": "Brown pottery bottle",
+      "category": "decoration",
+      "tags": [
+        "bottle"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            263
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "bottle_tall_blue": {
+      "id": "bottle_tall_blue",
+      "sourceGroupId": 50,
+      "name": "Bottle Tall Blue",
+      "description": "Tall blue potion bottle (1x3 vertical)",
+      "category": "decoration",
+      "tags": [
+        "bottle",
+        "potion"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 3,
+        "tiles": [
+          [
+            264
+          ],
+          [
+            285
+          ],
+          [
+            306
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "candle_lit": {
+      "id": "candle_lit",
+      "sourceGroupId": 51,
+      "name": "Candle Lit",
+      "description": "Small lit candle",
+      "category": "decoration",
+      "tags": [
+        "candle"
+      ],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            265
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "bottle_blue_tall": {
+      "id": "bottle_blue_tall",
+      "sourceGroupId": 52,
+      "name": "Bottle Blue Tall",
+      "description": "Tall blue bottle (1x2)",
+      "category": "decoration",
+      "tags": [
+        "bottle"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 2,
+        "tiles": [
+          [
+            266
+          ],
+          [
+            287
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "water_pool": {
+      "id": "water_pool",
+      "sourceGroupId": 53,
+      "name": "Water Pool",
+      "description": "Large water pool/bath (6x3)",
+      "category": "furniture",
+      "tags": [
+        "water"
+      ],
+      "surface": "water",
+      "grid": {
+        "cols": 6,
+        "rows": 3,
+        "tiles": [
+          [
+            267,
+            268,
+            269,
+            270,
+            271,
+            272
+          ],
+          [
+            288,
+            289,
+            290,
+            291,
+            292,
+            293
+          ],
+          [
+            309,
+            310,
+            311,
+            312,
+            313,
+            314
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 96,
+          "height": 48,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "wall_shield_a": {
+      "id": "wall_shield_a",
+      "sourceGroupId": 54,
+      "name": "Wall Shield A",
+      "description": "Shield mounted on wall (2x2)",
+      "category": "decoration",
+      "tags": [
+        "shield"
+      ],
+      "surface": "metal",
+      "grid": {
+        "cols": 2,
+        "rows": 2,
+        "tiles": [
+          [
+            273,
+            274
+          ],
+          [
+            294,
+            295
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "wall_shield_b": {
+      "id": "wall_shield_b",
+      "sourceGroupId": 55,
+      "name": "Wall Shield B",
+      "description": "Shield variant on wall (2x2)",
+      "category": "decoration",
+      "tags": [
+        "shield"
+      ],
+      "surface": "metal",
+      "grid": {
+        "cols": 2,
+        "rows": 2,
+        "tiles": [
+          [
+            275,
+            276
+          ],
+          [
+            296,
+            297
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "flower_vase": {
+      "id": "flower_vase",
+      "sourceGroupId": 56,
+      "name": "Flower Vase",
+      "description": "Flower in vase",
+      "category": "decoration",
+      "tags": [],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            277
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "plant_small": {
+      "id": "plant_small",
+      "sourceGroupId": 57,
+      "name": "Plant Small",
+      "description": "Small decorative plant",
+      "category": "decoration",
+      "tags": [
+        "plant"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            278
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "mushroom": {
+      "id": "mushroom",
+      "sourceGroupId": 58,
+      "name": "Mushroom",
+      "description": "Mushroom or fungus",
+      "category": "decoration",
+      "tags": [
+        "mushroom"
+      ],
+      "surface": "dirt",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            279
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "rock_small": {
+      "id": "rock_small",
+      "sourceGroupId": 59,
+      "name": "Rock Small",
+      "description": "Small rock",
+      "category": "decoration",
+      "tags": [
+        "rock"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            280
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "bone": {
+      "id": "bone",
+      "sourceGroupId": 60,
+      "name": "Bone",
+      "description": "Small bone",
+      "category": "decoration",
+      "tags": [
+        "bone"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            281
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "pottery_jug": {
+      "id": "pottery_jug",
+      "sourceGroupId": 61,
+      "name": "Pottery Jug",
+      "description": "Clay pottery jug",
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            282
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "candle_holder": {
+      "id": "candle_holder",
+      "sourceGroupId": 62,
+      "name": "Candle Holder",
+      "description": "Candle in holder",
+      "category": "decoration",
+      "tags": [
+        "candle"
+      ],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            284
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "tool_vertical": {
+      "id": "tool_vertical",
+      "sourceGroupId": 63,
+      "name": "Tool Vertical",
+      "description": "Vertical tool or weapon (1x2)",
+      "category": "decoration",
+      "tags": [
+        "weapon"
+      ],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 2,
+        "tiles": [
+          [
+            286
+          ],
+          [
+            307
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "gem_small": {
+      "id": "gem_small",
+      "sourceGroupId": 64,
+      "name": "Gem Small",
+      "description": "Small gemstone",
+      "category": "decoration",
+      "tags": [
+        "gem",
+        "stone"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            298
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "bone_pile": {
+      "id": "bone_pile",
+      "sourceGroupId": 65,
+      "name": "Bone Pile",
+      "description": "Small pile of bones",
+      "category": "decoration",
+      "tags": [
+        "bone"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            301
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "pottery_shard": {
+      "id": "pottery_shard",
+      "sourceGroupId": 66,
+      "name": "Pottery Shard",
+      "description": "Pottery fragment",
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            303
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "candle_small": {
+      "id": "candle_small",
+      "sourceGroupId": 67,
+      "name": "Candle Small",
+      "description": "Tiny candle",
+      "category": "decoration",
+      "tags": [
+        "candle"
+      ],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            305
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "weapon_sword": {
+      "id": "weapon_sword",
+      "sourceGroupId": 68,
+      "name": "Weapon Sword",
+      "description": "Sword",
+      "category": "decoration",
+      "tags": [
+        "weapon",
+        "sword"
+      ],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            315
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "weapon_dagger": {
+      "id": "weapon_dagger",
+      "sourceGroupId": 69,
+      "name": "Weapon Dagger",
+      "description": "Dagger",
+      "category": "decoration",
+      "tags": [
+        "weapon"
+      ],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            316
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "weapon_axe": {
+      "id": "weapon_axe",
+      "sourceGroupId": 70,
+      "name": "Weapon Axe",
+      "description": "Axe",
+      "category": "decoration",
+      "tags": [
+        "weapon"
+      ],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            317
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "chest_key": {
+      "id": "chest_key",
+      "sourceGroupId": 71,
+      "name": "Chest Key",
+      "description": "Key or tool",
+      "category": "decoration",
+      "tags": [
+        "chest",
+        "key"
+      ],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            320
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "scroll": {
+      "id": "scroll",
+      "sourceGroupId": 72,
+      "name": "Scroll",
+      "description": "Rolled scroll",
+      "category": "decoration",
+      "tags": [
+        "scroll"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            323
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "necklace": {
+      "id": "necklace",
+      "sourceGroupId": 73,
+      "name": "Necklace",
+      "description": "Necklace or chain",
+      "category": "decoration",
+      "tags": [],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            326
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "pendant": {
+      "id": "pendant",
+      "sourceGroupId": 74,
+      "name": "Pendant",
+      "description": "Pendant or amulet",
+      "category": "decoration",
+      "tags": [],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            327
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "ring": {
+      "id": "ring",
+      "sourceGroupId": 75,
+      "name": "Ring",
+      "description": "Ring or small jewelry",
+      "category": "decoration",
+      "tags": [],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            328
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "coin_stack": {
+      "id": "coin_stack",
+      "sourceGroupId": 76,
+      "name": "Coin Stack",
+      "description": "Stack of gold coins",
+      "category": "decoration",
+      "tags": [
+        "coin"
+      ],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            330
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "gem_blue": {
+      "id": "gem_blue",
+      "sourceGroupId": 77,
+      "name": "Gem Blue",
+      "description": "Blue gemstone",
+      "category": "decoration",
+      "tags": [
+        "gem",
+        "stone"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            333
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "gem_red": {
+      "id": "gem_red",
+      "sourceGroupId": 78,
+      "name": "Gem Red",
+      "description": "Red gemstone",
+      "category": "decoration",
+      "tags": [
+        "gem",
+        "stone"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            334
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "pickaxe": {
+      "id": "pickaxe",
+      "sourceGroupId": 79,
+      "name": "Pickaxe",
+      "description": "Pickaxe tool",
+      "category": "decoration",
+      "tags": [],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            336
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "hammer": {
+      "id": "hammer",
+      "sourceGroupId": 80,
+      "name": "Hammer",
+      "description": "Hammer tool",
+      "category": "decoration",
+      "tags": [],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            337
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "shovel": {
+      "id": "shovel",
+      "sourceGroupId": 81,
+      "name": "Shovel",
+      "description": "Shovel tool",
+      "category": "decoration",
+      "tags": [],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            338
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "rock_pile": {
+      "id": "rock_pile",
+      "sourceGroupId": 82,
+      "name": "Rock Pile",
+      "description": "Small rock pile",
+      "category": "decoration",
+      "tags": [
+        "rock"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            339
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "ore_chunk": {
+      "id": "ore_chunk",
+      "sourceGroupId": 83,
+      "name": "Ore Chunk",
+      "description": "Ore or mineral chunk",
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            340
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "torch_wall": {
+      "id": "torch_wall",
+      "sourceGroupId": 84,
+      "name": "Torch Wall",
+      "description": "Wall torch or sconce",
+      "category": "decoration",
+      "tags": [],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            341
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "lantern": {
+      "id": "lantern",
+      "sourceGroupId": 85,
+      "name": "Lantern",
+      "description": "Hanging lantern",
+      "category": "decoration",
+      "tags": [],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            342
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "candelabra": {
+      "id": "candelabra",
+      "sourceGroupId": 86,
+      "name": "Candelabra",
+      "description": "Candelabra or lamp",
+      "category": "decoration",
+      "tags": [],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            343
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "brazier": {
+      "id": "brazier",
+      "sourceGroupId": 87,
+      "name": "Brazier",
+      "description": "Fire brazier or coal pot",
+      "category": "decoration",
+      "tags": [],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            344
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "potion_red": {
+      "id": "potion_red",
+      "sourceGroupId": 88,
+      "name": "Potion Red",
+      "description": "Red potion bottle",
+      "category": "decoration",
+      "tags": [
+        "bottle",
+        "potion"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            345
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "potion_green": {
+      "id": "potion_green",
+      "sourceGroupId": 89,
+      "name": "Potion Green",
+      "description": "Green potion bottle",
+      "category": "decoration",
+      "tags": [
+        "bottle",
+        "potion"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            346
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "potion_blue": {
+      "id": "potion_blue",
+      "sourceGroupId": 90,
+      "name": "Potion Blue",
+      "description": "Blue potion bottle",
+      "category": "decoration",
+      "tags": [
+        "bottle",
+        "potion"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            347
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "food_plate": {
+      "id": "food_plate",
+      "sourceGroupId": 91,
+      "name": "Food Plate",
+      "description": "Plate of food",
+      "category": "decoration",
+      "tags": [
+        "food"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            348
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "mug_tankard": {
+      "id": "mug_tankard",
+      "sourceGroupId": 92,
+      "name": "Mug Tankard",
+      "description": "Drinking mug or tankard",
+      "category": "decoration",
+      "tags": [],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            349
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "cooking_pot": {
+      "id": "cooking_pot",
+      "sourceGroupId": 93,
+      "name": "Cooking Pot",
+      "description": "Cooking pot or cauldron",
+      "category": "decoration",
+      "tags": [],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            351
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "fishing_rod": {
+      "id": "fishing_rod",
+      "sourceGroupId": 94,
+      "name": "Fishing Rod",
+      "description": "Fishing rod or pole",
+      "category": "decoration",
+      "tags": [],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            353
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "net": {
+      "id": "net",
+      "sourceGroupId": 95,
+      "name": "Net",
+      "description": "Fishing net or rope",
+      "category": "decoration",
+      "tags": [],
+      "surface": "carpet",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            354
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "weapon_spear": {
+      "id": "weapon_spear",
+      "sourceGroupId": 96,
+      "name": "Weapon Spear",
+      "description": "Spear or lance",
+      "category": "decoration",
+      "tags": [
+        "weapon"
+      ],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            356
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "scythe": {
+      "id": "scythe",
+      "sourceGroupId": 97,
+      "name": "Scythe",
+      "description": "Scythe or curved blade",
+      "category": "decoration",
+      "tags": [],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            357
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "bow": {
+      "id": "bow",
+      "sourceGroupId": 98,
+      "name": "Bow",
+      "description": "Bow weapon",
+      "category": "decoration",
+      "tags": [
+        "weapon"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            358
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "arrow_quiver": {
+      "id": "arrow_quiver",
+      "sourceGroupId": 99,
+      "name": "Arrow Quiver",
+      "description": "Arrow or quiver",
+      "category": "decoration",
+      "tags": [],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            360
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "satchel": {
+      "id": "satchel",
+      "sourceGroupId": 100,
+      "name": "Satchel",
+      "description": "Leather satchel or bag (2x2)",
+      "category": "decoration",
+      "tags": [],
+      "surface": "carpet",
+      "grid": {
+        "cols": 2,
+        "rows": 2,
+        "tiles": [
+          [
+            null,
+            363
+          ],
+          [
+            383,
+            384
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "herb_bundle": {
+      "id": "herb_bundle",
+      "sourceGroupId": 101,
+      "name": "Herb Bundle",
+      "description": "Bundle of dried herbs",
+      "category": "decoration",
+      "tags": [],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            364
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "potion_bottle_green": {
+      "id": "potion_bottle_green",
+      "sourceGroupId": 102,
+      "name": "Potion Bottle Green",
+      "description": "Green potion in round bottle",
+      "category": "decoration",
+      "tags": [
+        "bottle",
+        "potion"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            365
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "potion_bottle_brown": {
+      "id": "potion_bottle_brown",
+      "sourceGroupId": 103,
+      "name": "Potion Bottle Brown",
+      "description": "Brown potion in round bottle",
+      "category": "decoration",
+      "tags": [
+        "bottle",
+        "potion"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            366
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "weapon_tall_a": {
+      "id": "weapon_tall_a",
+      "sourceGroupId": 104,
+      "name": "Weapon Tall A",
+      "description": "Tall weapon or staff (1x2)",
+      "category": "decoration",
+      "tags": [
+        "weapon"
+      ],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 2,
+        "tiles": [
+          [
+            367
+          ],
+          [
+            388
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "weapon_tall_b": {
+      "id": "weapon_tall_b",
+      "sourceGroupId": 105,
+      "name": "Weapon Tall B",
+      "description": "Tall weapon or staff variant (1x2)",
+      "category": "decoration",
+      "tags": [
+        "weapon"
+      ],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 2,
+        "tiles": [
+          [
+            368
+          ],
+          [
+            389
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "treasure_item": {
+      "id": "treasure_item",
+      "sourceGroupId": 106,
+      "name": "Treasure Item",
+      "description": "Small treasure or valuable item",
+      "category": "decoration",
+      "tags": [],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            369
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "weapon_tall_c": {
+      "id": "weapon_tall_c",
+      "sourceGroupId": 107,
+      "name": "Weapon Tall C",
+      "description": "Tall weapon (1x2)",
+      "category": "decoration",
+      "tags": [
+        "weapon"
+      ],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 2,
+        "tiles": [
+          [
+            370
+          ],
+          [
+            391
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "tool_tall": {
+      "id": "tool_tall",
+      "sourceGroupId": 108,
+      "name": "Tool Tall",
+      "description": "Tall tool or staff (1x2)",
+      "category": "decoration",
+      "tags": [],
+      "surface": "metal",
+      "grid": {
+        "cols": 1,
+        "rows": 2,
+        "tiles": [
+          [
+            372
+          ],
+          [
+            393
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "arrow_single": {
+      "id": "arrow_single",
+      "sourceGroupId": 109,
+      "name": "Arrow Single",
+      "description": "Single arrow",
+      "category": "decoration",
+      "tags": [],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            373
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "bottle_potion_d": {
+      "id": "bottle_potion_d",
+      "sourceGroupId": 110,
+      "name": "Bottle Potion D",
+      "description": "Small bottle",
+      "category": "decoration",
+      "tags": [
+        "bottle",
+        "potion"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            375
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "feather": {
+      "id": "feather",
+      "sourceGroupId": 111,
+      "name": "Feather",
+      "description": "Feather or quill",
+      "category": "decoration",
+      "tags": [],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            376
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "rock_a": {
+      "id": "rock_a",
+      "sourceGroupId": 112,
+      "name": "Rock A",
+      "description": "Small rock",
+      "category": "decoration",
+      "tags": [
+        "rock"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            378
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "rock_b": {
+      "id": "rock_b",
+      "sourceGroupId": 113,
+      "name": "Rock B",
+      "description": "Rock variant",
+      "category": "decoration",
+      "tags": [
+        "rock"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            379
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "mineral": {
+      "id": "mineral",
+      "sourceGroupId": 114,
+      "name": "Mineral",
+      "description": "Mineral or ore sample",
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            380
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "clay_pot": {
+      "id": "clay_pot",
+      "sourceGroupId": 115,
+      "name": "Clay Pot",
+      "description": "Small clay pot",
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            381
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "mushroom_b": {
+      "id": "mushroom_b",
+      "sourceGroupId": 116,
+      "name": "Mushroom B",
+      "description": "Mushroom or fungus",
+      "category": "decoration",
+      "tags": [
+        "mushroom"
+      ],
+      "surface": "dirt",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            382
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "herb_dried": {
+      "id": "herb_dried",
+      "sourceGroupId": 117,
+      "name": "Herb Dried",
+      "description": "Dried herb bundle",
+      "category": "decoration",
+      "tags": [],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            385
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "potion_small": {
+      "id": "potion_small",
+      "sourceGroupId": 118,
+      "name": "Potion Small",
+      "description": "Tiny potion bottle",
+      "category": "decoration",
+      "tags": [
+        "bottle",
+        "potion"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            386
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "gem_c": {
+      "id": "gem_c",
+      "sourceGroupId": 119,
+      "name": "Gem C",
+      "description": "Small gem",
+      "category": "decoration",
+      "tags": [
+        "gem"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            387
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "crystal": {
+      "id": "crystal",
+      "sourceGroupId": 120,
+      "name": "Crystal",
+      "description": "Crystal or magic item",
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            394
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "potion_bottle_e": {
+      "id": "potion_bottle_e",
+      "sourceGroupId": 121,
+      "name": "Potion Bottle E",
+      "description": "Potion bottle variant",
+      "category": "decoration",
+      "tags": [
+        "bottle",
+        "potion"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            396
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "rock_c": {
+      "id": "rock_c",
+      "sourceGroupId": 122,
+      "name": "Rock C",
+      "description": "Rock or mineral",
+      "category": "decoration",
+      "tags": [
+        "rock"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            397
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "wall_shelf_table_a": {
+      "id": "wall_shelf_table_a",
+      "sourceGroupId": 123,
+      "name": "Wall Shelf Table A",
+      "description": "Wall-mounted shelf or wide table (4x3)",
+      "category": "furniture",
+      "tags": [
+        "table",
+        "shelf"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 4,
+        "rows": 3,
+        "tiles": [
+          [
+            399,
+            400,
+            401,
+            402
+          ],
+          [
+            420,
+            421,
+            422,
+            423
+          ],
+          [
+            441,
+            442,
+            null,
+            null
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 64,
+          "height": 48,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "wall_shelf_table_b": {
+      "id": "wall_shelf_table_b",
+      "sourceGroupId": 124,
+      "name": "Wall Shelf Table B",
+      "description": "Wall shelf/table variant (4x3)",
+      "category": "furniture",
+      "tags": [
+        "table",
+        "shelf"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 4,
+        "rows": 3,
+        "tiles": [
+          [
+            403,
+            404,
+            405,
+            406
+          ],
+          [
+            424,
+            425,
+            426,
+            427
+          ],
+          [
+            null,
+            null,
+            447,
+            448
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 64,
+          "height": 48,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "wide_table": {
+      "id": "wide_table",
+      "sourceGroupId": 125,
+      "name": "Wide Table",
+      "description": "Wide wooden table with stools (4x3)",
+      "category": "furniture",
+      "tags": [
+        "table",
+        "stool",
+        "wood"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 4,
+        "rows": 3,
+        "tiles": [
+          [
+            407,
+            408,
+            409,
+            410
+          ],
+          [
+            428,
+            429,
+            430,
+            431
+          ],
+          [
+            449,
+            450,
+            451,
+            452
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "base",
+          "shape": "rect",
+          "x": 0,
+          "y": 28,
+          "width": 64,
+          "height": 19,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        },
+        {
+          "id": "surface",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 64,
+          "height": 48,
+          "elevation": 1,
+          "type": "platform",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "long_table_benches": {
+      "id": "long_table_benches",
+      "sourceGroupId": 126,
+      "name": "Long Table Benches",
+      "description": "Long table with bench seats (4x3)",
+      "category": "furniture",
+      "tags": [
+        "table",
+        "bench"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 4,
+        "rows": 3,
+        "tiles": [
+          [
+            411,
+            412,
+            413,
+            414
+          ],
+          [
+            432,
+            433,
+            434,
+            435
+          ],
+          [
+            453,
+            454,
+            455,
+            456
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "base",
+          "shape": "rect",
+          "x": 0,
+          "y": 28,
+          "width": 64,
+          "height": 19,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        },
+        {
+          "id": "surface",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 64,
+          "height": 48,
+          "elevation": 1,
+          "type": "platform",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "bench_pair_a": {
+      "id": "bench_pair_a",
+      "sourceGroupId": 127,
+      "name": "Bench Pair A",
+      "description": "Pair of wooden stools (2x1)",
+      "category": "decoration",
+      "tags": [
+        "stool",
+        "bench",
+        "wood"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 2,
+        "rows": 1,
+        "tiles": [
+          [
+            443,
+            444
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "bench_pair_b": {
+      "id": "bench_pair_b",
+      "sourceGroupId": 128,
+      "name": "Bench Pair B",
+      "description": "Pair of wooden stools variant (2x1)",
+      "category": "decoration",
+      "tags": [
+        "stool",
+        "bench",
+        "wood"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 2,
+        "rows": 1,
+        "tiles": [
+          [
+            445,
+            446
+          ]
+        ]
+      },
+      "colliders": [],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    }
+  }
+}

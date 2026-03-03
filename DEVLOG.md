@@ -4,6 +4,20 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-02 — Object Definition System (WFC Prep)
+
+**Commits:** (v0.13.0)
+
+New object definition schema and bootstrap pipeline for defining multi-tile objects with pixel-level collision, nodes, and WFC data.
+
+- **Object def schema** (`client/src/map/object-def-schema.js`): 5 enum exports, defaults, `validateObjectDef()` with grid/parts/collider/node validation. 34 unit tests.
+- **Bootstrap script** (`scripts/bootstrap-object-defs.js`): Generates object definitions from tile analysis groups + identifications. Maps categories, creates default colliders (two-level for platform objects), extracts tags, assigns WFC edge sockets.
+- **Generated data**: 129 objects for Interior_1st_floor (27 furniture, 6 structure, 96 decoration) and 19 for Walls_interior (all structure). All pass validation.
+- **WFC socket vocabulary** (`_sockets.json`): 9 socket types (open_floor, wall_face, counter_end, etc.) with compatibility rules.
+- **Next**: Visual editor for collision shapes and nodes, then ObjectPlacer to replace hardcoded map generation helpers.
+
+---
+
 ## 2026-03-02 — Tile Analysis Pipeline & Tavern Fix (Issue #8)
 
 **Commits:** (v0.12.0)

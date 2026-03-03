@@ -1,0 +1,1393 @@
+{
+  "version": 1,
+  "tileset": "Walls_interior",
+  "objects": {
+    "beam_end": {
+      "id": "beam_end",
+      "sourceGroupId": 0,
+      "name": "Beam End",
+      "description": "Wooden beam end piece (single dark tile)",
+      "category": "structure",
+      "tags": [
+        "wood"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            1
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 16,
+          "height": 16,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": false
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "wall_top_beam": {
+      "id": "wall_top_beam",
+      "sourceGroupId": 1,
+      "name": "Wall Top Beam",
+      "description": "Horizontal wall top beam strip - decorative plaster/wood top of wall",
+      "category": "structure",
+      "tags": [
+        "wood"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 7,
+        "rows": 1,
+        "tiles": [
+          [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 112,
+          "height": 16,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "wall_frame_left": {
+      "id": "wall_frame_left",
+      "sourceGroupId": 2,
+      "name": "Wall Frame Left",
+      "description": "Vertical wooden beam column - left wall frame edge",
+      "category": "structure",
+      "tags": [
+        "wood"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 4,
+        "tiles": [
+          [
+            10
+          ],
+          [
+            20
+          ],
+          [
+            30
+          ],
+          [
+            40
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 16,
+          "height": 64,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": false
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "wall_opening": {
+      "id": "wall_opening",
+      "sourceGroupId": 3,
+      "name": "Wall Opening",
+      "description": "Dark window/door opening in wall",
+      "category": "structure",
+      "tags": [
+        "door",
+        "window"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            11
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 16,
+          "height": 16,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": false
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "wall_frame_right": {
+      "id": "wall_frame_right",
+      "sourceGroupId": 4,
+      "name": "Wall Frame Right",
+      "description": "Vertical wooden beam column - right wall frame edge",
+      "category": "structure",
+      "tags": [
+        "wood"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 4,
+        "tiles": [
+          [
+            12
+          ],
+          [
+            22
+          ],
+          [
+            32
+          ],
+          [
+            42
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 16,
+          "height": 64,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": false
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "stone_wall_and_floor": {
+      "id": "stone_wall_and_floor",
+      "sourceGroupId": 5,
+      "name": "Stone Wall And Floor",
+      "description": "Large merged group: stone wall face (rows 1-7), wall base/trim (rows 8-9), and cobblestone floor (row 10-11). Mixed content due to similar edge colors.",
+      "category": "structure",
+      "tags": [
+        "stone"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 10,
+        "rows": 11,
+        "tiles": [
+          [
+            null,
+            null,
+            null,
+            13,
+            14,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            23,
+            24,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            33,
+            34,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            43,
+            44,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            53,
+            54,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            63,
+            64,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            73,
+            74,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            83,
+            84,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99
+          ],
+          [
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109
+          ],
+          [
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 160,
+          "height": 176,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "stone_wall_right": {
+      "id": "stone_wall_right",
+      "sourceGroupId": 6,
+      "name": "Stone Wall Right",
+      "description": "Stone wall face section - right portion with shelves and ornamental details",
+      "category": "structure",
+      "tags": [
+        "stone"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 4,
+        "rows": 4,
+        "tiles": [
+          [
+            16,
+            17,
+            18,
+            19
+          ],
+          [
+            26,
+            27,
+            28,
+            29
+          ],
+          [
+            36,
+            37,
+            38,
+            39
+          ],
+          [
+            46,
+            47,
+            48,
+            49
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 64,
+          "height": 64,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "wooden_pillar": {
+      "id": "wooden_pillar",
+      "sourceGroupId": 7,
+      "name": "Wooden Pillar",
+      "description": "Tall wooden pillar/column (3 tiles tall)",
+      "category": "structure",
+      "tags": [
+        "wood"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 1,
+        "rows": 3,
+        "tiles": [
+          [
+            21
+          ],
+          [
+            31
+          ],
+          [
+            41
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 16,
+          "height": 48,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": false
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "stone_wall_lower_right": {
+      "id": "stone_wall_lower_right",
+      "sourceGroupId": 8,
+      "name": "Stone Wall Lower Right",
+      "description": "Lower stone wall face with arched details and shelves",
+      "category": "structure",
+      "tags": [
+        "stone"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 4,
+        "rows": 4,
+        "tiles": [
+          [
+            56,
+            57,
+            58,
+            59
+          ],
+          [
+            66,
+            67,
+            68,
+            69
+          ],
+          [
+            76,
+            77,
+            78,
+            79
+          ],
+          [
+            86,
+            87,
+            88,
+            89
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 64,
+          "height": 64,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "stone_shelf": {
+      "id": "stone_shelf",
+      "sourceGroupId": 9,
+      "name": "Stone Shelf",
+      "description": "Stone wall shelf or ledge (2 tiles wide)",
+      "category": "structure",
+      "tags": [
+        "shelf",
+        "stone"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 2,
+        "rows": 1,
+        "tiles": [
+          [
+            60,
+            61
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 16,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": false
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "wooden_door": {
+      "id": "wooden_door",
+      "sourceGroupId": 10,
+      "name": "Wooden Door",
+      "description": "Wooden door with stone arch frame (2x2)",
+      "category": "structure",
+      "tags": [
+        "door",
+        "wood",
+        "stone"
+      ],
+      "surface": "wood",
+      "grid": {
+        "cols": 2,
+        "rows": 2,
+        "tiles": [
+          [
+            70,
+            71
+          ],
+          [
+            80,
+            81
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 32,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": false
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "wall_baseboard": {
+      "id": "wall_baseboard",
+      "sourceGroupId": 11,
+      "name": "Wall Baseboard",
+      "description": "Decorative stone baseboard/trim strip along wall base",
+      "category": "structure",
+      "tags": [
+        "stone"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 10,
+        "rows": 1,
+        "tiles": [
+          [
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 160,
+          "height": 16,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "arched_windows": {
+      "id": "arched_windows",
+      "sourceGroupId": 12,
+      "name": "Arched Windows",
+      "description": "Row of blue stained-glass arched windows (10 tiles wide)",
+      "category": "structure",
+      "tags": [
+        "window"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 10,
+        "rows": 1,
+        "tiles": [
+          [
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 160,
+          "height": 16,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "lower_wall_section": {
+      "id": "lower_wall_section",
+      "sourceGroupId": 13,
+      "name": "Lower Wall Section",
+      "description": "Lower wall section with trim, dark floor areas, and stone base",
+      "category": "structure",
+      "tags": [
+        "stone"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 10,
+        "rows": 4,
+        "tiles": [
+          [
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149
+          ],
+          [
+            150,
+            151,
+            152,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            160,
+            null,
+            162,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            170,
+            171,
+            172,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 160,
+          "height": 64,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "gray_stone_trim": {
+      "id": "gray_stone_trim",
+      "sourceGroupId": 15,
+      "name": "Gray Stone Trim",
+      "description": "Gray stone wall trim or accent pieces",
+      "category": "structure",
+      "tags": [
+        "stone"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 3,
+        "rows": 1,
+        "tiles": [
+          [
+            155,
+            156,
+            157
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 48,
+          "height": 16,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "dark_stone_accent": {
+      "id": "dark_stone_accent",
+      "sourceGroupId": 16,
+      "name": "Dark Stone Accent",
+      "description": "Dark stone wall accent tiles",
+      "category": "structure",
+      "tags": [
+        "stone"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 2,
+        "rows": 1,
+        "tiles": [
+          [
+            158,
+            159
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 16,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": false
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "stone_wall_base": {
+      "id": "stone_wall_base",
+      "sourceGroupId": 17,
+      "name": "Stone Wall Base",
+      "description": "Stone wall base section tiles",
+      "category": "structure",
+      "tags": [
+        "stone"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 3,
+        "rows": 1,
+        "tiles": [
+          [
+            165,
+            166,
+            167
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 48,
+          "height": 16,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": true
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "stone_arch_left": {
+      "id": "stone_arch_left",
+      "sourceGroupId": 18,
+      "name": "Stone Arch Left",
+      "description": "Stone archway left pillar (1x2)",
+      "category": "structure",
+      "tags": [
+        "stone"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 1,
+        "rows": 2,
+        "tiles": [
+          [
+            168
+          ],
+          [
+            178
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 16,
+          "height": 32,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": false
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    },
+    "stone_arch_right": {
+      "id": "stone_arch_right",
+      "sourceGroupId": 19,
+      "name": "Stone Arch Right",
+      "description": "Stone archway right pillar (1x2)",
+      "category": "structure",
+      "tags": [
+        "stone"
+      ],
+      "surface": "stone",
+      "grid": {
+        "cols": 1,
+        "rows": 2,
+        "tiles": [
+          [
+            169
+          ],
+          [
+            179
+          ]
+        ]
+      },
+      "colliders": [
+        {
+          "id": "body",
+          "shape": "rect",
+          "x": 0,
+          "y": 0,
+          "width": 16,
+          "height": 32,
+          "elevation": 0,
+          "type": "solid",
+          "stretchable": false
+        }
+      ],
+      "nodes": [],
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "wall_face",
+          "south": "open_floor",
+          "east": "wall_face",
+          "west": "wall_face"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood",
+          "carpet"
+        ],
+        "weight": 1
+      }
+    }
+  }
+}
