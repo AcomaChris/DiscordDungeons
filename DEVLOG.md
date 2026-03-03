@@ -4,6 +4,18 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-02 — Tile Editor Tooltip Pass
+
+**Commits:** (v0.16.2)
+
+Added native HTML `title` tooltips to all interactive elements across the tile editor for first-time user guidance.
+
+- **5 files updated**: TileEditor.js (toolbar), ObjectEditorList.js (list controls), ObjectEditorProperties.js (~30+ form fields), ObjectEditorCanvas.js (mode-aware canvas tooltip), ObjectCreationWizard.js (wizard nav, presets, draw mode).
+- **DOM builder approach**: Added optional `tooltip` parameter to all 7 helper methods in ObjectEditorProperties (`_makeTextInput`, `_makeSelect`, `_makeNumberInput`, `_makeCheckbox`, `_makeTextarea`, `_makeTagsInput`, `_makeBtn`) for clean integration.
+- **Dynamic canvas tooltips**: Canvas `title` updates when entering/exiting reassign mode, wizard mode, or draw mode.
+
+---
+
 ## 2026-03-02 — Wizard Collision Step Fixes
 
 **Commits:** (v0.16.1)

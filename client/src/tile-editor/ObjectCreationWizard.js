@@ -131,12 +131,14 @@ export class ObjectCreationWizard {
     const cancelBtn = document.createElement('button');
     cancelBtn.className = 'btn';
     cancelBtn.textContent = 'Cancel';
+    cancelBtn.title = 'Close wizard and discard changes';
     cancelBtn.addEventListener('click', () => this.close());
     btns.appendChild(cancelBtn);
 
     this._tileNextBtn = document.createElement('button');
     this._tileNextBtn.className = 'btn btn-primary';
     this._tileNextBtn.textContent = 'Next';
+    this._tileNextBtn.title = 'Proceed to next step';
     this._tileNextBtn.disabled = !this._tileSelection;
     this._tileNextBtn.addEventListener('click', () => {
       if (!this._tileSelection) return;
@@ -264,11 +266,12 @@ export class ObjectCreationWizard {
     footer.className = 'wizard-footer';
 
     const leftBtns = document.createElement('div');
-    const cancelBtn = document.createElement('button');
-    cancelBtn.className = 'btn';
-    cancelBtn.textContent = 'Cancel';
-    cancelBtn.addEventListener('click', () => this.close());
-    leftBtns.appendChild(cancelBtn);
+    const modalCancelBtn = document.createElement('button');
+    modalCancelBtn.className = 'btn';
+    modalCancelBtn.textContent = 'Cancel';
+    modalCancelBtn.title = 'Close wizard and discard changes';
+    modalCancelBtn.addEventListener('click', () => this.close());
+    leftBtns.appendChild(modalCancelBtn);
     footer.appendChild(leftBtns);
 
     const rightBtns = document.createElement('div');
@@ -278,6 +281,7 @@ export class ObjectCreationWizard {
     this._prevBtn = document.createElement('button');
     this._prevBtn.className = 'btn';
     this._prevBtn.textContent = 'Back';
+    this._prevBtn.title = 'Go to previous step';
     this._prevBtn.addEventListener('click', () => {
       if (this._step > 0) {
         this._step--;
@@ -311,8 +315,10 @@ export class ObjectCreationWizard {
     if (this._nextBtn) {
       if (this._step === 3) {
         this._nextBtn.textContent = 'Create';
+        this._nextBtn.title = 'Create the object with these settings';
       } else {
         this._nextBtn.textContent = 'Next';
+        this._nextBtn.title = 'Proceed to next step';
       }
     }
   }
@@ -412,10 +418,16 @@ export class ObjectCreationWizard {
       { label: 'Bottom Half', x: 0, y: Math.round(ph / 2), width: pw, height: Math.round(ph / 2) },
       { label: 'Center', x: Math.round(pw * 0.25), y: Math.round(ph * 0.25), width: Math.round(pw * 0.5), height: Math.round(ph * 0.5) },
     ];
+    const presetTooltips = {
+      Full: 'Add a collider covering the entire object',
+      'Bottom Half': 'Add a collider for the bottom half (common for furniture)',
+      Center: 'Add a centered collider (50% inset)',
+    };
     for (const preset of presetDefs) {
       const btn = document.createElement('button');
       btn.className = 'btn';
       btn.textContent = preset.label;
+      btn.title = presetTooltips[preset.label] || '';
       btn.style.fontSize = '0.7rem';
       btn.addEventListener('click', () => {
         this._colliders.push({
@@ -444,6 +456,7 @@ export class ObjectCreationWizard {
     const addBtn = document.createElement('button');
     addBtn.className = 'btn';
     addBtn.textContent = '+ Add Collider';
+    addBtn.title = 'Add a collider with default full-size bounds';
     addBtn.addEventListener('click', () => {
       this._colliders.push({
         id: `collider_${this._colliders.length}`,
@@ -463,6 +476,7 @@ export class ObjectCreationWizard {
     const drawBtn = document.createElement('button');
     drawBtn.className = this._drawingCollider ? 'btn btn-danger' : 'btn';
     drawBtn.textContent = this._drawingCollider ? 'Cancel Draw' : 'Draw Collider';
+    drawBtn.title = this._drawingCollider ? 'Cancel draw mode' : 'Click then drag on the preview to draw a collision rectangle';
     drawBtn.addEventListener('click', () => {
       if (this._drawingCollider) {
         this._drawingCollider = null;
@@ -508,6 +522,7 @@ export class ObjectCreationWizard {
     canvas.style.border = this._drawingCollider ? '1px solid #00ccff' : '1px solid #2a2a4a';
     canvas.style.maxWidth = '100%';
     canvas.style.cursor = this._drawingCollider ? 'crosshair' : 'default';
+    canvas.title = this._drawingCollider ? 'Click and drag to draw collision bounds' : 'Collision preview — use Draw Collider to draw on this canvas';
 
     // Store references for in-place redraw
     this._collisionCanvas = canvas;
@@ -682,6 +697,7 @@ export class ObjectCreationWizard {
     const removeBtn = document.createElement('button');
     removeBtn.className = 'remove-btn';
     removeBtn.textContent = 'Remove';
+    removeBtn.title = 'Delete this collider';
     removeBtn.addEventListener('click', () => {
       this._colliders.splice(index, 1);
       this._renderCollisionStep();
@@ -725,6 +741,7 @@ export class ObjectCreationWizard {
     const isDrawingThis = this._drawingCollider?.targetIndex === index;
     drawBoundsBtn.className = isDrawingThis ? 'btn btn-danger' : 'btn';
     drawBoundsBtn.textContent = isDrawingThis ? 'Cancel' : 'Draw';
+    drawBoundsBtn.title = isDrawingThis ? 'Cancel draw mode' : "Redraw this collider's bounds on the preview canvas";
     drawBoundsBtn.style.fontSize = '0.65rem';
     drawBoundsBtn.style.padding = '1px 6px';
     drawBoundsBtn.addEventListener('click', () => {

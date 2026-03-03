@@ -81,6 +81,7 @@ export class ObjectEditorCanvas {
     this._active = active;
 
     if (active) {
+      this.canvas.title = 'Click to select an object. Shift+drag to define a new object from tiles.';
       this.canvas.addEventListener('mousemove', this._boundMouseMove);
       this.canvas.addEventListener('mousedown', this._boundMouseDown);
       this.canvas.addEventListener('mouseup', this._boundMouseUp);
@@ -158,6 +159,7 @@ export class ObjectEditorCanvas {
     this._reassignMode = true;
     this._reassignObjectId = objectId;
     this.canvas.style.cursor = 'copy';
+    this.canvas.title = 'Drag to select new tiles for the current object';
     if (this._active) this.render();
   }
 
@@ -168,6 +170,7 @@ export class ObjectEditorCanvas {
     this._dragStart = null;
     this._dragCurrent = null;
     this.canvas.style.cursor = 'crosshair';
+    this.canvas.title = 'Click to select an object. Shift+drag to define a new object from tiles.';
     if (this._active) this.render();
   }
 
@@ -180,6 +183,7 @@ export class ObjectEditorCanvas {
   enterWizardMode() {
     this._wizardMode = true;
     this.canvas.style.cursor = 'copy';
+    this.canvas.title = 'Drag to select tiles for the new object';
     if (this._active) this.render();
   }
 
@@ -189,6 +193,7 @@ export class ObjectEditorCanvas {
     this._dragStart = null;
     this._dragCurrent = null;
     this.canvas.style.cursor = 'crosshair';
+    this.canvas.title = 'Click to select an object. Shift+drag to define a new object from tiles.';
     if (this._active) this.render();
   }
 

@@ -102,6 +102,15 @@ class TileEditor {
     this.objectProperties.onRenameObject = (oldId, newId) => this._onRenameObject(oldId, newId);
     this.objectProperties.onDuplicateObject = (id) => this._onDuplicateObject(id);
 
+    // --- Tooltips ---
+    this._tilesetSelect.title = 'Choose a tileset to edit';
+    this._modeTileBtn.title = 'Edit individual tile metadata (surface, animation, flags)';
+    this._modeObjectBtn.title = 'Define composite objects with collision, nodes, and parts';
+    this._importJsonBtn.title = 'Import metadata or object definitions from a JSON file';
+    this._exportJsonBtn.title = 'Download current metadata/definitions as JSON';
+    this._saveGithubBtn.title = 'Save changes to the GitHub repository';
+    document.getElementById('zoom-slider').title = 'Adjust canvas zoom (1x\u20138x)';
+
     this._populateTilesetSelect();
     this._bindEvents();
     this._setMode('tile');

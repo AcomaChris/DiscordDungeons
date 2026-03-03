@@ -51,6 +51,7 @@ export class ObjectEditorList {
     const newBtn = document.createElement('button');
     newBtn.className = 'btn btn-primary';
     newBtn.textContent = '+ New';
+    newBtn.title = 'Create a new object definition (opens wizard)';
     newBtn.style.fontSize = '0.7rem';
     newBtn.style.padding = '2px 8px';
     newBtn.addEventListener('click', () => {
@@ -61,6 +62,7 @@ export class ObjectEditorList {
     const clearBtn = document.createElement('button');
     clearBtn.className = 'btn btn-danger';
     clearBtn.textContent = 'Clear';
+    clearBtn.title = 'Delete all object definitions';
     clearBtn.style.fontSize = '0.7rem';
     clearBtn.style.padding = '2px 8px';
     clearBtn.addEventListener('click', () => {
@@ -89,6 +91,7 @@ export class ObjectEditorList {
       opt.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
       this._categorySelect.appendChild(opt);
     }
+    this._categorySelect.title = 'Filter objects by category';
     this._categorySelect.addEventListener('change', () => {
       this._filterCategory = this._categorySelect.value;
       this._renderList();
@@ -98,6 +101,7 @@ export class ObjectEditorList {
     this._searchInput = document.createElement('input');
     this._searchInput.type = 'text';
     this._searchInput.placeholder = 'Search...';
+    this._searchInput.title = 'Search by ID, name, or tags';
     this._searchInput.addEventListener('input', () => {
       this._filterText = this._searchInput.value.toLowerCase();
       this._renderList();

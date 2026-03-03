@@ -143,32 +143,32 @@ export class ObjectEditorProperties {
         return;
       }
       if (this.onRenameObject) this.onRenameObject(this.selectedId, newId);
-    }));
+    }, false, 'Unique identifier \u2014 edit to rename this object'));
 
     // Name
     body.appendChild(this._makeTextInput('Name', def.name || '', (val) => {
       this._emitChange('name', val);
-    }));
+    }, false, 'Display name for this object'));
 
     // Description
     body.appendChild(this._makeTextarea('Description', def.description || '', (val) => {
       this._emitChange('description', val || undefined);
-    }));
+    }, 'Optional description of what this object is'));
 
     // Category
     body.appendChild(this._makeSelect('Category', OBJECT_CATEGORIES, def.category || 'decoration', (val) => {
       this._emitChange('category', val);
-    }));
+    }, 'Object category (affects list grouping)'));
 
     // Surface
     body.appendChild(this._makeSelect('Surface', TILE_SURFACES, def.surface || 'stone', (val) => {
       this._emitChange('surface', val);
-    }));
+    }, 'Surface material (affects step sounds and physics)'));
 
     // Tags
     body.appendChild(this._makeTagsInput('Tags', def.tags || [], (tags) => {
       this._emitChange('tags', tags);
-    }));
+    }, undefined, 'Add searchable tags (press Enter to add)'));
 
     this.panel.appendChild(header);
     this.panel.appendChild(body);
@@ -210,6 +210,7 @@ export class ObjectEditorProperties {
         }
         this._render();
       },
+      'Re-select tiles on the canvas to redefine this object\'s grid',
     );
     body.appendChild(reassignBtn);
 
@@ -225,11 +226,11 @@ export class ObjectEditorProperties {
 
     body.appendChild(this._makeTextInput('Layer', rendering.layer || 'Walls', (val) => {
       this._emitChange('rendering.layer', val);
-    }));
+    }, false, 'Tiled layer name for rendering (e.g., Walls, Overlay)'));
 
     body.appendChild(this._makeSelect('Depth Mode', DEPTH_MODES, rendering.depthMode || 'ysort', (val) => {
       this._emitChange('rendering.depthMode', val);
-    }));
+    }, 'ysort: depth based on Y position, fixed: constant depth'));
 
     this.panel.appendChild(header);
     this.panel.appendChild(body);
@@ -255,7 +256,7 @@ export class ObjectEditorProperties {
         stretchable: false,
       };
       this._emitChange('colliders', [...colliders, newCollider]);
-    });
+    }, 'Add a new collision shape');
     body.appendChild(addBtn);
 
     for (let i = 0; i < colliders.length; i++) {
@@ -283,6 +284,7 @@ export class ObjectEditorProperties {
     const removeBtn = document.createElement('button');
     removeBtn.className = 'remove-btn';
     removeBtn.textContent = 'Remove';
+    removeBtn.title = 'Delete this collider';
     removeBtn.addEventListener('click', () => {
       const updated = colliders.filter((_, j) => j !== index);
       this._emitChange('colliders', updated);
@@ -293,46 +295,46 @@ export class ObjectEditorProperties {
     // Fields
     card.appendChild(this._makeTextInput('ID', c.id || '', (val) => {
       this._emitColliderField(colliders, index, 'id', val);
-    }));
+    }, false, 'Unique collider identifier'));
 
     const row1 = document.createElement('div');
     row1.className = 'inline-fields';
     row1.appendChild(this._makeSelect('Shape', COLLISION_SHAPES, c.shape || 'rect', (val) => {
       this._emitColliderField(colliders, index, 'shape', val);
-    }));
+    }, 'Collision shape: rect or ellipse'));
     row1.appendChild(this._makeSelect('Type', COLLISION_TYPES, c.type || 'solid', (val) => {
       this._emitColliderField(colliders, index, 'type', val);
-    }));
+    }, 'solid: blocks movement, trigger: passable, platform: walkable surface'));
     card.appendChild(row1);
 
     const row2 = document.createElement('div');
     row2.className = 'inline-fields';
     row2.appendChild(this._makeNumberInput('X', c.x, (val) => {
       this._emitColliderField(colliders, index, 'x', val);
-    }));
+    }, undefined, undefined, undefined, 'Offset from object origin in pixels'));
     row2.appendChild(this._makeNumberInput('Y', c.y, (val) => {
       this._emitColliderField(colliders, index, 'y', val);
-    }));
+    }, undefined, undefined, undefined, 'Offset from object origin in pixels'));
     card.appendChild(row2);
 
     const row3 = document.createElement('div');
     row3.className = 'inline-fields';
     row3.appendChild(this._makeNumberInput('Width', c.width, (val) => {
       this._emitColliderField(colliders, index, 'width', val);
-    }, 1));
+    }, 1, undefined, undefined, 'Collider width in pixels'));
     row3.appendChild(this._makeNumberInput('Height', c.height, (val) => {
       this._emitColliderField(colliders, index, 'height', val);
-    }, 1));
+    }, 1, undefined, undefined, 'Collider height in pixels'));
     card.appendChild(row3);
 
     const row4 = document.createElement('div');
     row4.className = 'inline-fields';
     row4.appendChild(this._makeNumberInput('Elevation', c.elevation || 0, (val) => {
       this._emitColliderField(colliders, index, 'elevation', val);
-    }, 0));
+    }, 0, undefined, undefined, 'Height above ground in pixels (0 = ground level)'));
     row4.appendChild(this._makeCheckbox('Stretchable', c.stretchable || false, (val) => {
       this._emitColliderField(colliders, index, 'stretchable', val);
-    }));
+    }, 'Scale this collider when the object is stretched'));
     card.appendChild(row4);
 
     return card;
@@ -358,7 +360,7 @@ export class ObjectEditorProperties {
         elevation: 0,
       };
       this._emitChange('nodes', [...nodes, newNode]);
-    });
+    }, 'Add an interaction point (spawn, sit, interact, etc.)');
     body.appendChild(addBtn);
 
     for (let i = 0; i < nodes.length; i++) {
@@ -385,6 +387,7 @@ export class ObjectEditorProperties {
     const removeBtn = document.createElement('button');
     removeBtn.className = 'remove-btn';
     removeBtn.textContent = 'Remove';
+    removeBtn.title = 'Delete this node';
     removeBtn.addEventListener('click', () => {
       const updated = nodes.filter((_, j) => j !== index);
       this._emitChange('nodes', updated);
@@ -395,32 +398,32 @@ export class ObjectEditorProperties {
     // Fields
     card.appendChild(this._makeTextInput('ID', n.id || '', (val) => {
       this._emitNodeField(nodes, index, 'id', val);
-    }));
+    }, false, 'Unique node identifier'));
 
     card.appendChild(this._makeSelect('Type', NODE_TYPES, n.type || 'interact', (val) => {
       this._emitNodeField(nodes, index, 'type', val);
-    }));
+    }, 'interact: player action, spawn: start position, sit: seating spot, attach: mount point'));
 
     const row1 = document.createElement('div');
     row1.className = 'inline-fields';
     row1.appendChild(this._makeNumberInput('X', n.x, (val) => {
       this._emitNodeField(nodes, index, 'x', val);
-    }));
+    }, undefined, undefined, undefined, 'Position offset from object origin in pixels'));
     row1.appendChild(this._makeNumberInput('Y', n.y, (val) => {
       this._emitNodeField(nodes, index, 'y', val);
-    }));
+    }, undefined, undefined, undefined, 'Position offset from object origin in pixels'));
     card.appendChild(row1);
 
     const row2 = document.createElement('div');
     row2.className = 'inline-fields';
     row2.appendChild(this._makeNumberInput('Elevation', n.elevation || 0, (val) => {
       this._emitNodeField(nodes, index, 'elevation', val);
-    }, 0));
+    }, 0, undefined, undefined, 'Height above ground in pixels'));
 
     const facingOptions = ['', 'up', 'down', 'left', 'right'];
     row2.appendChild(this._makeSelect('Facing', facingOptions, n.facing || '', (val) => {
       this._emitNodeField(nodes, index, 'facing', val || undefined);
-    }));
+    }, 'Direction this node faces'));
     card.appendChild(row2);
 
     // Part role (only shown when object has parts)
@@ -428,7 +431,7 @@ export class ObjectEditorProperties {
       const roleNames = ['', ...Object.keys(def.parts.roles)];
       card.appendChild(this._makeSelect('Part Role', roleNames, n.partRole || '', (val) => {
         this._emitNodeField(nodes, index, 'partRole', val || undefined);
-      }));
+      }, 'Assign this node to a part role'));
     }
 
     return card;
@@ -458,7 +461,7 @@ export class ObjectEditorProperties {
       } else {
         this._emitChange('parts', null);
       }
-    }));
+    }, 'Enable multi-part composition for this object'));
 
     if (hasParts && def.parts.roles) {
       // Roles list
@@ -476,7 +479,7 @@ export class ObjectEditorProperties {
         const newName = `role_${Object.keys(def.parts.roles).length}`;
         const updatedRoles = { ...def.parts.roles, [newName]: { required: true, repeatable: false } };
         this._emitChange('parts', { ...def.parts, roles: updatedRoles });
-      });
+      }, 'Add a new part role category');
       body.appendChild(addRoleBtn);
 
       // Layout grid
@@ -541,6 +544,7 @@ export class ObjectEditorProperties {
     const removeBtn = document.createElement('button');
     removeBtn.className = 'remove-btn';
     removeBtn.textContent = 'Remove';
+    removeBtn.title = 'Delete this part role';
     removeBtn.addEventListener('click', () => {
       const rest = Object.fromEntries(
         Object.entries(def.parts.roles).filter(([k]) => k !== roleName),
@@ -559,14 +563,14 @@ export class ObjectEditorProperties {
     row1.appendChild(this._makeCheckbox('Required', role.required, (val) => {
       const updatedRoles = { ...def.parts.roles, [roleName]: { ...role, required: val } };
       this._emitChange('parts', { ...def.parts, roles: updatedRoles });
-    }));
+    }, 'At least one part with this role must be present'));
     row1.appendChild(this._makeCheckbox('Repeatable', role.repeatable || false, (val) => {
       const update = { ...role, repeatable: val };
       if (val && !update.minRepeat) { update.minRepeat = 1; update.maxRepeat = 10; }
       if (!val) { delete update.minRepeat; delete update.maxRepeat; }
       const updatedRoles = { ...def.parts.roles, [roleName]: update };
       this._emitChange('parts', { ...def.parts, roles: updatedRoles });
-    }));
+    }, 'Allow multiple parts with this role'));
     card.appendChild(row1);
 
     if (role.repeatable) {
@@ -603,7 +607,7 @@ export class ObjectEditorProperties {
       } else {
         this._emitChange('wfc', null);
       }
-    }));
+    }, 'Enable Wave Function Collapse constraints for procedural placement'));
 
     if (hasWfc) {
       const wfc = def.wfc;
@@ -631,6 +635,7 @@ export class ObjectEditorProperties {
               edges: { ...wfc.edges, [dir]: val },
             });
           },
+          `Socket type on ${dir} edge \u2014 must match adjacent objects`,
         ));
       }
       body.appendChild(edgeGrid);
@@ -653,7 +658,8 @@ export class ObjectEditorProperties {
               clearance: { ...wfc.clearance, [dir]: val },
             });
           },
-          0,
+          0, undefined, undefined,
+          `Minimum clearance required on ${dir} side in pixels`,
         ));
       }
       body.appendChild(clearGrid);
@@ -664,12 +670,13 @@ export class ObjectEditorProperties {
         wfc.allowedFloors || [],
         (tags) => this._emitChange('wfc', { ...wfc, allowedFloors: tags }),
         TILE_SURFACES,
+        'Floor surfaces this object can be placed on (press Enter to add)',
       ));
 
       // Weight
       body.appendChild(this._makeNumberInput('Weight', wfc.weight || 1.0, (val) => {
         this._emitChange('wfc', { ...wfc, weight: val });
-      }, 0, 100, 0.1));
+      }, 0, 100, 0.1, 'Probability weight \u2014 higher values make this object more likely to spawn'));
     }
 
     this.panel.appendChild(header);
@@ -702,13 +709,13 @@ export class ObjectEditorProperties {
 
     const dupBtn = this._makeBtn('Duplicate', 'btn', () => {
       if (this.onDuplicateObject) this.onDuplicateObject(this.selectedId);
-    });
+    }, 'Create a copy of this object with a new ID');
     actions.appendChild(dupBtn);
 
     const deleteBtn = this._makeBtn('Delete Object', 'btn btn-danger', () => {
       if (!confirm(`Delete object "${this.selectedId}"?`)) return;
       if (this.onDeleteObject) this.onDeleteObject(this.selectedId);
-    });
+    }, 'Permanently delete this object definition');
     actions.appendChild(deleteBtn);
 
     this.panel.appendChild(actions);
@@ -753,7 +760,7 @@ export class ObjectEditorProperties {
     return { header, body };
   }
 
-  _makeTextInput(label, value, onChange, readonly) {
+  _makeTextInput(label, value, onChange, readonly, tooltip) {
     const group = document.createElement('div');
     group.className = 'prop-group';
     const lbl = document.createElement('label');
@@ -766,6 +773,7 @@ export class ObjectEditorProperties {
       input.readOnly = true;
       input.style.opacity = '0.6';
     }
+    if (tooltip) input.title = tooltip;
     if (onChange) {
       input.addEventListener('change', () => onChange(input.value));
     }
@@ -773,7 +781,7 @@ export class ObjectEditorProperties {
     return group;
   }
 
-  _makeTextarea(label, value, onChange) {
+  _makeTextarea(label, value, onChange, tooltip) {
     const group = document.createElement('div');
     group.className = 'prop-group';
     const lbl = document.createElement('label');
@@ -782,6 +790,7 @@ export class ObjectEditorProperties {
     const textarea = document.createElement('textarea');
     textarea.rows = 3;
     textarea.value = value;
+    if (tooltip) textarea.title = tooltip;
     if (onChange) {
       textarea.addEventListener('change', () => onChange(textarea.value));
     }
@@ -789,7 +798,7 @@ export class ObjectEditorProperties {
     return group;
   }
 
-  _makeSelect(label, options, value, onChange) {
+  _makeSelect(label, options, value, onChange, tooltip) {
     const group = document.createElement('div');
     group.className = 'prop-group';
     const lbl = document.createElement('label');
@@ -803,6 +812,7 @@ export class ObjectEditorProperties {
       select.appendChild(o);
     }
     select.value = value;
+    if (tooltip) select.title = tooltip;
     if (onChange) {
       select.addEventListener('change', () => onChange(select.value));
     }
@@ -810,7 +820,7 @@ export class ObjectEditorProperties {
     return group;
   }
 
-  _makeNumberInput(label, value, onChange, min, max, step) {
+  _makeNumberInput(label, value, onChange, min, max, step, tooltip) {
     const group = document.createElement('div');
     group.className = 'prop-group';
     const lbl = document.createElement('label');
@@ -822,6 +832,7 @@ export class ObjectEditorProperties {
     if (min !== undefined) input.min = min;
     if (max !== undefined) input.max = max;
     if (step !== undefined) input.step = step;
+    if (tooltip) input.title = tooltip;
     if (onChange) {
       input.addEventListener('change', () => onChange(parseFloat(input.value) || 0));
     }
@@ -829,7 +840,7 @@ export class ObjectEditorProperties {
     return group;
   }
 
-  _makeCheckbox(label, checked, onChange) {
+  _makeCheckbox(label, checked, onChange, tooltip) {
     const group = document.createElement('div');
     group.className = 'prop-group';
     const row = document.createElement('div');
@@ -839,6 +850,7 @@ export class ObjectEditorProperties {
     input.checked = checked;
     const span = document.createElement('span');
     span.textContent = label;
+    if (tooltip) row.title = tooltip;
     if (onChange) {
       input.addEventListener('change', () => onChange(input.checked));
     }
@@ -847,11 +859,12 @@ export class ObjectEditorProperties {
     return group;
   }
 
-  _makeTagsInput(label, tags, onChange, suggestions) {
+  _makeTagsInput(label, tags, onChange, suggestions, tooltip) {
     const group = document.createElement('div');
     group.className = 'prop-group';
     const lbl = document.createElement('label');
     lbl.textContent = label;
+    if (tooltip) lbl.title = tooltip;
     group.appendChild(lbl);
 
     const container = document.createElement('div');
@@ -915,10 +928,11 @@ export class ObjectEditorProperties {
     return wrapper;
   }
 
-  _makeBtn(text, cls, onClick) {
+  _makeBtn(text, cls, onClick, tooltip) {
     const btn = document.createElement('button');
     btn.className = cls;
     btn.textContent = text;
+    if (tooltip) btn.title = tooltip;
     btn.addEventListener('click', onClick);
     return btn;
   }
