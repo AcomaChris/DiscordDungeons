@@ -9,6 +9,13 @@ import { join } from 'path';
 const GROUP_ZOOM = 8;
 const EDGE_DEPTH = 2; // Pixels deep to sample from each edge
 
+// --- Group Size & Sparsity Limits ---
+// AGENT: These limits prevent transitive merges from creating oversized,
+// sparse groups. Adjust thresholds cautiously — lower MAX_GROUP_DIM or
+// higher MIN_FILL_RATE produces more but tighter groups.
+export const MAX_GROUP_DIM = 6;      // Max tiles in any single dimension (cols or rows)
+export const MIN_FILL_RATE = 0.6;    // Minimum ratio of filled tiles within bounding box
+
 export async function groupTiles(ctx) {
   const outDir = join(ctx.outputBase, 'step3');
   const groupsDir = join(outDir, 'groups');
@@ -75,7 +82,7 @@ export async function groupTiles(ctx) {
     }
   }
 
-  // --- Build connected components ---
+  // --- Build connected components with size/sparsity limits ---
   const visited = new Set();
   const groups = [];
 
@@ -84,8 +91,16 @@ export async function groupTiles(ctx) {
       const idx = row * cols + col;
       if (transparent.has(idx) || visited.has(idx)) continue;
 
-      // BFS to find connected component
+      // BFS to find connected component, enforcing size/sparsity limits.
+      // Tiles that fail the constraint check are left unvisited so they
+      // can seed their own (smaller) group on a later iteration.
+      // memberCount tracks all accepted tiles (queued + processed) for
+      // accurate fill rate calculation.
       const component = [];
+      let memberCount = 1; // seed tile is already accepted
+      let cMinCol = col, cMaxCol = col;
+      let cMinRow = row, cMaxRow = row;
+
       const queue = [idx];
       visited.add(idx);
 
@@ -96,14 +111,37 @@ export async function groupTiles(ctx) {
         const neighbors = connections.get(current);
         if (!neighbors) continue;
         for (const n of neighbors) {
-          if (!visited.has(n)) {
-            visited.add(n);
-            queue.push(n);
-          }
+          if (visited.has(n)) continue;
+
+          // Check if adding this neighbor would violate constraints
+          const nc = n % cols;
+          const nr = Math.floor(n / cols);
+          const newMinCol = Math.min(cMinCol, nc);
+          const newMaxCol = Math.max(cMaxCol, nc);
+          const newMinRow = Math.min(cMinRow, nr);
+          const newMaxRow = Math.max(cMaxRow, nr);
+          const newW = newMaxCol - newMinCol + 1;
+          const newH = newMaxRow - newMinRow + 1;
+
+          // Reject if bounding box exceeds max dimension
+          if (newW > MAX_GROUP_DIM || newH > MAX_GROUP_DIM) continue;
+
+          // Reject if fill rate drops below threshold
+          const newArea = newW * newH;
+          if ((memberCount + 1) / newArea < MIN_FILL_RATE) continue;
+
+          // Accept this tile into the group
+          visited.add(n);
+          queue.push(n);
+          memberCount++;
+          cMinCol = newMinCol;
+          cMaxCol = newMaxCol;
+          cMinRow = newMinRow;
+          cMaxRow = newMaxRow;
         }
       }
 
-      // Compute bounding box in grid coords
+      // Final bounding box from component
       let minCol = Infinity, maxCol = -Infinity;
       let minRow = Infinity, maxRow = -Infinity;
       for (const tIdx of component) {
@@ -258,6 +296,95 @@ function addConnection(map, a, b) {
   if (!map.has(b)) map.set(b, new Set());
   map.get(a).add(b);
   map.get(b).add(a);
+}
+
+// --- Pure Grouping Logic (exported for testing) ---
+
+// Build connected-component groups from an adjacency graph with size/sparsity limits.
+// Parameters:
+//   connections — Map<tileIdx, Set<neighborIdx>> adjacency graph
+//   opaqueTiles — Set<tileIdx> of non-transparent tiles to group
+//   cols — number of columns in the tile grid
+//   opts — { maxGroupDim, minFillRate } optional overrides
+// Returns: Array of { id, tiles, cols, rows, topLeft }
+export function buildGroups(connections, opaqueTiles, cols, opts = {}) {
+  const maxDim = opts.maxGroupDim ?? MAX_GROUP_DIM;
+  const minFR = opts.minFillRate ?? MIN_FILL_RATE;
+
+  const visited = new Set();
+  const groups = [];
+
+  // Process tiles in row-major order for deterministic results
+  const sortedTiles = [...opaqueTiles].sort((a, b) => a - b);
+
+  for (const idx of sortedTiles) {
+    if (visited.has(idx)) continue;
+
+    const seedCol = idx % cols;
+    const seedRow = Math.floor(idx / cols);
+
+    const component = [];
+    let memberCount = 1;
+    let cMinCol = seedCol, cMaxCol = seedCol;
+    let cMinRow = seedRow, cMaxRow = seedRow;
+
+    const queue = [idx];
+    visited.add(idx);
+
+    while (queue.length > 0) {
+      const current = queue.shift();
+      component.push(current);
+
+      const neighbors = connections.get(current);
+      if (!neighbors) continue;
+      for (const n of neighbors) {
+        if (visited.has(n)) continue;
+
+        const nc = n % cols;
+        const nr = Math.floor(n / cols);
+        const newMinCol = Math.min(cMinCol, nc);
+        const newMaxCol = Math.max(cMaxCol, nc);
+        const newMinRow = Math.min(cMinRow, nr);
+        const newMaxRow = Math.max(cMaxRow, nr);
+        const newW = newMaxCol - newMinCol + 1;
+        const newH = newMaxRow - newMinRow + 1;
+
+        if (newW > maxDim || newH > maxDim) continue;
+
+        const newArea = newW * newH;
+        if ((memberCount + 1) / newArea < minFR) continue;
+
+        visited.add(n);
+        queue.push(n);
+        memberCount++;
+        cMinCol = newMinCol;
+        cMaxCol = newMaxCol;
+        cMinRow = newMinRow;
+        cMaxRow = newMaxRow;
+      }
+    }
+
+    let minCol = Infinity, maxCol = -Infinity;
+    let minRow = Infinity, maxRow = -Infinity;
+    for (const tIdx of component) {
+      const tc = tIdx % cols;
+      const tr = Math.floor(tIdx / cols);
+      minCol = Math.min(minCol, tc);
+      maxCol = Math.max(maxCol, tc);
+      minRow = Math.min(minRow, tr);
+      maxRow = Math.max(maxRow, tr);
+    }
+
+    groups.push({
+      id: groups.length,
+      tiles: component.sort((a, b) => a - b),
+      cols: maxCol - minCol + 1,
+      rows: maxRow - minRow + 1,
+      topLeft: { col: minCol, row: minRow },
+    });
+  }
+
+  return groups;
 }
 
 function readInfo(ctx) {

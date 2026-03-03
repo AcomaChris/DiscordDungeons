@@ -4,6 +4,18 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-02 — Issue #11: Collider & Group Fixes
+
+**Commits:** (v0.18.1)
+
+- **P0 — Null-aware colliders** (#11): `generateColliders()` now uses `computeTileBounds()` for tight-fit bounding boxes around actual non-null tiles instead of the full group bbox. Sparse groups (< 60% fill rate) decompose into horizontal row-run colliders via `decomposeToRowRuns()`.
+- **P1 — Group size limits** (#11): BFS grouping in `groupTiles.js` now enforces `MAX_GROUP_DIM=6` and `MIN_FILL_RATE=0.6`. Tiles that would create oversized or sparse groups are left unvisited to seed their own groups.
+- **Pure `buildGroups()` export**: Extracted BFS logic into a testable pure function with no `@napi-rs/canvas` dependency.
+- **28 new tests**: `collider-generation.test.js` (16 tests) and `group-tiles.test.js` (12 tests). CLI guard added to `bootstrap-object-defs.js` to prevent `process.exit` when imported by tests.
+- **BE CORS fix**: Added `/api/be/*` proxy on WS server so browser doesn't call external API directly. Refactored client to route through proxy by default.
+
+---
+
 ## 2026-03-02 — Behavior Engine Test Panel
 
 **Commits:** (v0.18.0)

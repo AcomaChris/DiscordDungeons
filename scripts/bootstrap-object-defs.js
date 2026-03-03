@@ -79,24 +79,104 @@ function buildTileGrid(group, tilesetCols) {
   return grid;
 }
 
-// Generate default colliders based on category and collision type.
-function generateColliders(group, identification, tileSize) {
-  const pixelW = group.cols * tileSize;
-  const pixelH = group.rows * tileSize;
-  const collision = identification.collision;
+// --- Collider Generation ---
 
+// AGENT: Colliders must cover only actual non-null tiles in the grid,
+// not the full bounding box. Use computeTileBounds() for tight fit,
+// decomposeToRowRuns() for sparse grids with gaps.
+
+// Compute the tightest axis-aligned bounding box around non-null tiles.
+// Returns { minCol, maxCol, minRow, maxRow } or null if grid is empty.
+export function computeTileBounds(tileGrid) {
+  let minCol = Infinity, maxCol = -Infinity;
+  let minRow = Infinity, maxRow = -Infinity;
+  let found = false;
+
+  for (let r = 0; r < tileGrid.length; r++) {
+    for (let c = 0; c < tileGrid[r].length; c++) {
+      if (tileGrid[r][c] !== null) {
+        minCol = Math.min(minCol, c);
+        maxCol = Math.max(maxCol, c);
+        minRow = Math.min(minRow, r);
+        maxRow = Math.max(maxRow, r);
+        found = true;
+      }
+    }
+  }
+
+  return found ? { minCol, maxCol, minRow, maxRow } : null;
+}
+
+// Decompose non-null tiles into horizontal row-runs (greedy).
+// Each run is { col, row, span } — a contiguous horizontal strip.
+// Used to generate tight colliders for sparse groups with gaps.
+export function decomposeToRowRuns(tileGrid) {
+  const runs = [];
+
+  for (let r = 0; r < tileGrid.length; r++) {
+    let runStart = null;
+    for (let c = 0; c < tileGrid[r].length; c++) {
+      if (tileGrid[r][c] !== null) {
+        if (runStart === null) runStart = c;
+      } else {
+        if (runStart !== null) {
+          runs.push({ col: runStart, row: r, span: c - runStart });
+          runStart = null;
+        }
+      }
+    }
+    // Close run at row end
+    if (runStart !== null) {
+      runs.push({ col: runStart, row: r, span: tileGrid[r].length - runStart });
+    }
+  }
+
+  return runs;
+}
+
+// Compute fill rate: ratio of non-null tiles within the tight bounding box.
+function fillRate(tileGrid, bounds) {
+  if (!bounds) return 0;
+  const bw = bounds.maxCol - bounds.minCol + 1;
+  const bh = bounds.maxRow - bounds.minRow + 1;
+  let count = 0;
+  for (let r = bounds.minRow; r <= bounds.maxRow; r++) {
+    for (let c = bounds.minCol; c <= bounds.maxCol; c++) {
+      if (tileGrid[r][c] !== null) count++;
+    }
+  }
+  return count / (bw * bh);
+}
+
+// AGENT: Sparsity threshold — if fill rate is below this, decompose into
+// row-run colliders instead of a single bounding rect.
+const COLLIDER_FILL_THRESHOLD = 0.6;
+
+// Generate default colliders based on category, collision type, and actual tile positions.
+// For dense groups (>= 60% fill), uses a single tight-fit rect around non-null tiles.
+// For sparse groups (< 60% fill), decomposes into row-run rects to avoid covering empty space.
+function generateColliders(group, identification, tileSize, tileGrid) {
+  const collision = identification.collision;
   if (collision === 'none') return [];
 
+  const bounds = computeTileBounds(tileGrid);
+  if (!bounds) return [];
+
+  const tightX = bounds.minCol * tileSize;
+  const tightY = bounds.minRow * tileSize;
+  const tightW = (bounds.maxCol - bounds.minCol + 1) * tileSize;
+  const tightH = (bounds.maxRow - bounds.minRow + 1) * tileSize;
+
   if (collision === 'platform') {
-    // Two-level: legs at ground, surface at elevation 1
+    // Platform uses the tight bounding box for both levels
     return [
       {
         id: 'base',
         shape: 'rect',
-        x: 0,
-        y: Math.floor(pixelH * 0.6),
-        width: pixelW,
-        height: Math.floor(pixelH * 0.4),
+        x: tightX,
+        y: tightY + Math.floor(tightH * 0.6),
+        width: tightW,
+        height: Math.floor(tightH * 0.4),
         elevation: 0,
         type: 'solid',
         stretchable: group.cols > 2,
@@ -104,10 +184,10 @@ function generateColliders(group, identification, tileSize) {
       {
         id: 'surface',
         shape: 'rect',
-        x: 0,
-        y: 0,
-        width: pixelW,
-        height: pixelH,
+        x: tightX,
+        y: tightY,
+        width: tightW,
+        height: tightH,
         elevation: 1,
         type: 'platform',
         stretchable: group.cols > 2,
@@ -115,20 +195,39 @@ function generateColliders(group, identification, tileSize) {
     ];
   }
 
-  // Solid — single full-size rect at ground level
-  return [
-    {
-      id: 'body',
-      shape: 'rect',
-      x: 0,
-      y: 0,
-      width: pixelW,
-      height: pixelH,
-      elevation: 0,
-      type: 'solid',
-      stretchable: group.cols > 2,
-    },
-  ];
+  // --- Solid collision ---
+  const fr = fillRate(tileGrid, bounds);
+
+  // Dense: single tight-fit rect
+  if (fr >= COLLIDER_FILL_THRESHOLD) {
+    return [
+      {
+        id: 'body',
+        shape: 'rect',
+        x: tightX,
+        y: tightY,
+        width: tightW,
+        height: tightH,
+        elevation: 0,
+        type: 'solid',
+        stretchable: group.cols > 2,
+      },
+    ];
+  }
+
+  // Sparse: decompose into row-run colliders
+  const runs = decomposeToRowRuns(tileGrid);
+  return runs.map((run, i) => ({
+    id: `body_${i}`,
+    shape: 'rect',
+    x: run.col * tileSize,
+    y: run.row * tileSize,
+    width: run.span * tileSize,
+    height: tileSize,
+    elevation: 0,
+    type: 'solid',
+    stretchable: false,
+  }));
 }
 
 // Extract tags from identification name and description.
@@ -191,7 +290,7 @@ function bootstrap(tilesetName) {
 
     const objCategory = category || 'decoration';
     const tileGrid = buildTileGrid(group, tilesetCols);
-    const colliders = generateColliders(group, ident, tileSize);
+    const colliders = generateColliders(group, ident, tileSize, tileGrid);
     const tags = extractTags(ident);
     const edges = DEFAULT_EDGES[objCategory];
 
@@ -263,12 +362,15 @@ function summarizeCategories(objects) {
 }
 
 // --- CLI ---
+// Guard: only run when executed directly, not when imported by tests.
 
-const tilesetName = process.argv[2];
-if (!tilesetName) {
-  console.error('Usage: node scripts/bootstrap-object-defs.js <tileset-name>');
-  console.error('Example: node scripts/bootstrap-object-defs.js Interior_1st_floor');
-  process.exit(1);
+const isDirectRun = process.argv[1] && import.meta.url.endsWith(process.argv[1].replace(/\\/g, '/'));
+if (isDirectRun) {
+  const tilesetName = process.argv[2];
+  if (!tilesetName) {
+    console.error('Usage: node scripts/bootstrap-object-defs.js <tileset-name>');
+    console.error('Example: node scripts/bootstrap-object-defs.js Interior_1st_floor');
+    process.exit(1);
+  }
+  bootstrap(tilesetName);
 }
-
-bootstrap(tilesetName);
