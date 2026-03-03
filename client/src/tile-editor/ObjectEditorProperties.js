@@ -27,6 +27,8 @@ export class ObjectEditorProperties {
     // Callbacks
     this.onPropertyChange = null;
     this.onDeleteObject = null;
+    this.onRenameObject = null;
+    this.onDuplicateObject = null;
 
     // Section collapse state (persists across selections)
     this._collapsed = {
@@ -132,8 +134,16 @@ export class ObjectEditorProperties {
   _renderBasicSection(def) {
     const { header, body } = this._makeSection('basic', 'Basic');
 
-    // ID (readonly)
-    body.appendChild(this._makeTextInput('ID', this.selectedId, null, true));
+    // ID (editable — rename on change)
+    body.appendChild(this._makeTextInput('ID', this.selectedId, (val) => {
+      const newId = val.trim().replace(/\s+/g, '_');
+      if (!newId || newId === this.selectedId) return;
+      if (this.objectDefs[newId]) {
+        alert(`Object "${newId}" already exists.`);
+        return;
+      }
+      if (this.onRenameObject) this.onRenameObject(this.selectedId, newId);
+    }));
 
     // Name
     body.appendChild(this._makeTextInput('Name', def.name || '', (val) => {
@@ -186,6 +196,22 @@ export class ObjectEditorProperties {
       empty.innerHTML = '<span style="color:#7a7aaa;font-size:0.8rem">No grid data</span>';
       body.appendChild(empty);
     }
+
+    // Reassign tiles button
+    const inReassign = this.canvasComponent?.isInReassignMode?.();
+    const reassignBtn = this._makeBtn(
+      inReassign ? 'Cancel Reassign' : 'Reassign Tiles',
+      inReassign ? 'btn btn-danger' : 'btn',
+      () => {
+        if (this.canvasComponent.isInReassignMode()) {
+          this.canvasComponent.exitReassignMode();
+        } else {
+          this.canvasComponent.enterReassignMode(this.selectedId);
+        }
+        this._render();
+      },
+    );
+    body.appendChild(reassignBtn);
 
     this.panel.appendChild(header);
     this.panel.appendChild(body);
@@ -673,6 +699,11 @@ export class ObjectEditorProperties {
   _renderActions() {
     const actions = document.createElement('div');
     actions.className = 'action-buttons';
+
+    const dupBtn = this._makeBtn('Duplicate', 'btn', () => {
+      if (this.onDuplicateObject) this.onDuplicateObject(this.selectedId);
+    });
+    actions.appendChild(dupBtn);
 
     const deleteBtn = this._makeBtn('Delete Object', 'btn btn-danger', () => {
       if (!confirm(`Delete object "${this.selectedId}"?`)) return;

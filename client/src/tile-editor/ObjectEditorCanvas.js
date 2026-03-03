@@ -55,6 +55,13 @@ export class ObjectEditorCanvas {
     this._dragCurrent = null;
     this._isDragging = false;
 
+    // Reassign mode — re-select tiles for an existing object
+    this._reassignMode = false;
+    this._reassignObjectId = null;
+
+    // Wizard mode — selecting tiles for the creation wizard
+    this._wizardMode = false;
+
     // Track whether this canvas is active (controls rendering + events)
     this._active = false;
     this._boundMouseMove = (e) => this._onMouseMove(e);
@@ -65,6 +72,8 @@ export class ObjectEditorCanvas {
     // Callbacks
     this.onObjectSelect = null;
     this.onObjectCreate = null;
+    this.onTileReassign = null;
+    this.onWizardSelect = null;
   }
 
   setActive(active) {
@@ -143,6 +152,50 @@ export class ObjectEditorCanvas {
     }
   }
 
+  // --- Reassign mode ---
+
+  enterReassignMode(objectId) {
+    this._reassignMode = true;
+    this._reassignObjectId = objectId;
+    this.canvas.style.cursor = 'copy';
+    if (this._active) this.render();
+  }
+
+  exitReassignMode() {
+    this._reassignMode = false;
+    this._reassignObjectId = null;
+    this._isDragging = false;
+    this._dragStart = null;
+    this._dragCurrent = null;
+    this.canvas.style.cursor = 'crosshair';
+    if (this._active) this.render();
+  }
+
+  isInReassignMode() {
+    return this._reassignMode;
+  }
+
+  // --- Wizard mode ---
+
+  enterWizardMode() {
+    this._wizardMode = true;
+    this.canvas.style.cursor = 'copy';
+    if (this._active) this.render();
+  }
+
+  exitWizardMode() {
+    this._wizardMode = false;
+    this._isDragging = false;
+    this._dragStart = null;
+    this._dragCurrent = null;
+    this.canvas.style.cursor = 'crosshair';
+    if (this._active) this.render();
+  }
+
+  isInWizardMode() {
+    return this._wizardMode;
+  }
+
   // --- Internal: build tile → object lookup ---
   _buildTileToObjectMap() {
     this._tileToObject.clear();
@@ -207,6 +260,10 @@ export class ObjectEditorCanvas {
 
     // 6. Hover
     this._drawHover();
+
+    // 7. Mode banners
+    if (this._reassignMode) this._drawModeBanner(`Draw new tiles for: ${this._reassignObjectId}`, '#ff9f43');
+    if (this._wizardMode) this._drawModeBanner('Draw a rectangle to select object tiles', '#00ccff');
   }
 
   _drawGrid() {
@@ -383,6 +440,17 @@ export class ObjectEditorCanvas {
     ctx.strokeRect(x1 * s + 0.5, y1 * s + 0.5, (x2 - x1 + 1) * s - 1, (y2 - y1 + 1) * s - 1);
   }
 
+  _drawModeBanner(text, color) {
+    const { ctx, canvas } = this;
+    ctx.fillStyle = color;
+    ctx.globalAlpha = 0.85;
+    ctx.fillRect(0, 0, canvas.width, 24);
+    ctx.globalAlpha = 1;
+    ctx.font = 'bold 13px sans-serif';
+    ctx.fillStyle = '#1a1a2e';
+    ctx.fillText(text, 8, 16);
+  }
+
   _drawHover() {
     if (this.hoveredTile < 0) return;
     const { ctx, zoom, columns } = this;
@@ -480,6 +548,14 @@ export class ObjectEditorCanvas {
     const { id, col, row } = this._getTileAt(e);
     if (id < 0) return;
 
+    // Reassign or wizard mode: any click starts drag
+    if (this._reassignMode || this._wizardMode) {
+      this._isDragging = true;
+      this._dragStart = { col, row };
+      this._dragCurrent = { col, row };
+      return;
+    }
+
     // Shift+click starts drag for creating new objects
     if (e.shiftKey) {
       this._isDragging = true;
@@ -522,15 +598,29 @@ export class ObjectEditorCanvas {
     const rows = y2 - y1 + 1;
     const tiles = [];
     for (let r = y1; r <= y2; r++) {
-      const row = [];
+      const tileRow = [];
       for (let c = x1; c <= x2; c++) {
-        row.push(r * this.columns + c);
+        tileRow.push(r * this.columns + c);
       }
-      tiles.push(row);
+      tiles.push(tileRow);
     }
 
-    if (this.onObjectCreate) {
-      this.onObjectCreate({ cols, rows, tiles, originCol: x1, originRow: y1 });
+    if (this._reassignMode) {
+      if (this.onTileReassign) {
+        this.onTileReassign({
+          objectId: this._reassignObjectId,
+          cols, rows, tiles,
+        });
+      }
+      this.exitReassignMode();
+    } else if (this._wizardMode) {
+      if (this.onWizardSelect) {
+        this.onWizardSelect({ cols, rows, tiles, originCol: x1, originRow: y1 });
+      }
+    } else {
+      if (this.onObjectCreate) {
+        this.onObjectCreate({ cols, rows, tiles, originCol: x1, originRow: y1 });
+      }
     }
 
     this.render();

@@ -20,6 +20,8 @@ export class ObjectEditorList {
 
     // Callbacks
     this.onObjectSelect = null;
+    this.onNewObject = null;
+    this.onClearAll = null;
 
     this._filterCategory = 'all';
     this._filterText = '';
@@ -30,10 +32,46 @@ export class ObjectEditorList {
   _buildUI() {
     this.panel.innerHTML = '';
 
-    // Header
+    // Header row
+    const headerRow = document.createElement('div');
+    headerRow.style.display = 'flex';
+    headerRow.style.justifyContent = 'space-between';
+    headerRow.style.alignItems = 'center';
+    headerRow.style.marginBottom = '8px';
+
     const header = document.createElement('h3');
     header.textContent = 'Objects';
-    this.panel.appendChild(header);
+    header.style.margin = '0';
+    headerRow.appendChild(header);
+
+    const headerBtns = document.createElement('div');
+    headerBtns.style.display = 'flex';
+    headerBtns.style.gap = '4px';
+
+    const newBtn = document.createElement('button');
+    newBtn.className = 'btn btn-primary';
+    newBtn.textContent = '+ New';
+    newBtn.style.fontSize = '0.7rem';
+    newBtn.style.padding = '2px 8px';
+    newBtn.addEventListener('click', () => {
+      if (this.onNewObject) this.onNewObject();
+    });
+    headerBtns.appendChild(newBtn);
+
+    const clearBtn = document.createElement('button');
+    clearBtn.className = 'btn btn-danger';
+    clearBtn.textContent = 'Clear';
+    clearBtn.style.fontSize = '0.7rem';
+    clearBtn.style.padding = '2px 8px';
+    clearBtn.addEventListener('click', () => {
+      const count = Object.keys(this.objectDefs).length;
+      if (!count || !confirm(`Delete all ${count} objects?`)) return;
+      if (this.onClearAll) this.onClearAll();
+    });
+    headerBtns.appendChild(clearBtn);
+
+    headerRow.appendChild(headerBtns);
+    this.panel.appendChild(headerRow);
 
     // Filter controls
     const controls = document.createElement('div');

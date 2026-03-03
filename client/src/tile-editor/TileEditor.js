@@ -9,6 +9,7 @@ import { TileEditorProperties } from './TileEditorProperties.js';
 import { ObjectEditorCanvas } from './ObjectEditorCanvas.js';
 import { ObjectEditorList } from './ObjectEditorList.js';
 import { ObjectEditorProperties } from './ObjectEditorProperties.js';
+import { ObjectCreationWizard } from './ObjectCreationWizard.js';
 import { TILE_DEFAULTS, isDefaultTile } from '../map/tile-metadata-schema.js';
 import { OBJECT_DEFAULTS } from '../map/object-def-schema.js';
 
@@ -92,9 +93,14 @@ class TileEditor {
     // Wire object mode callbacks
     this.objectCanvas.onObjectSelect = (id) => this._onObjectSelect(id);
     this.objectCanvas.onObjectCreate = (info) => this._onObjectCreate(info);
+    this.objectCanvas.onTileReassign = (info) => this._onTileReassign(info);
     this.objectList.onObjectSelect = (id) => this._onObjectSelect(id);
+    this.objectList.onNewObject = () => this._openObjectWizard();
+    this.objectList.onClearAll = () => this._onClearAllObjects();
     this.objectProperties.onPropertyChange = (id, path, val) => this._onObjectPropertyChange(id, path, val);
     this.objectProperties.onDeleteObject = (id) => this._onDeleteObject(id);
+    this.objectProperties.onRenameObject = (oldId, newId) => this._onRenameObject(oldId, newId);
+    this.objectProperties.onDuplicateObject = (id) => this._onDuplicateObject(id);
 
     this._populateTilesetSelect();
     this._bindEvents();
@@ -393,6 +399,103 @@ class TileEditor {
     this.objectList.loadDefs(this.objectDefs, this._tilesetImage, this._tilesetColumns);
     this.objectProperties.updateSelection(null, this.objectDefs, this.objectCanvas);
     this.objectCanvas.selectObject(null);
+    this._updateStatus();
+  }
+
+  // --- Object Mode: Rename ---
+  _onRenameObject(oldId, newId) {
+    const def = this.objectDefs[oldId];
+    if (!def) return;
+
+    def.id = newId;
+    delete this.objectDefs[oldId];
+    this.objectDefs[newId] = def;
+    this._objectDefsModified = true;
+
+    this.objectCanvas.loadDefs(this.objectDefs);
+    this.objectList.loadDefs(this.objectDefs, this._tilesetImage, this._tilesetColumns);
+    this._onObjectSelect(newId);
+    this._updateStatus();
+  }
+
+  // --- Object Mode: Duplicate ---
+  _onDuplicateObject(objectId) {
+    const def = this.objectDefs[objectId];
+    if (!def) return;
+
+    let newId = `${objectId}_copy`;
+    let counter = 1;
+    while (this.objectDefs[newId]) {
+      newId = `${objectId}_copy${counter++}`;
+    }
+
+    const clone = structuredClone(def);
+    clone.id = newId;
+    clone.name = `${def.name || objectId} (copy)`;
+
+    this.objectDefs[newId] = clone;
+    this._objectDefsModified = true;
+
+    this.objectCanvas.loadDefs(this.objectDefs);
+    this.objectList.loadDefs(this.objectDefs, this._tilesetImage, this._tilesetColumns);
+    this._onObjectSelect(newId);
+    this._updateStatus();
+  }
+
+  // --- Object Mode: Reassign Tiles ---
+  _onTileReassign({ objectId, cols, rows, tiles }) {
+    const def = this.objectDefs[objectId];
+    if (!def) return;
+
+    def.grid = { cols, rows, tiles };
+    this._objectDefsModified = true;
+
+    this.objectCanvas.loadDefs(this.objectDefs);
+    this.objectList.loadDefs(this.objectDefs, this._tilesetImage, this._tilesetColumns);
+    this.objectProperties.updateSelection(objectId, this.objectDefs, this.objectCanvas);
+    this._updateStatus();
+  }
+
+  // --- Object Mode: Clear All ---
+  _onClearAllObjects() {
+    this.objectDefs = {};
+    this._objectDefsModified = true;
+
+    this.objectCanvas.loadDefs(this.objectDefs);
+    this.objectList.loadDefs(this.objectDefs, this._tilesetImage, this._tilesetColumns);
+    this.objectProperties.updateSelection(null, this.objectDefs, this.objectCanvas);
+    this.objectCanvas.selectObject(null);
+    this._updateStatus();
+  }
+
+  // --- Object Mode: New Object Wizard ---
+  _openObjectWizard() {
+    if (!this._tilesetImage) {
+      alert('Load a tileset first.');
+      return;
+    }
+
+    if (!this._wizard) {
+      this._wizard = new ObjectCreationWizard(this.objectCanvas);
+      this._wizard.onComplete = (def) => this._onWizardComplete(def);
+    }
+
+    this._wizard.setExistingIds(Object.keys(this.objectDefs));
+    this._wizard.open();
+  }
+
+  _onWizardComplete(def) {
+    if (this.objectDefs[def.id]) {
+      alert(`Object "${def.id}" already exists.`);
+      return;
+    }
+
+    this.objectDefs[def.id] = def;
+    this._objectDefsModified = true;
+
+    this.objectCanvas.loadDefs(this.objectDefs);
+    this.objectList.loadDefs(this.objectDefs, this._tilesetImage, this._tilesetColumns);
+    this._onObjectSelect(def.id);
     this._updateStatus();
   }
 

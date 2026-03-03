@@ -4,6 +4,20 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-02 — Object Editor Improvements & Creation Wizard
+
+**Commits:** (v0.16.0)
+
+Made object definitions fully editable and added a guided creation wizard.
+
+- **Editable Object ID**: ID field is now directly editable with rename propagation across canvas, list, and properties. Sanitizes input (trims, underscores for spaces) and validates uniqueness.
+- **Reassign Tiles**: New button in Grid section puts canvas into a drag mode with orange banner. Drawing a new rectangle replaces the object's grid tiles without needing to delete/recreate.
+- **Duplicate & Clear All**: Duplicate button deep-clones an object with `_copy` suffix. Clear All button in list header wipes all definitions after confirmation.
+- **New Object Wizard**: 4-step modal — (1) floating panel for tile selection on canvas, (2) basic info form with auto-slug ID, (3) collision editor with live preview, (4) review summary. "+ New" button in object list header.
+- **Canvas modes**: ObjectEditorCanvas now supports `reassignMode` and `wizardMode` alongside normal selection. Both use drag without Shift key for intuitive interaction.
+
+---
+
 ## 2026-03-02 — Fix Tavern Collision (Issues #9, #10)
 
 **Commits:** (v0.15.1)
