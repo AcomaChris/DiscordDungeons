@@ -17,6 +17,8 @@ import { OBJECT_DEFAULTS } from '../map/object-def-schema.js';
 import { analyzeTileset } from './TilesetAnalyzer.js';
 import { enrichAll } from './AutoEnricher.js';
 import { CategoryPainter } from './CategoryPainter.js';
+import { ConnectionEditor } from './ConnectionEditor.js';
+import { BatchCollisionEditor } from './BatchCollisionEditor.js';
 
 const API_URL = import.meta.env.VITE_AUTH_URL || 'http://localhost:3001';
 
@@ -64,6 +66,8 @@ class TileEditor {
     this._autoDetectBtn = document.getElementById('auto-detect-btn');
     this._dimAssignedBtn = document.getElementById('dim-assigned-btn');
     this._paintCategoriesBtn = document.getElementById('paint-categories-btn');
+    this._editConnectionsBtn = document.getElementById('edit-connections-btn');
+    this._editCollisionBtn = document.getElementById('edit-collision-btn');
     this._objectToolbar = document.getElementById('object-toolbar');
 
     // --- Tile mode components ---
@@ -122,6 +126,8 @@ class TileEditor {
     this._autoDetectBtn.title = 'Analyze tileset pixels and auto-detect object boundaries, categories, and enrichments';
     this._dimAssignedBtn.title = 'Dim tiles already assigned to objects to see unassigned tiles clearly';
     this._paintCategoriesBtn.title = 'Paint mode: select a category and click objects to assign it';
+    this._editConnectionsBtn.title = 'Cycle through objects to set WFC edge connections';
+    this._editCollisionBtn.title = 'Cycle through objects to set collision presets';
 
     // --- Bug Reporter ---
     this._bugReporter = new BugReporter(null);
@@ -146,12 +152,9 @@ class TileEditor {
     this._objectListPanel.classList.toggle('hidden', mode !== 'object');
     this._objectToolbar.classList.toggle('hidden', mode !== 'object');
 
-    // Exit paint mode when switching away from object mode
-    if (mode === 'tile' && this.objectCanvas.isInPaintMode()) {
-      this.objectCanvas.setPaintMode(null);
-      if (this._categoryPainter) this._categoryPainter.deactivate();
-      this._categoryPainter = null;
-      this._paintCategoriesBtn.classList.remove('active');
+    // Exit all batch editors when switching away from object mode
+    if (mode === 'tile') {
+      this._exitActiveBatchEditor();
     }
 
     // Swap active canvas component
@@ -212,6 +215,8 @@ class TileEditor {
     this._autoDetectBtn.addEventListener('click', () => this._autoDetectObjects());
     this._dimAssignedBtn.addEventListener('click', () => this._toggleDimAssigned());
     this._paintCategoriesBtn.addEventListener('click', () => this._togglePaintMode());
+    this._editConnectionsBtn.addEventListener('click', () => this._toggleConnectionEditor());
+    this._editCollisionBtn.addEventListener('click', () => this._toggleCollisionEditor());
 
     // Warn on unsaved changes
     window.addEventListener('beforeunload', (e) => {
@@ -680,14 +685,13 @@ class TileEditor {
   _togglePaintMode() {
     if (this.objectCanvas.isInPaintMode()) {
       // Exit paint mode — restore property panel
-      this.objectCanvas.setPaintMode(null);
-      this._categoryPainter.deactivate();
-      this._categoryPainter = null;
-      this._paintCategoriesBtn.classList.remove('active');
+      this._exitActiveBatchEditor();
       this.objectProperties.updateSelection(
         this.objectCanvas.selectedObjectId, this.objectDefs, this.objectCanvas,
       );
     } else {
+      // Exit any other batch editor first
+      this._exitActiveBatchEditor();
       // Enter paint mode — replace property panel with category palette
       this._categoryPainter = new CategoryPainter(
         document.getElementById('property-panel'),
@@ -706,6 +710,107 @@ class TileEditor {
     this.objectList.refreshObject(objectId);
     this._categoryPainter.render();
     this._updateStatus();
+  }
+
+  // --- Connection Editor ---
+
+  _toggleConnectionEditor() {
+    // Exit any other active editor first
+    this._exitActiveBatchEditor();
+
+    if (this._connectionEditor) {
+      // Deactivate
+      this._connectionEditor.deactivate();
+      this._connectionEditor = null;
+      this._editConnectionsBtn.classList.remove('active');
+      this.objectCanvas.setEdgeIndicators(null);
+      this.objectProperties.updateSelection(
+        this.objectCanvas.selectedObjectId, this.objectDefs, this.objectCanvas,
+      );
+    } else {
+      // Activate
+      this._connectionEditor = new ConnectionEditor(
+        document.getElementById('property-panel'),
+        this.objectDefs,
+        this._socketTypes,
+        () => {
+          this._objectDefsModified = true;
+          this.objectCanvas.loadDefs(this.objectDefs);
+          this._connectionEditor.render();
+          this._updateStatus();
+        },
+      );
+      this._connectionEditor.onNavigate = (id) => {
+        this.objectCanvas.selectObject(id);
+        this.objectCanvas.scrollToObject(id);
+        this.objectCanvas.setEdgeIndicators(id);
+        this.objectList.selectObject(id);
+      };
+      this._connectionEditor.activate(this.objectCanvas.selectedObjectId);
+      this._editConnectionsBtn.classList.add('active');
+      if (this._connectionEditor.currentObjectId) {
+        this.objectCanvas.setEdgeIndicators(this._connectionEditor.currentObjectId);
+      }
+    }
+  }
+
+  // --- Collision Editor ---
+
+  _toggleCollisionEditor() {
+    // Exit any other active editor first
+    this._exitActiveBatchEditor();
+
+    if (this._collisionEditor) {
+      // Deactivate
+      this._collisionEditor.deactivate();
+      this._collisionEditor = null;
+      this._editCollisionBtn.classList.remove('active');
+      this.objectProperties.updateSelection(
+        this.objectCanvas.selectedObjectId, this.objectDefs, this.objectCanvas,
+      );
+    } else {
+      // Activate
+      this._collisionEditor = new BatchCollisionEditor(
+        document.getElementById('property-panel'),
+        this.objectDefs,
+        (objectId) => {
+          this._objectDefsModified = true;
+          this.objectCanvas.loadDefs(this.objectDefs);
+          if (objectId && this._collisionEditor) {
+            this._collisionEditor.render();
+          }
+          this._updateStatus();
+        },
+      );
+      this._collisionEditor.onNavigate = (id) => {
+        this.objectCanvas.selectObject(id);
+        this.objectCanvas.scrollToObject(id);
+        this.objectList.selectObject(id);
+      };
+      this._collisionEditor.activate(this.objectCanvas.selectedObjectId);
+      this._editCollisionBtn.classList.add('active');
+    }
+  }
+
+  // Exit any active batch editor (paint, connection, collision) before entering another
+  _exitActiveBatchEditor() {
+    if (this.objectCanvas.isInPaintMode()) {
+      this.objectCanvas.setPaintMode(null);
+      if (this._categoryPainter) this._categoryPainter.deactivate();
+      this._categoryPainter = null;
+      this._paintCategoriesBtn.classList.remove('active');
+    }
+    if (this._connectionEditor) {
+      this._connectionEditor.deactivate();
+      this._connectionEditor = null;
+      this._editConnectionsBtn.classList.remove('active');
+      this.objectCanvas.setEdgeIndicators(null);
+    }
+    if (this._collisionEditor) {
+      this._collisionEditor.deactivate();
+      this._collisionEditor = null;
+      this._editCollisionBtn.classList.remove('active');
+    }
   }
 
   _showToast(message) {

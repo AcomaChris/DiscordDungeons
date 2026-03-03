@@ -69,6 +69,10 @@ export class ObjectEditorCanvas {
     this._paintMode = false;
     this._painter = null;
 
+    // Edge indicator overlay for ConnectionEditor
+    this._showEdgeIndicators = false;
+    this._edgeObjectId = null;
+
     // Track whether this canvas is active (controls rendering + events)
     this._active = false;
     this._boundMouseMove = (e) => this._onMouseMove(e);
@@ -232,6 +236,14 @@ export class ObjectEditorCanvas {
     return this._paintMode;
   }
 
+  // --- Edge indicators ---
+
+  setEdgeIndicators(objectId) {
+    this._showEdgeIndicators = !!objectId;
+    this._edgeObjectId = objectId || null;
+    if (this._active) this.render();
+  }
+
   // --- Internal: build tile → object lookup ---
   _buildTileToObjectMap() {
     this._tileToObject.clear();
@@ -292,6 +304,12 @@ export class ObjectEditorCanvas {
       this._drawSelectedHighlight(def);
       this._drawColliders(def);
       this._drawNodes(def);
+    }
+
+    // 5b. Edge indicators for ConnectionEditor
+    if (this._showEdgeIndicators && this._edgeObjectId) {
+      const edgeDef = this.objectDefs[this._edgeObjectId];
+      if (edgeDef) this._drawEdgeIndicators(edgeDef);
     }
 
     // 6. Drag rect
@@ -479,6 +497,61 @@ export class ObjectEditorCanvas {
       ctx.textAlign = 'start';
       ctx.textBaseline = 'alphabetic';
     }
+  }
+
+  _drawEdgeIndicators(def) {
+    if (!def.wfc || !def.wfc.edges) return;
+    const { ctx, zoom } = this;
+    const bounds = this._getObjectBounds(def);
+    if (!bounds) return;
+
+    const s = TILE_SIZE * zoom;
+    const x = bounds.x * s;
+    const y = bounds.y * s;
+    const w = bounds.w * s;
+    const h = bounds.h * s;
+    const stripW = Math.max(3, zoom * 1.5);
+
+    const edgeColors = {
+      open_floor: '#444466',
+      wall_face: '#54a0ff',
+      shelf_mount: '#54a0ff',
+      counter_end: '#00d2d3',
+      counter_mid: '#00d2d3',
+      furniture_edge: '#ff9f43',
+      nature_edge: '#10ac84',
+      stair_entry: '#feca57',
+      void: '#ff4444',
+    };
+
+    const edges = def.wfc.edges;
+    const fontSize = Math.max(8, zoom * 2);
+    ctx.font = `bold ${fontSize}px monospace`;
+    ctx.textBaseline = 'middle';
+
+    // North strip
+    ctx.fillStyle = edgeColors[edges.north] || '#888';
+    ctx.fillRect(x, y, w, stripW);
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.fillText(edges.north.replace(/_/g, ' '), x + w / 2, y + stripW + fontSize / 2 + 1);
+
+    // South strip
+    ctx.fillStyle = edgeColors[edges.south] || '#888';
+    ctx.fillRect(x, y + h - stripW, w, stripW);
+    ctx.fillStyle = '#fff';
+    ctx.fillText(edges.south.replace(/_/g, ' '), x + w / 2, y + h - stripW - fontSize / 2 - 1);
+
+    // East strip
+    ctx.fillStyle = edgeColors[edges.east] || '#888';
+    ctx.fillRect(x + w - stripW, y, stripW, h);
+
+    // West strip
+    ctx.fillStyle = edgeColors[edges.west] || '#888';
+    ctx.fillRect(x, y, stripW, h);
+
+    ctx.textAlign = 'start';
+    ctx.textBaseline = 'alphabetic';
   }
 
   _drawDragRect() {

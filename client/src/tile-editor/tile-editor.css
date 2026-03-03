@@ -878,3 +878,87 @@ body {
   min-width: 20px;
   text-align: right;
 }
+
+/* --- Batch Editor (Connection + Collision) --- */
+
+.batch-editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.batch-editor-header h3 {
+  color: #00ccff;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.batch-progress {
+  font-size: 0.75rem;
+  color: #7a7aaa;
+}
+
+.batch-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.batch-counter {
+  font-size: 0.8rem;
+  color: #c0c0e0;
+}
+
+.btn-sm {
+  padding: 3px 8px;
+  font-size: 0.75rem;
+}
+
+.batch-object-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #e0e0e0;
+  padding: 4px 0 8px;
+  border-bottom: 1px solid #2a2a4a;
+  margin-bottom: 10px;
+}
+
+.batch-empty {
+  font-size: 0.85rem;
+  color: #7a7aaa;
+  font-style: italic;
+}
+
+/* --- Edge Dropdowns (ConnectionEditor) --- */
+
+.edge-dropdowns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+/* --- Collision Editor --- */
+
+.collision-info {
+  font-size: 0.8rem;
+  color: #c0c0e0;
+  margin-bottom: 10px;
+}
+
+.collision-presets label {
+  display: block;
+  font-size: 0.75rem;
+  color: #7a7aaa;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.preset-buttons {
+  display: flex;
+  gap: 6px;
+}
