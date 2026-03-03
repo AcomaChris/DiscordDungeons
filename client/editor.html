@@ -3,13 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DiscordDungeons — Tile Metadata Editor</title>
+  <title>DiscordDungeons — Tileset Editor</title>
 </head>
 <body>
   <div id="editor-root">
     <div id="editor-toolbar">
       <label for="tileset-select">Tileset</label>
       <select id="tileset-select"></select>
+      <div class="toolbar-sep"></div>
+      <div id="mode-toggle" class="mode-toggle">
+        <button id="mode-tile-btn" class="btn btn-toggle active">Tiles</button>
+        <button id="mode-object-btn" class="btn btn-toggle">Objects</button>
+      </div>
       <div class="toolbar-sep"></div>
       <button id="import-json-btn" class="btn">Import JSON</button>
       <button id="export-json-btn" class="btn">Export JSON</button>
@@ -27,6 +32,7 @@
         <canvas id="tileset-canvas"></canvas>
       </div>
       <div id="property-panel-wrapper">
+        <div id="object-list-panel" class="hidden"></div>
         <div id="tile-preview"></div>
         <div id="property-panel"></div>
       </div>

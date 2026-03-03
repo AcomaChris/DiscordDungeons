@@ -64,6 +64,10 @@ async function handleHttpRequest(req, res) {
     return handleSaveTileMetadata(req, res);
   }
 
+  if (url.pathname === '/api/object-defs' && req.method === 'POST') {
+    return handleSaveObjectDefs(req, res);
+  }
+
   if (url.pathname === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ status: 'ok' }));
@@ -373,6 +377,85 @@ async function handleSaveTileMetadata(req, res) {
     res.end(JSON.stringify({ success: true, sha: result.content.sha }));
   } catch (err) {
     console.error('[tile-metadata] Error:', err);
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Internal server error' }));
+  }
+}
+
+// --- Object Definitions Save ---
+
+async function handleSaveObjectDefs(req, res) {
+  if (!GITHUB_TOKEN) {
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'GitHub API token not configured' }));
+    return;
+  }
+
+  try {
+    const body = await readBody(req);
+    const { tileset, content } = JSON.parse(body);
+
+    if (!tileset || !ALLOWED_TILESETS.includes(tileset)) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: `Invalid tileset: ${tileset}` }));
+      return;
+    }
+
+    if (!content) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Content is required' }));
+      return;
+    }
+
+    const path = `client/public/object-defs/${tileset}.objects.json`;
+    const apiUrl = `${GITHUB_API}/repos/${GITHUB_REPO}/contents/${path}`;
+
+    // Get current file SHA (required for updates)
+    let sha = null;
+    const getRes = await fetch(apiUrl, {
+      headers: {
+        Authorization: `Bearer ${GITHUB_TOKEN}`,
+        Accept: 'application/vnd.github+json',
+      },
+    });
+    if (getRes.ok) {
+      const existing = await getRes.json();
+      sha = existing.sha;
+    }
+
+    // Commit the file
+    const putBody = {
+      message: `object-defs: update ${tileset}`,
+      content: Buffer.from(content).toString('base64'),
+      branch: 'main',
+    };
+    if (sha) putBody.sha = sha;
+
+    const putRes = await fetch(apiUrl, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${GITHUB_TOKEN}`,
+        'Content-Type': 'application/json',
+        Accept: 'application/vnd.github+json',
+      },
+      body: JSON.stringify(putBody),
+    });
+
+    if (!putRes.ok) {
+      const err = await putRes.text();
+      console.error('[object-defs] GitHub commit failed:', putRes.status, err);
+      res.writeHead(502, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Failed to commit to GitHub' }));
+      return;
+    }
+
+    const result = await putRes.json();
+    console.log(`[object-defs] Saved ${tileset}.objects.json (${result.content.sha.slice(0, 7)})`);
+
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ success: true, sha: result.content.sha }));
+  } catch (err) {
+    console.error('[object-defs] Error:', err);
     res.writeHead(500, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ error: 'Internal server error' }));
   }

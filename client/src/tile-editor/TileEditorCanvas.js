@@ -29,6 +29,9 @@ export class TileEditorCanvas {
     this._dragCurrent = null;
     this._isDragging = false;
 
+    // Active state — when false, mouse events are no-ops
+    this._active = true;
+
     // Callbacks
     this.onSelectionChange = null;
 
@@ -182,6 +185,10 @@ export class TileEditorCanvas {
     return { id: row * this.columns + col, col, row };
   }
 
+  setActive(active) {
+    this._active = active;
+  }
+
   // --- Event Handlers ---
 
   _bindEvents() {
@@ -192,12 +199,14 @@ export class TileEditorCanvas {
 
     if (this.zoomSlider) {
       this.zoomSlider.addEventListener('input', (e) => {
+        if (!this._active) return;
         this.setZoom(parseInt(e.target.value, 10));
       });
     }
   }
 
   _onMouseMove(e) {
+    if (!this._active) return;
     const { id, col, row } = this._getTileAt(e);
 
     if (this._isDragging) {
@@ -213,6 +222,7 @@ export class TileEditorCanvas {
   }
 
   _onMouseDown(e) {
+    if (!this._active) return;
     const { id, col, row } = this._getTileAt(e);
     if (id < 0) return;
 
@@ -235,7 +245,7 @@ export class TileEditorCanvas {
   }
 
   _onMouseUp(e) {
-    if (!this._isDragging) return;
+    if (!this._active || !this._isDragging) return;
 
     const { col, row } = this._getTileAt(e);
     this._dragCurrent = { col, row };
@@ -274,7 +284,7 @@ export class TileEditorCanvas {
   }
 
   _onMouseLeave() {
-    if (this._isDragging) return;
+    if (!this._active || this._isDragging) return;
     this.hoveredTile = -1;
     this.render();
   }
