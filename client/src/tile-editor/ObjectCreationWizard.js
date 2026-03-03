@@ -25,6 +25,7 @@ export class ObjectCreationWizard {
     this._basicInfo = { id: '', name: '', category: 'decoration', description: '', surface: 'stone', tags: [] };
     this._colliders = [];
     this._existingIds = new Set();
+    this._drawingCollider = null; // { targetIndex, startX?, startY?, currentX?, currentY?, dragging? }
 
     // Callbacks
     this.onComplete = null;
@@ -51,6 +52,7 @@ export class ObjectCreationWizard {
     this._tileSelection = null;
     this._basicInfo = { id: '', name: '', category: 'decoration', description: '', surface: 'stone', tags: [] };
     this._colliders = [];
+    this._drawingCollider = null;
     this._show();
   }
 
@@ -389,32 +391,90 @@ export class ObjectCreationWizard {
 
   _renderCollisionStep() {
     const c = this._contentEl;
+    c.innerHTML = '';
 
-    // Object preview with colliders
-    const previewCanvas = this._renderCollisionPreview();
-    c.appendChild(previewCanvas);
+    // Object preview with colliders (supports draw mode)
+    const previewWrapper = this._renderCollisionPreview();
+    c.appendChild(previewWrapper);
 
-    // Add collider button
+    // Preset buttons
+    const presets = document.createElement('div');
+    presets.style.display = 'flex';
+    presets.style.gap = '6px';
+    presets.style.marginBottom = '8px';
+
+    const { cols, rows } = this._tileSelection;
+    const pw = cols * TILE_SIZE;
+    const ph = rows * TILE_SIZE;
+
+    const presetDefs = [
+      { label: 'Full', x: 0, y: 0, width: pw, height: ph },
+      { label: 'Bottom Half', x: 0, y: Math.round(ph / 2), width: pw, height: Math.round(ph / 2) },
+      { label: 'Center', x: Math.round(pw * 0.25), y: Math.round(ph * 0.25), width: Math.round(pw * 0.5), height: Math.round(ph * 0.5) },
+    ];
+    for (const preset of presetDefs) {
+      const btn = document.createElement('button');
+      btn.className = 'btn';
+      btn.textContent = preset.label;
+      btn.style.fontSize = '0.7rem';
+      btn.addEventListener('click', () => {
+        this._colliders.push({
+          id: `collider_${this._colliders.length}`,
+          shape: 'rect',
+          type: 'solid',
+          x: preset.x,
+          y: preset.y,
+          width: preset.width,
+          height: preset.height,
+          elevation: 0,
+          stretchable: false,
+        });
+        this._renderCollisionStep();
+      });
+      presets.appendChild(btn);
+    }
+    c.appendChild(presets);
+
+    // Add collider / Draw collider buttons
+    const actionRow = document.createElement('div');
+    actionRow.style.display = 'flex';
+    actionRow.style.gap = '6px';
+    actionRow.style.marginBottom = '8px';
+
     const addBtn = document.createElement('button');
     addBtn.className = 'btn';
     addBtn.textContent = '+ Add Collider';
-    addBtn.style.marginBottom = '8px';
     addBtn.addEventListener('click', () => {
-      const { cols, rows } = this._tileSelection;
       this._colliders.push({
         id: `collider_${this._colliders.length}`,
         shape: 'rect',
         type: 'solid',
         x: 0,
         y: 0,
-        width: cols * TILE_SIZE,
-        height: rows * TILE_SIZE,
+        width: pw,
+        height: ph,
         elevation: 0,
         stretchable: false,
       });
       this._renderCollisionStep();
     });
-    c.appendChild(addBtn);
+    actionRow.appendChild(addBtn);
+
+    const drawBtn = document.createElement('button');
+    drawBtn.className = this._drawingCollider ? 'btn btn-danger' : 'btn';
+    drawBtn.textContent = this._drawingCollider ? 'Cancel Draw' : 'Draw Collider';
+    drawBtn.addEventListener('click', () => {
+      if (this._drawingCollider) {
+        this._drawingCollider = null;
+        this._renderCollisionStep();
+      } else {
+        this._drawingCollider = { targetIndex: -1 };
+        this._renderCollisionStep();
+      }
+    });
+    actionRow.appendChild(drawBtn);
+
+    c.appendChild(actionRow);
 
     // Collider cards
     for (let i = 0; i < this._colliders.length; i++) {
@@ -435,19 +495,120 @@ export class ObjectCreationWizard {
   _renderCollisionPreview() {
     if (!this._tileSelection) return document.createElement('div');
 
-    const { cols, rows, tiles } = this._tileSelection;
+    const { cols, rows } = this._tileSelection;
     const scale = 4;
     const wrapper = document.createElement('div');
     wrapper.style.marginBottom = '12px';
+    wrapper.style.position = 'relative';
 
     const canvas = document.createElement('canvas');
     canvas.width = cols * TILE_SIZE * scale;
     canvas.height = rows * TILE_SIZE * scale;
     canvas.style.imageRendering = 'pixelated';
-    canvas.style.border = '1px solid #2a2a4a';
+    canvas.style.border = this._drawingCollider ? '1px solid #00ccff' : '1px solid #2a2a4a';
     canvas.style.maxWidth = '100%';
+    canvas.style.cursor = this._drawingCollider ? 'crosshair' : 'default';
+
+    // Store references for in-place redraw
+    this._collisionCanvas = canvas;
+    this._collisionScale = scale;
+
+    this._redrawCollisionCanvas();
+
+    // --- Draw mode mouse handlers ---
+    canvas.addEventListener('mousedown', (e) => {
+      if (!this._drawingCollider) return;
+      const rect = canvas.getBoundingClientRect();
+      const displayScale = canvas.width / rect.width;
+      const px = (e.clientX - rect.left) * displayScale / scale;
+      const py = (e.clientY - rect.top) * displayScale / scale;
+      this._drawingCollider.startX = Math.round(px);
+      this._drawingCollider.startY = Math.round(py);
+      this._drawingCollider.currentX = this._drawingCollider.startX;
+      this._drawingCollider.currentY = this._drawingCollider.startY;
+      this._drawingCollider.dragging = true;
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+      if (!this._drawingCollider?.dragging) return;
+      const rect = canvas.getBoundingClientRect();
+      const displayScale = canvas.width / rect.width;
+      const px = (e.clientX - rect.left) * displayScale / scale;
+      const py = (e.clientY - rect.top) * displayScale / scale;
+      this._drawingCollider.currentX = Math.round(px);
+      this._drawingCollider.currentY = Math.round(py);
+      this._redrawCollisionCanvas();
+    });
+
+    canvas.addEventListener('mouseup', () => {
+      if (!this._drawingCollider?.dragging) return;
+      const { startX, startY, currentX, currentY, targetIndex } = this._drawingCollider;
+      const x = Math.max(0, Math.min(startX, currentX));
+      const y = Math.max(0, Math.min(startY, currentY));
+      const w = Math.abs(currentX - startX);
+      const h = Math.abs(currentY - startY);
+
+      // Ignore tiny drags (likely accidental clicks)
+      if (w < 2 && h < 2) {
+        this._drawingCollider.dragging = false;
+        return;
+      }
+
+      // Clamp to object bounds
+      const maxW = cols * TILE_SIZE;
+      const maxH = rows * TILE_SIZE;
+      const cx = Math.min(x, maxW);
+      const cy = Math.min(y, maxH);
+      const cw = Math.min(w, maxW - cx);
+      const ch = Math.min(h, maxH - cy);
+
+      if (targetIndex >= 0 && targetIndex < this._colliders.length) {
+        // Redraw existing collider bounds
+        this._colliders[targetIndex].x = cx;
+        this._colliders[targetIndex].y = cy;
+        this._colliders[targetIndex].width = cw;
+        this._colliders[targetIndex].height = ch;
+      } else {
+        // Create new collider
+        this._colliders.push({
+          id: `collider_${this._colliders.length}`,
+          shape: 'rect',
+          type: 'solid',
+          x: cx, y: cy, width: cw, height: ch,
+          elevation: 0,
+          stretchable: false,
+        });
+      }
+
+      this._drawingCollider = null;
+      this._renderCollisionStep();
+    });
+
+    // Draw mode hint
+    if (this._drawingCollider) {
+      const hint = document.createElement('div');
+      hint.style.fontSize = '0.75rem';
+      hint.style.color = '#00ccff';
+      hint.style.marginTop = '4px';
+      hint.textContent = this._drawingCollider.targetIndex >= 0
+        ? `Draw to redefine collider bounds (collider_${this._drawingCollider.targetIndex})`
+        : 'Click and drag on the preview to draw a collision rectangle';
+      wrapper.appendChild(hint);
+    }
+
+    wrapper.insertBefore(canvas, wrapper.firstChild);
+    return wrapper;
+  }
+
+  _redrawCollisionCanvas() {
+    const canvas = this._collisionCanvas;
+    if (!canvas || !this._tileSelection) return;
+
+    const { tiles } = this._tileSelection;
+    const scale = this._collisionScale;
     const ctx = canvas.getContext('2d');
     ctx.imageSmoothingEnabled = false;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw tiles
     for (let r = 0; r < tiles.length; r++) {
@@ -459,7 +620,7 @@ export class ObjectCreationWizard {
       }
     }
 
-    // Draw colliders
+    // Draw existing colliders
     for (const collider of this._colliders) {
       ctx.strokeStyle = collider.type === 'solid' ? '#ff4444' : '#44ff44';
       ctx.lineWidth = 2;
@@ -467,14 +628,41 @@ export class ObjectCreationWizard {
       ctx.strokeRect(collider.x * scale, collider.y * scale, collider.width * scale, collider.height * scale);
       ctx.setLineDash([]);
 
+      // Semi-transparent fill
+      ctx.fillStyle = collider.type === 'solid' ? 'rgba(255, 68, 68, 0.15)' : 'rgba(68, 255, 68, 0.15)';
+      ctx.fillRect(collider.x * scale, collider.y * scale, collider.width * scale, collider.height * scale);
+
       // Label
       ctx.font = 'bold 11px monospace';
       ctx.fillStyle = '#ffffff';
       ctx.fillText(collider.id, collider.x * scale + 2, collider.y * scale - 3);
     }
 
-    wrapper.appendChild(canvas);
-    return wrapper;
+    // Draw in-progress drag rectangle
+    if (this._drawingCollider?.dragging) {
+      const { startX, startY, currentX, currentY } = this._drawingCollider;
+      const dx = Math.min(startX, currentX) * scale;
+      const dy = Math.min(startY, currentY) * scale;
+      const dw = Math.abs(currentX - startX) * scale;
+      const dh = Math.abs(currentY - startY) * scale;
+
+      ctx.strokeStyle = '#00ccff';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6, 3]);
+      ctx.strokeRect(dx, dy, dw, dh);
+      ctx.setLineDash([]);
+      ctx.fillStyle = 'rgba(0, 204, 255, 0.2)';
+      ctx.fillRect(dx, dy, dw, dh);
+
+      // Dimensions label
+      const w = Math.abs(currentX - startX);
+      const h = Math.abs(currentY - startY);
+      if (w > 4 || h > 4) {
+        ctx.font = 'bold 11px monospace';
+        ctx.fillStyle = '#00ccff';
+        ctx.fillText(`${w}×${h}`, dx + 2, dy - 3 > 10 ? dy - 3 : dy + 12);
+      }
+    }
   }
 
   _makeColliderCard(index) {
@@ -517,6 +705,38 @@ export class ObjectCreationWizard {
       this._renderCollisionStep();
     }));
     card.appendChild(row1);
+
+    // Bounds row with Draw button
+    const boundsHeader = document.createElement('div');
+    boundsHeader.style.display = 'flex';
+    boundsHeader.style.justifyContent = 'space-between';
+    boundsHeader.style.alignItems = 'center';
+    boundsHeader.style.marginBottom = '4px';
+
+    const boundsLabel = document.createElement('label');
+    boundsLabel.textContent = 'Bounds';
+    boundsLabel.style.fontSize = '0.75rem';
+    boundsLabel.style.color = '#7a7aaa';
+    boundsLabel.style.textTransform = 'uppercase';
+    boundsLabel.style.letterSpacing = '0.03em';
+    boundsHeader.appendChild(boundsLabel);
+
+    const drawBoundsBtn = document.createElement('button');
+    const isDrawingThis = this._drawingCollider?.targetIndex === index;
+    drawBoundsBtn.className = isDrawingThis ? 'btn btn-danger' : 'btn';
+    drawBoundsBtn.textContent = isDrawingThis ? 'Cancel' : 'Draw';
+    drawBoundsBtn.style.fontSize = '0.65rem';
+    drawBoundsBtn.style.padding = '1px 6px';
+    drawBoundsBtn.addEventListener('click', () => {
+      if (isDrawingThis) {
+        this._drawingCollider = null;
+      } else {
+        this._drawingCollider = { targetIndex: index };
+      }
+      this._renderCollisionStep();
+    });
+    boundsHeader.appendChild(drawBoundsBtn);
+    card.appendChild(boundsHeader);
 
     const row2 = document.createElement('div');
     row2.className = 'inline-fields';

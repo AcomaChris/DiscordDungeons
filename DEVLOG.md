@@ -4,6 +4,19 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-02 — Wizard Collision Step Fixes
+
+**Commits:** (v0.16.1)
+
+Fixed three issues with the collision step of the object creation wizard.
+
+- **Re-render bug fix**: Removing or adding colliders appended duplicate content to the dialog. Root cause: `_renderCollisionStep()` was called directly from callbacks without clearing `_contentEl.innerHTML` first (the clear only happened in `_renderModalStep`). Added `innerHTML = ''` at top of `_renderCollisionStep()`.
+- **Preset collision buttons**: Added Full, Bottom Half, and Center presets that instantly create colliders with common bounds configurations, sized proportionally to the object.
+- **Draw collider on canvas**: Click+drag on the collision preview canvas to draw a rectangle. "Draw Collider" button creates a new collider from the drawn bounds. Per-collider "Draw" button redefines an existing collider's bounds. Live preview with cyan dashed rectangle and dimensions label during drag.
+- **Visual improvements**: Colliders now show semi-transparent fills alongside dashed outlines for better visibility.
+
+---
+
 ## 2026-03-02 — Object Editor Improvements & Creation Wizard
 
 **Commits:** (v0.16.0)
