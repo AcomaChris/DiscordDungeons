@@ -18,6 +18,8 @@ export default defineConfig({
     __APP_VERSION__: JSON.stringify(pkg.version),
     __GIT_COMMIT__: JSON.stringify(gitCommit),
     __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+    __BE_API_KEY__: JSON.stringify(process.env.BEHAVIOR_ENGINE_API_KEY || ''),
+    __BE_PROJECT_ID__: JSON.stringify(process.env.BEHAVIOR_ENGINE_PROJECT_ID || ''),
   },
   build: {
     outDir: '../dist',

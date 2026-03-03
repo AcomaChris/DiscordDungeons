@@ -4,7 +4,7 @@ import globals from 'globals';
 
 export default [
   {
-    ignores: ['dist/', 'assets/'],
+    ignores: ['dist/', 'assets/', '.claude/'],
   },
   js.configs.recommended,
   prettier,
@@ -55,6 +55,8 @@ export default [
         __APP_VERSION__: 'readonly',
         __GIT_COMMIT__: 'readonly',
         __BUILD_TIME__: 'readonly',
+        __BE_API_KEY__: 'readonly',
+        __BE_PROJECT_ID__: 'readonly',
       },
     },
   },

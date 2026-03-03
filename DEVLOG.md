@@ -4,6 +4,17 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-02 — Behavior Engine Test Panel
+
+**Commits:** (v0.18.0)
+
+- **Behavior Engine panel**: New cog menu item that opens a modal for testing the Artificial Agency platform API. Sequential workflow: create session → create agent (tavern keeper "Greta") → send messages → see AI responses in a scrollable log.
+- **BehaviorEngineClient.js**: Thin REST client wrapping session/agent/action endpoints with auth headers and API versioning.
+- **Build-time credential injection**: `.env` variables (`BEHAVIOR_ENGINE_API_KEY`, `BEHAVIOR_ENGINE_PROJECT_ID`) injected via Vite `define`, pre-populate the UI fields. Persisted to localStorage for convenience.
+- **ESLint worktree fix**: Added `.claude/` to ESLint ignores — agent worktrees were bleeding into the main lint run.
+
+---
+
 ## 2026-03-02 — Mantle Ability (Phase 2 Complete)
 
 **Commits:** (v0.17.0)

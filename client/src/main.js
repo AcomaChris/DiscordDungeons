@@ -8,6 +8,7 @@ import { BuildStatusIndicator } from './build-status/BuildStatusIndicator.js';
 import { BugReporter } from './bug-report/BugReporter.js';
 import { PlayerDebugPanel } from './debug/PlayerDebugPanel.js';
 import { WorldDebugOverlay } from './debug/WorldDebugOverlay.js';
+import { BehaviorEnginePanel } from './behavior-engine/BehaviorEnginePanel.js';
 
 new BuildStatusIndicator().mount();
 const bugReporter = new BugReporter();
@@ -23,6 +24,9 @@ const worldDebugBtn = bugReporter.addMenuItem('World Debug', () => {
   worldDebug.toggle();
   worldDebugBtn.textContent = worldDebug.active ? 'World Debug \u2713' : 'World Debug';
 });
+
+const behaviorPanel = new BehaviorEnginePanel();
+bugReporter.addMenuItem('Behavior Engine', () => behaviorPanel.open());
 
 // --- Game Configuration ---
 
