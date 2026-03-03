@@ -88,17 +88,13 @@ export class BehaviorEnginePanel {
     // --- Connection section ---
     const connSection = this._makeSection('Connection');
 
-    const apiKeyRow = this._makeRow('API Key');
-    this._apiKeyInput = this._makeInput('password', saved.apiKey, 'Bearer token...');
-    apiKeyRow.appendChild(this._apiKeyInput);
+    const proxyRow = this._makeRow('WS Server (proxy)');
+    this._proxyInput = this._makeInput('text', saved.proxyUrl, 'https://ws.discorddungeons.com');
+    proxyRow.appendChild(this._proxyInput);
 
     const projectRow = this._makeRow('Project ID');
     this._projectInput = this._makeInput('text', saved.projectId, 'proj_...');
     projectRow.appendChild(this._projectInput);
-
-    const urlRow = this._makeRow('API URL');
-    this._urlInput = this._makeInput('text', saved.apiUrl, 'https://api.artificial.agency');
-    urlRow.appendChild(this._urlInput);
 
     // --- Session ---
     const sessionSection = this._makeSection('Session');
@@ -143,7 +139,7 @@ export class BehaviorEnginePanel {
     // --- Assemble ---
     this._dialog.append(
       title,
-      connSection, apiKeyRow, projectRow, urlRow,
+      connSection, proxyRow, projectRow,
       sessionSection, this._sessionBtn, this._sessionStatus,
       agentSection, this._agentBtn, this._agentStatus,
       msgSection, msgRow,
@@ -162,11 +158,10 @@ export class BehaviorEnginePanel {
     this._setStatus(this._sessionStatus, 'Creating session...', '');
 
     try {
-      this._client = new BehaviorEngineClient(
-        this._apiKeyInput.value.trim(),
-        this._projectInput.value.trim(),
-        this._urlInput.value.trim() || undefined,
-      );
+      this._client = new BehaviorEngineClient({
+        projectId: this._projectInput.value.trim(),
+        proxyUrl: this._proxyInput.value.trim() || undefined,
+      });
 
       const session = await this._client.createSession();
       this._sessionId = session.id;
@@ -300,21 +295,19 @@ export class BehaviorEnginePanel {
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
       return {
-        apiKey: saved.apiKey || (typeof __BE_API_KEY__ !== 'undefined' ? __BE_API_KEY__ : ''),
+        proxyUrl: saved.proxyUrl || 'https://ws.discorddungeons.com',
         projectId: saved.projectId || (typeof __BE_PROJECT_ID__ !== 'undefined' ? __BE_PROJECT_ID__ : ''),
-        apiUrl: saved.apiUrl || 'https://api.artificial.agency',
       };
     } catch {
-      return { apiKey: '', projectId: '', apiUrl: 'https://api.artificial.agency' };
+      return { proxyUrl: 'https://ws.discorddungeons.com', projectId: '' };
     }
   }
 
   _saveConfig() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        apiKey: this._apiKeyInput.value.trim(),
+        proxyUrl: this._proxyInput.value.trim(),
         projectId: this._projectInput.value.trim(),
-        apiUrl: this._urlInput.value.trim(),
       }));
     } catch { /* localStorage may be unavailable */ }
   }

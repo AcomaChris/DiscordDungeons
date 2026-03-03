@@ -13,6 +13,9 @@ const CORS_ORIGIN = process.env.CORS_ORIGIN || '*';
 const GITHUB_TOKEN = process.env.GITHUB_API_TOKEN || '';
 const GITHUB_REPO = 'AcomaChris/DiscordDungeons';
 const GITHUB_API = 'https://api.github.com';
+const BE_API_URL = process.env.BEHAVIOR_ENGINE_API_URL || 'https://api.artificial.agency';
+const BE_API_KEY = process.env.BEHAVIOR_ENGINE_API_KEY || '';
+const BE_API_VERSION = '2025-05-15';
 
 const rooms = new Map();
 let nextPlayerId = 1;
@@ -66,6 +69,11 @@ async function handleHttpRequest(req, res) {
 
   if (url.pathname === '/api/object-defs' && req.method === 'POST') {
     return handleSaveObjectDefs(req, res);
+  }
+
+  // Behavior Engine proxy — forwards /api/be/* to api.artificial.agency/*
+  if (url.pathname.startsWith('/api/be/') && (req.method === 'POST' || req.method === 'GET')) {
+    return handleBehaviorEngineProxy(req, res, url);
   }
 
   if (url.pathname === '/health') {
@@ -458,6 +466,42 @@ async function handleSaveObjectDefs(req, res) {
     console.error('[object-defs] Error:', err);
     res.writeHead(500, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ error: 'Internal server error' }));
+  }
+}
+
+// --- Behavior Engine Proxy ---
+// Forwards requests to the Artificial Agency API, adding auth headers
+// server-side so the API key stays off the client.
+
+async function handleBehaviorEngineProxy(req, res, url) {
+  if (!BE_API_KEY) {
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Behavior Engine API key not configured' }));
+    return;
+  }
+
+  try {
+    const body = req.method === 'POST' ? await readBody(req) : undefined;
+    // Strip /api/be prefix → forward remainder to BE API
+    const bePath = url.pathname.replace(/^\/api\/be/, '');
+
+    const beRes = await fetch(`${BE_API_URL}${bePath}`, {
+      method: req.method,
+      headers: {
+        'Authorization': `Bearer ${BE_API_KEY}`,
+        'AA-API-Version': BE_API_VERSION,
+        'Content-Type': 'application/json',
+      },
+      body,
+    });
+
+    const data = await beRes.text();
+    res.writeHead(beRes.status, { 'Content-Type': 'application/json' });
+    res.end(data);
+  } catch (err) {
+    console.error('[be-proxy] Error:', err);
+    res.writeHead(502, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Behavior Engine proxy error' }));
   }
 }
 
