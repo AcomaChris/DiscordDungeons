@@ -4,6 +4,8 @@
 // panels, handles file I/O for both tile metadata and object definitions.
 
 import './tile-editor.css';
+import '../bug-report/bug-report.css';
+import { BugReporter } from '../bug-report/BugReporter.js';
 import { TileEditorCanvas } from './TileEditorCanvas.js';
 import { TileEditorProperties } from './TileEditorProperties.js';
 import { ObjectEditorCanvas } from './ObjectEditorCanvas.js';
@@ -110,6 +112,10 @@ class TileEditor {
     this._exportJsonBtn.title = 'Download current metadata/definitions as JSON';
     this._saveGithubBtn.title = 'Save changes to the GitHub repository';
     document.getElementById('zoom-slider').title = 'Adjust canvas zoom (1x\u20138x)';
+
+    // --- Bug Reporter ---
+    this._bugReporter = new BugReporter(null);
+    this._bugReporter.mount();
 
     this._populateTilesetSelect();
     this._bindEvents();

@@ -4,6 +4,16 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-02 — Bug Reporter in Tile Editor + Parallel Agent Docs
+
+**Commits:** (v0.16.3)
+
+- **Bug reporter cog menu**: Mounted the existing `BugReporter` class in the tile editor — cog appears top-right, screenshot captures the tileset canvas, files GitHub issues via the WS server API. No modifications to BugReporter itself; it was already reusable.
+- **ESLint ignores `assets/`**: New `assets/reference/` directory (third-party docs) was causing lint failures. Added `assets/` to ESLint ignores.
+- **Parallel subagent docs**: Added "Parallel Work" section to CLAUDE.md and "Parallel Agent Strategy" to AGENTS.md — establishes worktree-isolated subagents as the default for multi-file work.
+
+---
+
 ## 2026-03-02 — Tile Editor Tooltip Pass
 
 **Commits:** (v0.16.2)
