@@ -4,6 +4,7 @@ import { CHAR_WIDTH, CHAR_HEIGHT, TEXTURE_SCALE, PLAYER_COLORS, ELEVATION_STEP }
 import { generatePlayerTextures } from './PlayerTextureGenerator.js';
 import { AbilityManager } from '../abilities/AbilityManager.js';
 import { startJump, updateJumpState } from '../physics/JumpPhysics.js';
+import { checkMantle, updateMantleState } from '../physics/MantlePhysics.js';
 import { createShadow, updateShadow } from './ShadowHelper.js';
 
 // --- Player ---
@@ -24,6 +25,11 @@ export class Player {
     this.color = PLAYER_COLORS[0];
     this.abilities = new AbilityManager();
     this._isJumping = false;
+    this._isMantling = false;
+    this._mantleStartZ = 0;
+    this._mantleTargetZ = 0;
+    this._mantleElapsed = 0;
+    this._mantleDuration = 0;
 
     // --- Z-axis state ---
     this.z = 0;           // height above ground plane (px)
@@ -95,7 +101,7 @@ export class Player {
 
     // Trigger jump on activation (single press, not held)
     const jumpAbility = this.abilities.get('jump');
-    if (jumpAbility?.active && !this._isJumping) {
+    if (jumpAbility?.active && !this._isJumping && !this._isMantling) {
       this._startJump(jumpAbility.params.heightPower);
     }
 
@@ -143,10 +149,63 @@ export class Player {
 
   // Called every frame from GameScene.update() after physics step.
   updateJump(delta) {
-    if (!this._isJumping && this.z <= this.groundZ) return;
+    if (!this._isJumping && !this._isMantling && this.z <= this.groundZ) return;
 
     const dt = delta / 1000;
 
+    // --- Mantle execution (overrides normal jump physics) ---
+    if (this._isMantling) {
+      const mState = updateMantleState({
+        z: this.z, startZ: this._mantleStartZ, targetZ: this._mantleTargetZ,
+        elapsed: this._mantleElapsed, duration: this._mantleDuration, isMantling: true,
+      }, dt);
+      this.z = mState.z;
+      this._mantleElapsed = mState.elapsed;
+      this._isMantling = mState.isMantling;
+      if (!mState.isMantling) {
+        this.vz = 0;
+        this._isJumping = false;
+        this.groundZ = this._mantleTargetZ;
+      }
+      return;
+    }
+
+    // --- Mantle detection (ascending/apex phase only) ---
+    if (this._isJumping && this.vz >= 0) {
+      const mantleAbility = this.abilities.get('mantle');
+      if (mantleAbility) {
+        const tm = this.scene.tileMapManager;
+        if (tm?.elevationData) {
+          const stepHeight = this.abilities.getParam('movement', 'stepHeight');
+          const result = checkMantle({
+            playerX: this.sprite.x,
+            playerY: this._groundY,
+            facing: this.facing,
+            z: this.z,
+            stepHeight,
+            mantleHeight: mantleAbility.params.mantleHeight,
+            mantleReach: mantleAbility.params.mantleReach,
+            tileWidth: tm.tilemap.tileWidth,
+            tileHeight: tm.tilemap.tileHeight,
+            mapWidth: tm.tilemap.width,
+            mapHeight: tm.tilemap.height,
+            elevationData: tm.elevationData,
+            elevationStep: ELEVATION_STEP,
+          });
+          if (result.canMantle) {
+            this._isMantling = true;
+            this._mantleStartZ = this.z;
+            this._mantleTargetZ = result.targetZ;
+            this._mantleElapsed = 0;
+            this._mantleDuration = mantleAbility.params.mantleSpeed;
+            this.vz = 0;
+            return;
+          }
+        }
+      }
+    }
+
+    // --- Normal jump physics ---
     // Float ability: reduce gravity during descent
     let gravityFactor = 1.0;
     if (this.vz < 0) {
@@ -183,7 +242,7 @@ export class Player {
       // Uses this.z (not groundZ) to prevent multi-frame escalation where
       // groundZ updates first and then the check erroneously passes.
       const stepHeight = this.abilities.getParam('movement', 'stepHeight');
-      if (!this._isJumping && newGroundZ > this.z && newGroundZ <= this.z + stepHeight) {
+      if (!this._isJumping && !this._isMantling && newGroundZ > this.z && newGroundZ <= this.z + stepHeight) {
         this.z = newGroundZ;
       }
 

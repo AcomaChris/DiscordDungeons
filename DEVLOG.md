@@ -4,6 +4,18 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-02 — Mantle Ability (Phase 2 Complete)
+
+**Commits:** (v0.17.0)
+
+- **Mantle ability**: New passive ability that lets the player climb ledges too high for step-height by jumping near them. Detection runs during the jump's ascending phase; smooth ease-out interpolation raises `z` to the target elevation.
+- **MantlePhysics.js**: Pure functions (`checkMantle`, `updateMantleState`) — no Phaser dependency, fully unit-testable. Facing-aware tile scanning with configurable reach and height limits.
+- **Player.js integration**: Mantle detection in `updateJump()` (ascending/apex phase only), execution via `updateMantleState()`, guards in `_startJump`/`handleInput`/`syncGroundPosition` to prevent conflicts with jump/step-up systems.
+- **21 new unit tests** for mantle physics, 3 for ability definition. Updated `ability-manager.test.js` expectations to include mantle in defaults.
+- **Phase 2 elevation system now complete**: Z-axis, physics jump, shadows, step-height collision, float ability, and mantling all working together.
+
+---
+
 ## 2026-03-02 — Bug Reporter in Tile Editor + Parallel Agent Docs
 
 **Commits:** (v0.16.3)

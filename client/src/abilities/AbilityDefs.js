@@ -44,7 +44,19 @@ export const ABILITY_DEFS = {
       gravityFactor: 0.5,
     },
   },
+
+  mantle: {
+    id: 'mantle',
+    category: 'Movement',
+    type: AbilityType.PASSIVE,
+    inputKey: null,
+    params: {
+      mantleHeight: 16,   // px — max elevation delta above stepHeight that can be mantled
+      mantleSpeed: 200,    // ms — climb interpolation duration
+      mantleReach: 1,      // tiles ahead to scan in facing direction
+    },
+  },
 };
 
 // Abilities equipped on every new player by default
-export const DEFAULT_ABILITIES = ['movement', 'jump'];
+export const DEFAULT_ABILITIES = ['movement', 'jump', 'mantle'];

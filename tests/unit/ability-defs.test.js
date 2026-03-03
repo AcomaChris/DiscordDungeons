@@ -56,4 +56,20 @@ describe('AbilityDefs', () => {
     expect(ABILITY_DEFS.movement.type).toBe(AbilityType.ACTIVE);
     expect(ABILITY_DEFS.float.type).toBe(AbilityType.PASSIVE);
   });
+
+  it('mantle has mantleHeight, mantleSpeed, and mantleReach params', () => {
+    const mantle = ABILITY_DEFS.mantle;
+    expect(mantle.params.mantleHeight).toBe(16);
+    expect(mantle.params.mantleSpeed).toBe(200);
+    expect(mantle.params.mantleReach).toBe(1);
+  });
+
+  it('mantle is passive with null inputKey', () => {
+    expect(ABILITY_DEFS.mantle.type).toBe(AbilityType.PASSIVE);
+    expect(ABILITY_DEFS.mantle.inputKey).toBeNull();
+  });
+
+  it('mantle is in DEFAULT_ABILITIES', () => {
+    expect(DEFAULT_ABILITIES).toContain('mantle');
+  });
 });

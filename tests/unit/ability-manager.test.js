@@ -85,16 +85,17 @@ describe('AbilityManager', () => {
 
   it('getState returns correct shape', () => {
     const state = mgr.getState();
-    expect(state.equipped).toEqual(['movement', 'jump']);
-    expect(state.active).toEqual([]);
+    expect(state.equipped).toEqual(['movement', 'jump', 'mantle']);
+    expect(state.active).toEqual(['mantle']);
     expect(state.params.movement).toEqual({ walkSpeed: 80, sprintSpeed: 160, stepHeight: 8 });
     expect(state.params.jump).toEqual({ heightPower: 200, horizontalPower: 100 });
+    expect(state.params.mantle).toEqual({ mantleHeight: 16, mantleSpeed: 200, mantleReach: 1 });
   });
 
   it('getState includes active abilities when sprinting', () => {
     mgr.updateFromInput({ sprint: true });
     const state = mgr.getState();
-    expect(state.active).toEqual(['movement']);
+    expect(state.active).toEqual(['movement', 'mantle']);
   });
 
   it('applyState syncs equipped and active sets', () => {
