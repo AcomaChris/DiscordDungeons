@@ -4,6 +4,21 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-02 — Tile Editor: Streamlined Object Annotation (v0.21.0)
+
+**Commits:** 0f3aea1, c120307, 766adad, 6cf0cae
+
+- **Browser-side pixel analysis** (`TilesetAnalyzer.js`): Ported `groupTiles.js` functions to browser Canvas API — tile transparency, edge distance, adjacency graph, BFS grouping. Added HSL color profiling and category classification heuristics (green → nature, brown/small → furniture, grey → structure, etc.). 27 unit tests.
+- **Auto-enrichment** (`AutoEnricher.js`): Ported `enrich-object-defs.js` to browser — WFC edge inference from tags/category, stretchable parts detection, interaction node generation (sit, item_placement, interact). 26 unit tests.
+- **Auto-Detect button**: Analyzes tileset pixels → groups adjacent opaque tiles → creates object defs with classified categories → applies collision presets per category → runs enrichAll for edges/parts/nodes. Summary toast reports results.
+- **Dim Assigned toggle**: Darkens tiles already in objects so unassigned opaque tiles visually pop.
+- **Category Painter**: "Paint Categories" replaces the property panel with a category palette; click/drag on canvas to assign categories to objects. Stronger color fills in paint mode. Mutual exclusion with other batch editors.
+- **Connection Editor**: "Connections" button opens next/prev navigator for WFC edge sockets. Four dropdowns + "Auto-fill from tags" button. Colored edge indicator strips on the canvas.
+- **Batch Collision Editor**: "Collision" button opens next/prev navigator with Full/Bottom Half/None presets. "Apply to all [category]" bulk-applies with proportional scaling.
+- All tools are mutually exclusive toggles — entering one exits any other. Clean exit on mode switch.
+
+---
+
 ## 2026-03-02 — Bartender NPC Agent (v0.19.0)
 
 **Commits:** 086f7ba, 61e0504, 42758b5
