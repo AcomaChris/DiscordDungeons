@@ -975,17 +975,20 @@ export class ObjectEditorCanvas {
       return;
     }
 
-    // Resize handle: start resize drag
+    // Resize handle: start resize drag (skip if tile belongs to another object)
     if (!e.shiftKey && !(e.ctrlKey || e.metaKey)) {
-      const handle = this._getHandleAt(col, row);
-      if (handle) {
-        const def = this.objectDefs[this.selectedObjectId];
-        this._isResizing = true;
-        this._resizeHandle = handle;
-        this._resizeStart = { col, row };
-        this._resizeCurrent = { col, row };
-        this._resizeBounds = { ...this._getObjectBounds(def) };
-        return;
+      const tileOwner = this._tileToObject.get(id);
+      if (!tileOwner || tileOwner === this.selectedObjectId) {
+        const handle = this._getHandleAt(col, row);
+        if (handle) {
+          const def = this.objectDefs[this.selectedObjectId];
+          this._isResizing = true;
+          this._resizeHandle = handle;
+          this._resizeStart = { col, row };
+          this._resizeCurrent = { col, row };
+          this._resizeBounds = { ...this._getObjectBounds(def) };
+          return;
+        }
       }
     }
 
