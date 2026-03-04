@@ -9,6 +9,9 @@ import { BugReporter } from './bug-report/BugReporter.js';
 import { PlayerDebugPanel } from './debug/PlayerDebugPanel.js';
 import { WorldDebugOverlay } from './debug/WorldDebugOverlay.js';
 import { BehaviorEnginePanel } from './behavior-engine/BehaviorEnginePanel.js';
+import { BRAND_TITLE } from './core/BrandConfig.js';
+
+document.title = BRAND_TITLE;
 
 new BuildStatusIndicator().mount();
 const bugReporter = new BugReporter();

@@ -2,6 +2,7 @@ import './player-debug.css';
 import { acquireInputFocus, releaseInputFocus } from '../core/InputContext.js';
 import { CHAR_HEIGHT, TEXTURE_SCALE } from '../core/Constants.js';
 import { ABILITY_DEFS, ABILITY_CATEGORIES } from '../abilities/AbilityDefs.js';
+import { ENTRY_DOMAIN, BRAND_NAME } from '../core/BrandConfig.js';
 
 // --- Player Debug Panel ---
 // Live-tweaking panel for player collision, color, and name.
@@ -102,6 +103,16 @@ export class PlayerDebugPanel {
       <div class="player-debug-row">
         <span class="player-debug-label">Name</span>
         <input type="text" class="player-debug-input" data-field="name" value="${this._escapeHtml(player.nameLabel?.text || 'Player')}" maxlength="20" />
+      </div>
+
+      <div class="player-debug-section">Entry</div>
+      <div class="player-debug-row">
+        <span class="player-debug-label">Domain</span>
+        <input type="text" class="player-debug-input" value="${this._escapeHtml(ENTRY_DOMAIN)}" readonly />
+      </div>
+      <div class="player-debug-row">
+        <span class="player-debug-label">Brand</span>
+        <input type="text" class="player-debug-input" value="${this._escapeHtml(BRAND_NAME)}" readonly />
       </div>
 
       <div class="player-debug-section">Position (read-only)</div>
