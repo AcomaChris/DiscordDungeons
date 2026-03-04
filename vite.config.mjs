@@ -29,6 +29,7 @@ export default defineConfig({
         main: resolve(__dirname, 'client/index.html'),
         devlog: resolve(__dirname, 'client/devlog.html'),
         editor: resolve(__dirname, 'client/editor.html'),
+        'map-editor': resolve(__dirname, 'client/map-editor.html'),
       },
     },
   },

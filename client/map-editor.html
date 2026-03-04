@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DiscordDungeons — Map Editor</title>
+</head>
+<body>
+  <div id="map-editor-root">
+    <div id="map-toolbar">
+      <span class="toolbar-title">Map Editor</span>
+      <div class="toolbar-sep"></div>
+      <div id="tool-buttons"></div>
+      <div class="toolbar-sep"></div>
+      <button id="import-btn" class="btn">Import</button>
+      <button id="export-btn" class="btn btn-primary">Export</button>
+      <div class="toolbar-sep"></div>
+      <button id="undo-btn" class="btn" title="Undo (Ctrl+Z)">Undo</button>
+      <button id="redo-btn" class="btn" title="Redo (Ctrl+Shift+Z)">Redo</button>
+      <div class="toolbar-sep"></div>
+      <button id="grid-toggle-btn" class="btn btn-toggle active" title="Toggle Grid (Ctrl+G)">Grid</button>
+    </div>
+    <div id="map-canvas-container">
+      <canvas id="map-canvas"></canvas>
+    </div>
+    <div id="map-status-bar">
+      <span id="status-cursor">Tile: 0, 0</span>
+      <span id="status-zoom">Zoom: 2x</span>
+      <span id="status-layer">Layer: Ground</span>
+      <span id="status-info"></span>
+    </div>
+  </div>
+  <div id="panel-mount"></div>
+  <script type="module">
+    import { MapEditor } from './src/map-editor/MapEditor.js';
+    const editor = new MapEditor();
+    editor.init();
+  </script>
+</body>
+</html>
