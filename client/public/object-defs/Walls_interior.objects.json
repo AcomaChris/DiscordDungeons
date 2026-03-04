@@ -1404,6 +1404,65 @@
         ],
         "weight": 1
       }
+    },
+    "obj_3_15": {
+      "category": "structure",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [
+        {
+          "id": "main",
+          "shape": "rect",
+          "type": "solid",
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 32,
+          "elevation": 0
+        }
+      ],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_3_15",
+      "name": "obj 3 15",
+      "grid": {
+        "cols": 2,
+        "rows": 2,
+        "tiles": [
+          [
+            153,
+            154
+          ],
+          [
+            163,
+            164
+          ]
+        ]
+      }
     }
   }
 }

@@ -8531,6 +8531,36 @@
           "carpet"
         ],
         "weight": 1
+      },
+      "parts": {
+        "layout": [
+          [
+            "left_end",
+            "middle",
+            "middle",
+            "right_end"
+          ],
+          [
+            "left_end",
+            "middle",
+            "middle",
+            "right_end"
+          ]
+        ],
+        "roles": {
+          "left_end": {
+            "required": true
+          },
+          "middle": {
+            "required": false,
+            "repeatable": true,
+            "minRepeat": 0,
+            "maxRepeat": 4
+          },
+          "right_end": {
+            "required": true
+          }
+        }
       }
     }
   }

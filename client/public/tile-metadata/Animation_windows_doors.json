@@ -1,0 +1,10 @@
+{
+  "tileset": "Animation_windows_doors",
+  "image": "tilesets/Animation_windows_doors.png",
+  "tileSize": 16,
+  "columns": 40,
+  "rows": 20,
+  "tileCount": 800,
+  "version": 1,
+  "tiles": {}
+}

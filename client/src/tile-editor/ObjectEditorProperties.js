@@ -105,7 +105,7 @@ export class ObjectEditorProperties {
 
     const def = this.objectDefs[this.selectedId];
 
-    // Composite thumbnail
+    // Composite thumbnail — swap tiles when scrubbing an animation frame
     if (this.canvasComponent && def.grid && def.grid.tiles) {
       const thumbCanvas = document.createElement('canvas');
       const cols = def.grid.cols || 1;
@@ -117,15 +117,27 @@ export class ObjectEditorProperties {
       const ctx = thumbCanvas.getContext('2d');
       ctx.imageSmoothingEnabled = false;
 
+      // Build tile-swap map from the current scrub frame
+      const frameMap = this._getFrameTileMap(def);
+
       for (let r = 0; r < def.grid.tiles.length; r++) {
         for (let c = 0; c < def.grid.tiles[r].length; c++) {
-          const tileCanvas = this.canvasComponent.getTileImageData(def.grid.tiles[r][c]);
+          const baseTile = def.grid.tiles[r][c];
+          const tileIdx = frameMap && frameMap[baseTile] !== undefined
+            ? frameMap[baseTile]
+            : baseTile;
+          const tileCanvas = this.canvasComponent.getTileImageData(tileIdx);
           if (tileCanvas) {
             ctx.drawImage(tileCanvas, c * TILE_SIZE * scale, r * TILE_SIZE * scale, TILE_SIZE * scale, TILE_SIZE * scale);
           }
         }
       }
       this.previewEl.appendChild(thumbCanvas);
+
+      // Animation frame scrubber
+      if (def.animation && def.animation.frames && def.animation.frames.length > 0) {
+        this.previewEl.appendChild(this._buildScrubber(def));
+      }
     }
 
     const info = document.createElement('div');
@@ -135,6 +147,60 @@ export class ObjectEditorProperties {
       <div>${this.selectedId}</div>
     `;
     this.previewEl.appendChild(info);
+  }
+
+  // Returns a baseTile→frameTile map for the current scrub frame, or null if none
+  _getFrameTileMap(def) {
+    if (!def.animation || !def.animation.frames) return null;
+    const frame = this._scrubFrame || 0;
+    const frameData = def.animation.frames[frame];
+    if (!frameData || !frameData.tiles) return null;
+    return frameData.tiles;
+  }
+
+  _buildScrubber(def) {
+    const frameCount = def.animation.frames.length;
+    const currentFrame = this._scrubFrame || 0;
+
+    const container = document.createElement('div');
+    container.className = 'animation-scrubber';
+
+    const label = document.createElement('span');
+    label.className = 'frame-label';
+    label.textContent = `Frame ${currentFrame + 1} / ${frameCount}`;
+    container.appendChild(label);
+
+    const prevBtn = document.createElement('button');
+    prevBtn.textContent = '\u25C0';
+    prevBtn.title = 'Previous frame';
+    prevBtn.addEventListener('click', () => {
+      this._scrubFrame = ((currentFrame - 1) + frameCount) % frameCount;
+      this._updatePreview();
+    });
+    container.appendChild(prevBtn);
+
+    const slider = document.createElement('input');
+    slider.type = 'range';
+    slider.min = 0;
+    slider.max = frameCount - 1;
+    slider.value = currentFrame;
+    slider.title = 'Scrub animation frames';
+    slider.addEventListener('input', () => {
+      this._scrubFrame = parseInt(slider.value, 10);
+      this._updatePreview();
+    });
+    container.appendChild(slider);
+
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = '\u25B6';
+    nextBtn.title = 'Next frame';
+    nextBtn.addEventListener('click', () => {
+      this._scrubFrame = (currentFrame + 1) % frameCount;
+      this._updatePreview();
+    });
+    container.appendChild(nextBtn);
+
+    return container;
   }
 
   // --- Multi-Select Panel ---
@@ -215,6 +281,21 @@ export class ObjectEditorProperties {
     body.appendChild(this._makeTagsInput('Tags', def.tags || [], (tags) => {
       this._emitChange('tags', tags);
     }, undefined, 'Add searchable tags (press Enter to add)'));
+
+    // Starting Frame (only for animated objects)
+    if (def.animation && def.animation.frames && def.animation.frames.length > 0) {
+      body.appendChild(this._makeNumberInput(
+        'Starting Frame',
+        def.animation.startFrame || 0,
+        (val) => {
+          this._emitChange('animation', { ...def.animation, startFrame: val });
+        },
+        0,
+        def.animation.frames.length - 1,
+        1,
+        'Which animation frame the object starts on (0-indexed)',
+      ));
+    }
 
     this.panel.appendChild(header);
     this.panel.appendChild(body);

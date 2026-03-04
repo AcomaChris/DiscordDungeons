@@ -69,7 +69,8 @@ describe('object-def-schema', () => {
       expect(keys).toContain('parts');
       expect(keys).toContain('rendering');
       expect(keys).toContain('wfc');
-      expect(keys).toHaveLength(8);
+      expect(keys).toContain('animation');
+      expect(keys).toHaveLength(9);
     });
 
     it('has correct default values', () => {
@@ -81,6 +82,7 @@ describe('object-def-schema', () => {
       expect(schema.OBJECT_DEFAULTS.parts).toBeNull();
       expect(schema.OBJECT_DEFAULTS.rendering).toEqual({ layer: 'Walls', depthMode: 'ysort' });
       expect(schema.OBJECT_DEFAULTS.wfc).toBeNull();
+      expect(schema.OBJECT_DEFAULTS.animation).toBeNull();
     });
   });
 
@@ -328,6 +330,112 @@ describe('object-def-schema', () => {
     it('returns empty array for empty file', () => {
       expect(schema.getObjectIds({})).toEqual([]);
       expect(schema.getObjectIds(null)).toEqual([]);
+    });
+  });
+
+  // --- Validation: animation field ---
+  describe('validateObjectDef — animation', () => {
+    it('accepts valid animation field', () => {
+      const result = schema.validateObjectDef(makeValidObject({
+        animation: {
+          startFrame: 0,
+          frames: [
+            { tiles: { '40': 40, '41': 41 }, duration: 150 },
+            { tiles: { '40': 50, '41': 51 }, duration: 150 },
+            { tiles: { '40': 60, '41': 61 }, duration: 150 },
+          ],
+        },
+      }));
+      expect(result.valid).toBe(true);
+      expect(result.errors).toHaveLength(0);
+    });
+
+    it('rejects animation with empty frames array', () => {
+      const result = schema.validateObjectDef(makeValidObject({
+        animation: { startFrame: 0, frames: [] },
+      }));
+      expect(result.valid).toBe(false);
+      expect(result.errors.some(e => e.includes('frames') && e.includes('non-empty'))).toBe(true);
+    });
+
+    it('rejects animation with negative startFrame', () => {
+      const result = schema.validateObjectDef(makeValidObject({
+        animation: {
+          startFrame: -1,
+          frames: [
+            { tiles: { '10': 10 }, duration: 100 },
+          ],
+        },
+      }));
+      expect(result.valid).toBe(false);
+      expect(result.errors.some(e => e.includes('startFrame'))).toBe(true);
+    });
+
+    it('rejects animation with startFrame >= frames.length', () => {
+      const result = schema.validateObjectDef(makeValidObject({
+        animation: {
+          startFrame: 2,
+          frames: [
+            { tiles: { '10': 10 }, duration: 100 },
+            { tiles: { '10': 20 }, duration: 100 },
+          ],
+        },
+      }));
+      expect(result.valid).toBe(false);
+      expect(result.errors.some(e => e.includes('startFrame'))).toBe(true);
+    });
+
+    it('rejects frame with missing tiles object', () => {
+      const result = schema.validateObjectDef(makeValidObject({
+        animation: {
+          startFrame: 0,
+          frames: [
+            { tiles: null, duration: 100 },
+          ],
+        },
+      }));
+      expect(result.valid).toBe(false);
+      expect(result.errors.some(e => e.includes('tiles') && e.includes('object'))).toBe(true);
+    });
+
+    it('rejects frame with non-number tile values', () => {
+      const result = schema.validateObjectDef(makeValidObject({
+        animation: {
+          startFrame: 0,
+          frames: [
+            { tiles: { '10': 'not_a_number' }, duration: 100 },
+          ],
+        },
+      }));
+      expect(result.valid).toBe(false);
+      expect(result.errors.some(e => e.includes('tiles') && e.includes('number'))).toBe(true);
+    });
+
+    it('rejects frame with non-positive duration', () => {
+      const result = schema.validateObjectDef(makeValidObject({
+        animation: {
+          startFrame: 0,
+          frames: [
+            { tiles: { '10': 10 }, duration: 0 },
+          ],
+        },
+      }));
+      expect(result.valid).toBe(false);
+      expect(result.errors.some(e => e.includes('duration'))).toBe(true);
+    });
+
+    it('rejects frames with inconsistent tile keys', () => {
+      const result = schema.validateObjectDef(makeValidObject({
+        animation: {
+          startFrame: 0,
+          frames: [
+            { tiles: { '10': 10, '11': 11 }, duration: 100 },
+            { tiles: { '10': 20, '12': 22 }, duration: 100 },
+          ],
+        },
+      }));
+      expect(result.valid).toBe(false);
+      expect(result.errors.some(e => e.includes('keys') && e.includes('match'))).toBe(true);
     });
   });
 });

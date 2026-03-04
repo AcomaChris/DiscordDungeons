@@ -1,0 +1,464 @@
+{
+  "tileset": "Animation_watcher",
+  "columns": 24,
+  "banks": {
+    "width": 2,
+    "count": 12
+  },
+  "animations": {
+    "0": [
+      {
+        "tileid": 0,
+        "duration": 150
+      },
+      {
+        "tileid": 2,
+        "duration": 150
+      },
+      {
+        "tileid": 4,
+        "duration": 150
+      },
+      {
+        "tileid": 6,
+        "duration": 150
+      },
+      {
+        "tileid": 8,
+        "duration": 150
+      },
+      {
+        "tileid": 10,
+        "duration": 150
+      },
+      {
+        "tileid": 12,
+        "duration": 150
+      },
+      {
+        "tileid": 14,
+        "duration": 150
+      },
+      {
+        "tileid": 16,
+        "duration": 150
+      },
+      {
+        "tileid": 18,
+        "duration": 150
+      },
+      {
+        "tileid": 20,
+        "duration": 150
+      },
+      {
+        "tileid": 22,
+        "duration": 150
+      }
+    ],
+    "1": [
+      {
+        "tileid": 1,
+        "duration": 150
+      },
+      {
+        "tileid": 3,
+        "duration": 150
+      },
+      {
+        "tileid": 5,
+        "duration": 150
+      },
+      {
+        "tileid": 7,
+        "duration": 150
+      },
+      {
+        "tileid": 9,
+        "duration": 150
+      },
+      {
+        "tileid": 11,
+        "duration": 150
+      },
+      {
+        "tileid": 13,
+        "duration": 150
+      },
+      {
+        "tileid": 15,
+        "duration": 150
+      },
+      {
+        "tileid": 17,
+        "duration": 150
+      },
+      {
+        "tileid": 19,
+        "duration": 150
+      },
+      {
+        "tileid": 21,
+        "duration": 150
+      },
+      {
+        "tileid": 23,
+        "duration": 150
+      }
+    ],
+    "24": [
+      {
+        "tileid": 24,
+        "duration": 150
+      },
+      {
+        "tileid": 26,
+        "duration": 150
+      },
+      {
+        "tileid": 28,
+        "duration": 150
+      },
+      {
+        "tileid": 30,
+        "duration": 150
+      },
+      {
+        "tileid": 32,
+        "duration": 150
+      },
+      {
+        "tileid": 34,
+        "duration": 150
+      },
+      {
+        "tileid": 36,
+        "duration": 150
+      },
+      {
+        "tileid": 38,
+        "duration": 150
+      },
+      {
+        "tileid": 40,
+        "duration": 150
+      },
+      {
+        "tileid": 42,
+        "duration": 150
+      },
+      {
+        "tileid": 44,
+        "duration": 150
+      },
+      {
+        "tileid": 46,
+        "duration": 150
+      }
+    ],
+    "25": [
+      {
+        "tileid": 25,
+        "duration": 150
+      },
+      {
+        "tileid": 27,
+        "duration": 150
+      },
+      {
+        "tileid": 29,
+        "duration": 150
+      },
+      {
+        "tileid": 31,
+        "duration": 150
+      },
+      {
+        "tileid": 33,
+        "duration": 150
+      },
+      {
+        "tileid": 35,
+        "duration": 150
+      },
+      {
+        "tileid": 37,
+        "duration": 150
+      },
+      {
+        "tileid": 39,
+        "duration": 150
+      },
+      {
+        "tileid": 41,
+        "duration": 150
+      },
+      {
+        "tileid": 43,
+        "duration": 150
+      },
+      {
+        "tileid": 45,
+        "duration": 150
+      },
+      {
+        "tileid": 47,
+        "duration": 150
+      }
+    ],
+    "48": [
+      {
+        "tileid": 48,
+        "duration": 150
+      },
+      {
+        "tileid": 50,
+        "duration": 150
+      },
+      {
+        "tileid": 52,
+        "duration": 150
+      },
+      {
+        "tileid": 54,
+        "duration": 150
+      },
+      {
+        "tileid": 56,
+        "duration": 150
+      },
+      {
+        "tileid": 58,
+        "duration": 150
+      },
+      {
+        "tileid": 60,
+        "duration": 150
+      },
+      {
+        "tileid": 62,
+        "duration": 150
+      },
+      {
+        "tileid": 64,
+        "duration": 150
+      },
+      {
+        "tileid": 66,
+        "duration": 150
+      },
+      {
+        "tileid": 68,
+        "duration": 150
+      },
+      {
+        "tileid": 70,
+        "duration": 150
+      }
+    ],
+    "49": [
+      {
+        "tileid": 49,
+        "duration": 150
+      },
+      {
+        "tileid": 51,
+        "duration": 150
+      },
+      {
+        "tileid": 53,
+        "duration": 150
+      },
+      {
+        "tileid": 55,
+        "duration": 150
+      },
+      {
+        "tileid": 57,
+        "duration": 150
+      },
+      {
+        "tileid": 59,
+        "duration": 150
+      },
+      {
+        "tileid": 61,
+        "duration": 150
+      },
+      {
+        "tileid": 63,
+        "duration": 150
+      },
+      {
+        "tileid": 65,
+        "duration": 150
+      },
+      {
+        "tileid": 67,
+        "duration": 150
+      },
+      {
+        "tileid": 69,
+        "duration": 150
+      },
+      {
+        "tileid": 71,
+        "duration": 150
+      }
+    ]
+  },
+  "families": [
+    [
+      0,
+      2,
+      4,
+      6,
+      8,
+      10,
+      12,
+      14,
+      16,
+      18,
+      20,
+      22
+    ],
+    [
+      1,
+      3,
+      5,
+      7,
+      9,
+      11,
+      13,
+      15,
+      17,
+      19,
+      21,
+      23
+    ],
+    [
+      24,
+      26,
+      28,
+      30,
+      32,
+      34,
+      36,
+      38,
+      40,
+      42,
+      44,
+      46
+    ],
+    [
+      25,
+      27,
+      29,
+      31,
+      33,
+      35,
+      37,
+      39,
+      41,
+      43,
+      45,
+      47
+    ],
+    [
+      48,
+      50,
+      52,
+      54,
+      56,
+      58,
+      60,
+      62,
+      64,
+      66,
+      68,
+      70
+    ],
+    [
+      49,
+      51,
+      53,
+      55,
+      57,
+      59,
+      61,
+      63,
+      65,
+      67,
+      69,
+      71
+    ]
+  ],
+  "frameTiles": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71
+  ]
+}

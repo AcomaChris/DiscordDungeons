@@ -26,6 +26,7 @@ const TILESETS = [
   'Walls_interior.png',
   'Walls_street.png',
   'Interior_2nd_floor.png',
+  'Animation_windows_doors.png',
 ];
 
 async function main() {

@@ -962,3 +962,50 @@ body {
   display: flex;
   gap: 6px;
 }
+
+/* --- Animation Scrubber --- */
+
+.animation-scrubber {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 4px;
+}
+
+.animation-scrubber .frame-label {
+  font-size: 0.8rem;
+  color: #a0a0c0;
+  min-width: 70px;
+}
+
+.animation-scrubber input[type="range"] {
+  flex: 1;
+}
+
+.animation-scrubber button {
+  background: none;
+  border: 1px solid #555;
+  color: #c0c0e0;
+  padding: 2px 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+/* --- Confidence + Animation Badges --- */
+
+.confidence-badge {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+
+.anim-badge {
+  font-size: 0.65rem;
+  color: #8a8;
+  margin-left: 4px;
+}

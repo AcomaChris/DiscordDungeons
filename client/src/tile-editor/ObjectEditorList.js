@@ -190,10 +190,32 @@ export class ObjectEditorList {
     const info = document.createElement('div');
     info.className = 'object-list-info';
 
-    const name = document.createElement('div');
-    name.className = 'object-list-name';
-    name.textContent = def.name || id;
-    info.appendChild(name);
+    const nameRow = document.createElement('div');
+    nameRow.className = 'object-list-name';
+
+    // Confidence badge (colored dot before the name)
+    if (def.confidence) {
+      const confDot = document.createElement('span');
+      confDot.className = 'confidence-badge';
+      const confColors = { high: '#4a9', medium: '#da4' };
+      confDot.style.background = confColors[def.confidence] || '#888';
+      confDot.title = `Confidence: ${def.confidence}`;
+      nameRow.appendChild(confDot);
+    }
+
+    const nameText = document.createTextNode(def.name || id);
+    nameRow.appendChild(nameText);
+
+    // Animation indicator
+    if (def.animation && def.animation.frames && def.animation.frames.length > 0) {
+      const animBadge = document.createElement('span');
+      animBadge.className = 'anim-badge';
+      animBadge.textContent = '\u25B6 anim';
+      animBadge.title = `${def.animation.frames.length} animation frame(s)`;
+      nameRow.appendChild(animBadge);
+    }
+
+    info.appendChild(nameRow);
 
     const meta = document.createElement('div');
     meta.className = 'object-list-meta';

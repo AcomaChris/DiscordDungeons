@@ -1,0 +1,3735 @@
+{
+  "version": 1,
+  "tileset": "Walls_street",
+  "objects": {
+    "obj_0_0": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_0_0",
+      "name": "obj 0 0",
+      "grid": {
+        "cols": 3,
+        "rows": 3,
+        "tiles": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            21,
+            null,
+            23
+          ],
+          [
+            null,
+            null,
+            44
+          ]
+        ]
+      }
+    },
+    "obj_3_0": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_3_0",
+      "name": "obj 3 0",
+      "grid": {
+        "cols": 2,
+        "rows": 1,
+        "tiles": [
+          [
+            3,
+            4
+          ]
+        ]
+      }
+    },
+    "obj_6_0": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_6_0",
+      "name": "obj 6 0",
+      "grid": {
+        "cols": 2,
+        "rows": 1,
+        "tiles": [
+          [
+            6,
+            7
+          ]
+        ]
+      }
+    },
+    "obj_11_0": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_11_0",
+      "name": "obj 11 0",
+      "grid": {
+        "cols": 2,
+        "rows": 1,
+        "tiles": [
+          [
+            11,
+            12
+          ]
+        ]
+      }
+    },
+    "obj_14_0": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_14_0",
+      "name": "obj 14 0",
+      "grid": {
+        "cols": 2,
+        "rows": 4,
+        "tiles": [
+          [
+            14,
+            15
+          ],
+          [
+            35,
+            36
+          ],
+          [
+            56,
+            57
+          ],
+          [
+            77,
+            78
+          ]
+        ]
+      }
+    },
+    "obj_17_0": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_17_0",
+      "name": "obj 17 0",
+      "grid": {
+        "cols": 4,
+        "rows": 4,
+        "tiles": [
+          [
+            17,
+            18,
+            19,
+            20
+          ],
+          [
+            38,
+            39,
+            40,
+            41
+          ],
+          [
+            59,
+            60,
+            61,
+            62
+          ],
+          [
+            80,
+            81,
+            82,
+            83
+          ]
+        ]
+      }
+    },
+    "obj_1_1": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_1_1",
+      "name": "obj 1 1",
+      "grid": {
+        "cols": 1,
+        "rows": 2,
+        "tiles": [
+          [
+            22
+          ],
+          [
+            43
+          ]
+        ]
+      }
+    },
+    "obj_3_1": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_3_1",
+      "name": "obj 3 1",
+      "grid": {
+        "cols": 2,
+        "rows": 3,
+        "tiles": [
+          [
+            24,
+            25
+          ],
+          [
+            45,
+            46
+          ],
+          [
+            66,
+            67
+          ]
+        ]
+      }
+    },
+    "obj_11_1": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_11_1",
+      "name": "obj 11 1",
+      "grid": {
+        "cols": 2,
+        "rows": 4,
+        "tiles": [
+          [
+            32,
+            33
+          ],
+          [
+            53,
+            54
+          ],
+          [
+            74,
+            75
+          ],
+          [
+            95,
+            96
+          ]
+        ]
+      }
+    },
+    "obj_0_2": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_0_2",
+      "name": "obj 0 2",
+      "grid": {
+        "cols": 3,
+        "rows": 3,
+        "tiles": [
+          [
+            42,
+            null,
+            null
+          ],
+          [
+            63,
+            64,
+            65
+          ],
+          [
+            84,
+            85,
+            86
+          ]
+        ]
+      }
+    },
+    "obj_3_4": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_3_4",
+      "name": "obj 3 4",
+      "grid": {
+        "cols": 2,
+        "rows": 1,
+        "tiles": [
+          [
+            87,
+            88
+          ]
+        ]
+      }
+    },
+    "obj_6_5": {
+      "category": "nature",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [
+        {
+          "id": "main",
+          "shape": "rect",
+          "type": "solid",
+          "x": 0,
+          "y": 24,
+          "width": 64,
+          "height": 24,
+          "elevation": 0
+        }
+      ],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_6_5",
+      "name": "obj 6 5",
+      "grid": {
+        "cols": 4,
+        "rows": 3,
+        "tiles": [
+          [
+            null,
+            null,
+            113,
+            114
+          ],
+          [
+            132,
+            133,
+            134,
+            135
+          ],
+          [
+            153,
+            154,
+            155,
+            156
+          ]
+        ]
+      }
+    },
+    "obj_14_5": {
+      "category": "structure",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [
+        {
+          "id": "main",
+          "shape": "rect",
+          "type": "solid",
+          "x": 0,
+          "y": 0,
+          "width": 48,
+          "height": 16,
+          "elevation": 0
+        }
+      ],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_14_5",
+      "name": "obj 14 5",
+      "grid": {
+        "cols": 3,
+        "rows": 1,
+        "tiles": [
+          [
+            119,
+            120,
+            121
+          ]
+        ]
+      }
+    },
+    "obj_19_5": {
+      "category": "structure",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [
+        {
+          "id": "main",
+          "shape": "rect",
+          "type": "solid",
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 16,
+          "elevation": 0
+        }
+      ],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_19_5",
+      "name": "obj 19 5",
+      "grid": {
+        "cols": 2,
+        "rows": 1,
+        "tiles": [
+          [
+            124,
+            125
+          ]
+        ]
+      }
+    },
+    "obj_0_6": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_0_6",
+      "name": "obj 0 6",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            126
+          ]
+        ]
+      }
+    },
+    "obj_1_6": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_1_6",
+      "name": "obj 1 6",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            127
+          ]
+        ]
+      }
+    },
+    "obj_2_6": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_2_6",
+      "name": "obj 2 6",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            128
+          ]
+        ]
+      }
+    },
+    "obj_3_6": {
+      "category": "structure",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [
+        {
+          "id": "main",
+          "shape": "rect",
+          "type": "solid",
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 32,
+          "elevation": 0
+        }
+      ],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_3_6",
+      "name": "obj 3 6",
+      "grid": {
+        "cols": 2,
+        "rows": 2,
+        "tiles": [
+          [
+            129,
+            130
+          ],
+          [
+            150,
+            151
+          ]
+        ]
+      }
+    },
+    "obj_11_6": {
+      "category": "structure",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [
+        {
+          "id": "main",
+          "shape": "rect",
+          "type": "solid",
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 16,
+          "elevation": 0
+        }
+      ],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_11_6",
+      "name": "obj 11 6",
+      "grid": {
+        "cols": 2,
+        "rows": 1,
+        "tiles": [
+          [
+            137,
+            138
+          ]
+        ]
+      }
+    },
+    "obj_14_6": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_14_6",
+      "name": "obj 14 6",
+      "grid": {
+        "cols": 2,
+        "rows": 2,
+        "tiles": [
+          [
+            140,
+            141
+          ],
+          [
+            161,
+            162
+          ]
+        ]
+      }
+    },
+    "obj_17_6": {
+      "category": "structure",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [
+        {
+          "id": "main",
+          "shape": "rect",
+          "type": "solid",
+          "x": 0,
+          "y": 0,
+          "width": 64,
+          "height": 32,
+          "elevation": 0
+        }
+      ],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_17_6",
+      "name": "obj 17 6",
+      "grid": {
+        "cols": 4,
+        "rows": 2,
+        "tiles": [
+          [
+            143,
+            144,
+            145,
+            146
+          ],
+          [
+            164,
+            165,
+            166,
+            167
+          ]
+        ]
+      }
+    },
+    "obj_0_7": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_0_7",
+      "name": "obj 0 7",
+      "grid": {
+        "cols": 2,
+        "rows": 4,
+        "tiles": [
+          [
+            147,
+            148
+          ],
+          [
+            168,
+            169
+          ],
+          [
+            189,
+            190
+          ],
+          [
+            210,
+            211
+          ]
+        ]
+      }
+    },
+    "obj_2_8": {
+      "category": "nature",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [
+        {
+          "id": "main",
+          "shape": "rect",
+          "type": "solid",
+          "x": 0,
+          "y": 24,
+          "width": 48,
+          "height": 24,
+          "elevation": 0
+        }
+      ],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_2_8",
+      "name": "obj 2 8",
+      "grid": {
+        "cols": 3,
+        "rows": 3,
+        "tiles": [
+          [
+            170,
+            171,
+            172
+          ],
+          [
+            191,
+            192,
+            193
+          ],
+          [
+            212,
+            213,
+            214
+          ]
+        ]
+      }
+    },
+    "obj_11_8": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_11_8",
+      "name": "obj 11 8",
+      "grid": {
+        "cols": 1,
+        "rows": 3,
+        "tiles": [
+          [
+            179
+          ],
+          [
+            200
+          ],
+          [
+            221
+          ]
+        ]
+      }
+    },
+    "obj_12_8": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_12_8",
+      "name": "obj 12 8",
+      "grid": {
+        "cols": 1,
+        "rows": 3,
+        "tiles": [
+          [
+            180
+          ],
+          [
+            201
+          ],
+          [
+            222
+          ]
+        ]
+      }
+    },
+    "obj_13_8": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_13_8",
+      "name": "obj 13 8",
+      "grid": {
+        "cols": 1,
+        "rows": 3,
+        "tiles": [
+          [
+            181
+          ],
+          [
+            202
+          ],
+          [
+            223
+          ]
+        ]
+      }
+    },
+    "obj_14_8": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_14_8",
+      "name": "obj 14 8",
+      "grid": {
+        "cols": 6,
+        "rows": 3,
+        "tiles": [
+          [
+            182,
+            183,
+            184,
+            185,
+            186,
+            187
+          ],
+          [
+            203,
+            204,
+            205,
+            206,
+            207,
+            208
+          ],
+          [
+            224,
+            225,
+            226,
+            227,
+            null,
+            null
+          ]
+        ]
+      }
+    },
+    "obj_20_8": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_20_8",
+      "name": "obj 20 8",
+      "grid": {
+        "cols": 1,
+        "rows": 2,
+        "tiles": [
+          [
+            188
+          ],
+          [
+            209
+          ]
+        ]
+      }
+    },
+    "obj_5_9": {
+      "category": "nature",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [
+        {
+          "id": "main",
+          "shape": "rect",
+          "type": "solid",
+          "x": 0,
+          "y": 16,
+          "width": 32,
+          "height": 16,
+          "elevation": 0
+        }
+      ],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_5_9",
+      "name": "obj 5 9",
+      "grid": {
+        "cols": 2,
+        "rows": 2,
+        "tiles": [
+          [
+            194,
+            195
+          ],
+          [
+            215,
+            216
+          ]
+        ]
+      }
+    },
+    "obj_8_9": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_8_9",
+      "name": "obj 8 9",
+      "grid": {
+        "cols": 3,
+        "rows": 2,
+        "tiles": [
+          [
+            197,
+            198,
+            199
+          ],
+          [
+            218,
+            219,
+            220
+          ]
+        ]
+      }
+    },
+    "obj_18_10": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_18_10",
+      "name": "obj 18 10",
+      "grid": {
+        "cols": 3,
+        "rows": 1,
+        "tiles": [
+          [
+            228,
+            229,
+            230
+          ]
+        ]
+      }
+    },
+    "obj_14_11": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_14_11",
+      "name": "obj 14 11",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            245
+          ]
+        ]
+      }
+    },
+    "obj_15_11": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_15_11",
+      "name": "obj 15 11",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            246
+          ]
+        ]
+      }
+    },
+    "obj_16_11": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_16_11",
+      "name": "obj 16 11",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            247
+          ]
+        ]
+      }
+    },
+    "obj_17_11": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_17_11",
+      "name": "obj 17 11",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            248
+          ]
+        ]
+      }
+    },
+    "obj_18_11": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_18_11",
+      "name": "obj 18 11",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            249
+          ]
+        ]
+      }
+    },
+    "obj_19_11": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_19_11",
+      "name": "obj 19 11",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            250
+          ]
+        ]
+      }
+    },
+    "obj_20_11": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_20_11",
+      "name": "obj 20 11",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            251
+          ]
+        ]
+      }
+    },
+    "obj_0_12": {
+      "category": "structure",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [
+        {
+          "id": "main",
+          "shape": "rect",
+          "type": "solid",
+          "x": 0,
+          "y": 0,
+          "width": 96,
+          "height": 64,
+          "elevation": 0
+        }
+      ],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_0_12",
+      "name": "obj 0 12",
+      "grid": {
+        "cols": 6,
+        "rows": 4,
+        "tiles": [
+          [
+            252,
+            253,
+            254,
+            255,
+            256,
+            257
+          ],
+          [
+            273,
+            274,
+            275,
+            276,
+            277,
+            278
+          ],
+          [
+            294,
+            295,
+            296,
+            297,
+            298,
+            299
+          ],
+          [
+            315,
+            316,
+            317,
+            318,
+            319,
+            320
+          ]
+        ]
+      }
+    },
+    "obj_6_12": {
+      "category": "structure",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [
+        {
+          "id": "main",
+          "shape": "rect",
+          "type": "solid",
+          "x": 0,
+          "y": 0,
+          "width": 96,
+          "height": 64,
+          "elevation": 0
+        }
+      ],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_6_12",
+      "name": "obj 6 12",
+      "grid": {
+        "cols": 6,
+        "rows": 4,
+        "tiles": [
+          [
+            258,
+            259,
+            260,
+            261,
+            262,
+            263
+          ],
+          [
+            279,
+            280,
+            281,
+            282,
+            283,
+            284
+          ],
+          [
+            300,
+            301,
+            302,
+            303,
+            304,
+            305
+          ],
+          [
+            321,
+            322,
+            323,
+            324,
+            325,
+            326
+          ]
+        ]
+      }
+    },
+    "obj_13_12": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_13_12",
+      "name": "obj 13 12",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            265
+          ]
+        ]
+      }
+    },
+    "obj_14_12": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_14_12",
+      "name": "obj 14 12",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            266
+          ]
+        ]
+      }
+    },
+    "obj_15_12": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_15_12",
+      "name": "obj 15 12",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            267
+          ]
+        ]
+      }
+    },
+    "obj_16_12": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_16_12",
+      "name": "obj 16 12",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            268
+          ]
+        ]
+      }
+    },
+    "obj_17_12": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_17_12",
+      "name": "obj 17 12",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            269
+          ]
+        ]
+      }
+    },
+    "obj_18_12": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_18_12",
+      "name": "obj 18 12",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            270
+          ]
+        ]
+      }
+    },
+    "obj_19_12": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_19_12",
+      "name": "obj 19 12",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            271
+          ]
+        ]
+      }
+    },
+    "obj_20_12": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_20_12",
+      "name": "obj 20 12",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            272
+          ]
+        ]
+      }
+    },
+    "obj_14_13": {
+      "category": "nature",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [
+        {
+          "id": "main",
+          "shape": "rect",
+          "type": "solid",
+          "x": 0,
+          "y": 8,
+          "width": 32,
+          "height": 8,
+          "elevation": 0
+        }
+      ],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_14_13",
+      "name": "obj 14 13",
+      "grid": {
+        "cols": 2,
+        "rows": 1,
+        "tiles": [
+          [
+            287,
+            288
+          ]
+        ]
+      }
+    },
+    "obj_16_13": {
+      "category": "nature",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [
+        {
+          "id": "main",
+          "shape": "rect",
+          "type": "solid",
+          "x": 0,
+          "y": 8,
+          "width": 32,
+          "height": 8,
+          "elevation": 0
+        }
+      ],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_16_13",
+      "name": "obj 16 13",
+      "grid": {
+        "cols": 2,
+        "rows": 1,
+        "tiles": [
+          [
+            289,
+            290
+          ]
+        ]
+      }
+    },
+    "obj_18_13": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_18_13",
+      "name": "obj 18 13",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            291
+          ]
+        ]
+      }
+    },
+    "obj_19_13": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_19_13",
+      "name": "obj 19 13",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            292
+          ]
+        ]
+      }
+    },
+    "obj_20_13": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_20_13",
+      "name": "obj 20 13",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            293
+          ]
+        ]
+      }
+    },
+    "obj_13_14": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_13_14",
+      "name": "obj 13 14",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            307
+          ]
+        ]
+      }
+    },
+    "obj_15_14": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_15_14",
+      "name": "obj 15 14",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            309
+          ]
+        ]
+      }
+    },
+    "obj_16_14": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_16_14",
+      "name": "obj 16 14",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            310
+          ]
+        ]
+      }
+    },
+    "obj_17_14": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_17_14",
+      "name": "obj 17 14",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            311
+          ]
+        ]
+      }
+    },
+    "obj_18_14": {
+      "category": "nature",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [
+        {
+          "id": "main",
+          "shape": "rect",
+          "type": "solid",
+          "x": 0,
+          "y": 8,
+          "width": 32,
+          "height": 8,
+          "elevation": 0
+        }
+      ],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_18_14",
+      "name": "obj 18 14",
+      "grid": {
+        "cols": 2,
+        "rows": 1,
+        "tiles": [
+          [
+            312,
+            313
+          ]
+        ]
+      }
+    },
+    "obj_20_14": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_20_14",
+      "name": "obj 20 14",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            314
+          ]
+        ]
+      }
+    },
+    "obj_12_15": {
+      "category": "lighting",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_12_15",
+      "name": "obj 12 15",
+      "grid": {
+        "cols": 3,
+        "rows": 1,
+        "tiles": [
+          [
+            327,
+            328,
+            329
+          ]
+        ]
+      }
+    },
+    "obj_15_15": {
+      "category": "furniture",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [
+        {
+          "id": "main",
+          "shape": "rect",
+          "type": "solid",
+          "x": 0,
+          "y": 16,
+          "width": 32,
+          "height": 16,
+          "elevation": 0
+        }
+      ],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_15_15",
+      "name": "obj 15 15",
+      "grid": {
+        "cols": 2,
+        "rows": 2,
+        "tiles": [
+          [
+            330,
+            331
+          ],
+          [
+            351,
+            352
+          ]
+        ]
+      }
+    },
+    "obj_17_15": {
+      "category": "lighting",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_17_15",
+      "name": "obj 17 15",
+      "grid": {
+        "cols": 2,
+        "rows": 1,
+        "tiles": [
+          [
+            332,
+            333
+          ]
+        ]
+      }
+    },
+    "obj_19_15": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_19_15",
+      "name": "obj 19 15",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            334
+          ]
+        ]
+      }
+    },
+    "obj_20_15": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_20_15",
+      "name": "obj 20 15",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            335
+          ]
+        ]
+      }
+    },
+    "obj_0_16": {
+      "category": "structure",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [
+        {
+          "id": "main",
+          "shape": "rect",
+          "type": "solid",
+          "x": 0,
+          "y": 0,
+          "width": 96,
+          "height": 32,
+          "elevation": 0
+        }
+      ],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_0_16",
+      "name": "obj 0 16",
+      "grid": {
+        "cols": 6,
+        "rows": 2,
+        "tiles": [
+          [
+            336,
+            337,
+            338,
+            339,
+            340,
+            341
+          ],
+          [
+            357,
+            358,
+            359,
+            360,
+            361,
+            362
+          ]
+        ]
+      }
+    },
+    "obj_6_16": {
+      "category": "furniture",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [
+        {
+          "id": "main",
+          "shape": "rect",
+          "type": "solid",
+          "x": 0,
+          "y": 8,
+          "width": 96,
+          "height": 8,
+          "elevation": 0
+        }
+      ],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_6_16",
+      "name": "obj 6 16",
+      "grid": {
+        "cols": 6,
+        "rows": 1,
+        "tiles": [
+          [
+            342,
+            343,
+            344,
+            345,
+            346,
+            347
+          ]
+        ]
+      }
+    },
+    "obj_12_16": {
+      "category": "lighting",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_12_16",
+      "name": "obj 12 16",
+      "grid": {
+        "cols": 3,
+        "rows": 1,
+        "tiles": [
+          [
+            348,
+            349,
+            350
+          ]
+        ]
+      }
+    },
+    "obj_17_16": {
+      "category": "lighting",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_17_16",
+      "name": "obj 17 16",
+      "grid": {
+        "cols": 2,
+        "rows": 1,
+        "tiles": [
+          [
+            353,
+            354
+          ]
+        ]
+      }
+    },
+    "obj_19_16": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_19_16",
+      "name": "obj 19 16",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            355
+          ]
+        ]
+      }
+    },
+    "obj_20_16": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_20_16",
+      "name": "obj 20 16",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            356
+          ]
+        ]
+      }
+    },
+    "obj_6_17": {
+      "category": "furniture",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [
+        {
+          "id": "main",
+          "shape": "rect",
+          "type": "solid",
+          "x": 0,
+          "y": 8,
+          "width": 96,
+          "height": 8,
+          "elevation": 0
+        }
+      ],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_6_17",
+      "name": "obj 6 17",
+      "grid": {
+        "cols": 6,
+        "rows": 1,
+        "tiles": [
+          [
+            363,
+            364,
+            365,
+            366,
+            367,
+            368
+          ]
+        ]
+      }
+    },
+    "obj_12_17": {
+      "category": "lighting",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_12_17",
+      "name": "obj 12 17",
+      "grid": {
+        "cols": 5,
+        "rows": 1,
+        "tiles": [
+          [
+            369,
+            370,
+            371,
+            372,
+            373
+          ]
+        ]
+      }
+    },
+    "obj_17_17": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_17_17",
+      "name": "obj 17 17",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            374
+          ]
+        ]
+      }
+    },
+    "obj_18_17": {
+      "category": "decoration",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "open_floor",
+          "south": "open_floor",
+          "east": "open_floor",
+          "west": "open_floor"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_18_17",
+      "name": "obj 18 17",
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "tiles": [
+          [
+            375
+          ]
+        ]
+      }
+    },
+    "obj_19_17": {
+      "category": "furniture",
+      "tags": [],
+      "surface": "stone",
+      "colliders": [
+        {
+          "id": "main",
+          "shape": "rect",
+          "type": "solid",
+          "x": 0,
+          "y": 8,
+          "width": 32,
+          "height": 8,
+          "elevation": 0
+        }
+      ],
+      "nodes": [],
+      "parts": null,
+      "rendering": {
+        "layer": "Walls",
+        "depthMode": "ysort"
+      },
+      "wfc": {
+        "edges": {
+          "north": "furniture_edge",
+          "south": "furniture_edge",
+          "east": "furniture_edge",
+          "west": "furniture_edge"
+        },
+        "clearance": {
+          "north": 1,
+          "south": 1,
+          "east": 1,
+          "west": 1
+        },
+        "allowedFloors": [
+          "stone",
+          "wood"
+        ],
+        "weight": 1
+      },
+      "animation": null,
+      "id": "obj_19_17",
+      "name": "obj 19 17",
+      "grid": {
+        "cols": 2,
+        "rows": 1,
+        "tiles": [
+          [
+            376,
+            377
+          ]
+        ]
+      }
+    }
+  }
+}

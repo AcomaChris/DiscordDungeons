@@ -26,6 +26,7 @@ export const OBJECT_DEFAULTS = {
   parts: null,
   rendering: { layer: 'Walls', depthMode: 'ysort' },
   wfc: null,
+  animation: null,
 };
 
 // --- Validation ---
@@ -168,6 +169,43 @@ export function validateObjectDef(def) {
   if (def.rendering) {
     if (def.rendering.depthMode && !DEPTH_MODES.includes(def.rendering.depthMode)) {
       errors.push(`rendering.depthMode must be one of: ${DEPTH_MODES.join(', ')}`);
+    }
+  }
+
+  // --- Animation (optional) ---
+  if (def.animation != null) {
+    const anim = def.animation;
+    if (!Array.isArray(anim.frames) || anim.frames.length === 0) {
+      errors.push('animation.frames must be a non-empty array');
+    } else {
+      if (typeof anim.startFrame !== 'number' || !Number.isInteger(anim.startFrame)
+          || anim.startFrame < 0 || anim.startFrame >= anim.frames.length) {
+        errors.push(`animation.startFrame must be a non-negative integer less than frames.length (${anim.frames.length})`);
+      }
+
+      // Collect tile keys from each frame to verify consistency across frames
+      let referenceKeys = null;
+      for (let i = 0; i < anim.frames.length; i++) {
+        const frame = anim.frames[i];
+        if (typeof frame.tiles !== 'object' || frame.tiles === null || Array.isArray(frame.tiles)) {
+          errors.push(`animation.frames[${i}].tiles must be an object`);
+          continue;
+        }
+        const keys = Object.keys(frame.tiles).sort();
+        for (const key of keys) {
+          if (typeof frame.tiles[key] !== 'number') {
+            errors.push(`animation.frames[${i}].tiles["${key}"] must be a number`);
+          }
+        }
+        if (typeof frame.duration !== 'number' || frame.duration <= 0) {
+          errors.push(`animation.frames[${i}].duration must be a positive number`);
+        }
+        if (referenceKeys === null) {
+          referenceKeys = keys;
+        } else if (keys.join(',') !== referenceKeys.join(',')) {
+          errors.push(`animation.frames[${i}].tiles keys [${keys}] must match frame 0 keys [${referenceKeys}]`);
+        }
+      }
     }
   }
 

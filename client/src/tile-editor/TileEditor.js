@@ -695,7 +695,7 @@ class TileEditor {
 
   // --- Auto-Detect Objects ---
 
-  _autoDetectObjects() {
+  async _autoDetectObjects() {
     if (!this._tilesetImage) {
       alert('Load a tileset first.');
       return;
@@ -706,8 +706,19 @@ class TileEditor {
       return;
     }
 
-    // Run pixel analysis
-    const { groups, cols } = analyzeTileset(this._tilesetImage, TILE_SIZE);
+    // Attempt to load animation data for this tileset (404 = no animation data)
+    let animationData = null;
+    if (this.tilesetName) {
+      try {
+        const animRes = await fetch(`/tile-metadata/${this.tilesetName}.animations.json`);
+        if (animRes.ok) animationData = await animRes.json();
+      } catch {
+        // No animation data available — proceed without it
+      }
+    }
+
+    // Run pixel analysis (animation-aware when data is available)
+    const { groups, cols } = analyzeTileset(this._tilesetImage, TILE_SIZE, 30, animationData);
 
     // Build set of tiles already assigned to existing objects
     const assignedTiles = new Set();
@@ -750,11 +761,12 @@ class TileEditor {
       const category = group.category || 'decoration';
 
       // Create the object def with defaults + WFC bootstrap
-      this.objectDefs[id] = {
+      const objDef = {
         ...structuredClone(OBJECT_DEFAULTS),
         id,
         name: id.replace(/_/g, ' '),
         category,
+        confidence: group.confidence,
         grid: { cols: group.cols, rows: group.rows, tiles: tileGrid },
         wfc: {
           edges: { north: 'open_floor', south: 'open_floor', east: 'open_floor', west: 'open_floor' },
@@ -763,6 +775,34 @@ class TileEditor {
           weight: 1,
         },
       };
+
+      // Build animation field for groups containing animated base tiles
+      if (group.animated && animationData && animationData.animations) {
+        const baseTilesInGroup = group.tiles.filter(
+          t => animationData.animations[t] !== undefined,
+        );
+        if (baseTilesInGroup.length > 0) {
+          // All animated tiles should have the same frame count; use the first to determine it
+          const sampleFrames = animationData.animations[baseTilesInGroup[0]];
+          const frameCount = Array.isArray(sampleFrames) ? sampleFrames.length : 0;
+
+          const frames = [];
+          for (let f = 0; f < frameCount; f++) {
+            const mapping = {};
+            for (const bt of baseTilesInGroup) {
+              const frameTiles = animationData.animations[bt];
+              if (Array.isArray(frameTiles) && frameTiles[f] !== undefined) {
+                mapping[bt] = frameTiles[f];
+              }
+            }
+            frames.push(mapping);
+          }
+
+          objDef.animation = { startFrame: 0, frames };
+        }
+      }
+
+      this.objectDefs[id] = objDef;
 
       // Apply collision preset by category
       this._applyCollisionPreset(this.objectDefs[id]);

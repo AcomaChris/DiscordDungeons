@@ -307,7 +307,9 @@ export function classifyCategory(colorProfile, groupCols, groupRows) {
 // imageEl: an HTMLImageElement or any CanvasImageSource
 // tileSize: tile size in pixels (usually 16)
 // threshold: edge similarity threshold (lower = stricter grouping)
-export function analyzeTileset(imageEl, tileSize, threshold = 30) {
+// animationData: optional parsed .animations.json — restricts analysis to bank 0
+//   and force-connects animation families
+export function analyzeTileset(imageEl, tileSize, threshold = 30, animationData = null) {
   const width = imageEl.naturalWidth || imageEl.width;
   const height = imageEl.naturalHeight || imageEl.height;
   const cols = Math.floor(width / tileSize);
@@ -325,12 +327,59 @@ export function analyzeTileset(imageEl, tileSize, threshold = 30) {
     pixels, width, cols, rows, tileSize, threshold,
   );
 
+  // --- Animation-aware filtering ---
+  if (animationData && animationData.banks) {
+    const bankWidth = animationData.banks.width;
+
+    // Remove tiles outside bank 0 (frame tiles in other banks)
+    for (const idx of [...opaque]) {
+      const col = idx % cols;
+      if (col >= bankWidth) opaque.delete(idx);
+    }
+  }
+
+  if (animationData && animationData.frameTiles) {
+    // Remove frame tiles — they're animation frames, not standalone objects
+    for (const ft of animationData.frameTiles) {
+      opaque.delete(ft);
+    }
+  }
+
+  // Force-connect tiles within the same animation family so pixel analysis
+  // gaps don't split animated objects into separate groups
+  if (animationData && animationData.families) {
+    for (const family of animationData.families) {
+      const inOpaque = family.filter(idx => opaque.has(idx));
+      for (let i = 0; i < inOpaque.length; i++) {
+        for (let j = i + 1; j < inOpaque.length; j++) {
+          addConnection(connections, inOpaque[i], inOpaque[j]);
+        }
+      }
+    }
+  }
+
   const groups = buildGroups(connections, opaque, cols);
 
-  // Add color profiles and category guesses to each group
+  // Build set of animated base tile IDs for tagging groups
+  const animatedBaseTiles = new Set();
+  if (animationData && animationData.animations) {
+    for (const baseTileId of Object.keys(animationData.animations)) {
+      animatedBaseTiles.add(Number(baseTileId));
+    }
+  }
+
+  // Add color profiles, category guesses, and animation flags to each group
   for (const group of groups) {
     group.colorProfile = computeColorProfile(pixels, group.tiles, cols, tileSize, width);
     group.category = classifyCategory(group.colorProfile, group.cols, group.rows);
+
+    const hasAnimatedTile = group.tiles.some(t => animatedBaseTiles.has(t));
+    if (hasAnimatedTile) {
+      group.animated = true;
+      group.confidence = 'high';
+    } else {
+      group.confidence = animationData ? 'medium' : 'medium';
+    }
   }
 
   return { groups, transparent, cols, rows };

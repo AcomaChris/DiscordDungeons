@@ -4,6 +4,17 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-03 — Animation-Aware Tileset Auto-Setup (v0.25.0)
+
+- **TMX animation parser** (`scripts/parse-tmx-animations.js`): Parses 4 TMX files, extracts per-tileset animation data (142 entries on Animation_windows_doors, ~900 character animations). Detects bank structure (4 banks of 10 cols), identifies frame-only tiles, deduplicates across TMX files. Outputs 25 `.animations.json` files.
+- **Batch auto-setup** (`scripts/auto-setup-objects.js`): Generates `.objects.json` for all 6 tilesets in one pass. Animation-aware: restricts pixel analysis to bank 0, excludes frame tiles, builds animation metadata with frame mappings. Preserves existing objects. Result: 682 total objects (528 new), 12 animated.
+- **Animation in object defs**: Added `animation` field to schema with `startFrame` + frame array. Full validation in `validateObjectDef()` — frame consistency, tile key matching across frames, duration checks.
+- **Frame scrubber in editor**: Animated objects show slider + prev/next buttons to preview animation frames. "Starting Frame" input persists to definition. Preview canvas swaps base tile indices for frame tile indices.
+- **Bank-aware Auto-Detect**: `analyzeTileset()` accepts optional animation data — filters to bank 0 columns, excludes frame tiles, force-connects animation families. Tags groups with confidence level (high=animation-backed, medium=pixel-only).
+- **Confidence badges**: Object list shows colored dots (green=high, yellow=medium) and animation indicator with frame count.
+
+---
+
 ## 2026-03-03 — Tile Editor: Object Boundary Editing Tools (v0.22.0)
 
 **Commits:** 8e0acf4
