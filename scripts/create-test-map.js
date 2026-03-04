@@ -19,10 +19,11 @@ const TILE = 16;
 const MAP_W = 30; // tiles
 const MAP_H = 20; // tiles
 
-// --- Tileset: 8 tiles in an 8×1 strip ---
-// Tiles 1-5: original. Tiles 6-8: floor animation frames.
+// --- Tileset: 9 tiles in a 9×1 strip ---
+// Tiles 1-5: original. Tiles 6-8: animation frames for tile 1.
+// Tile 9: static floor (used for most of the ground).
 const TILE_COLORS = [
-  '#3a3a4a', // 1: floor (dark stone)
+  '#3a3a4a', // 1: animated floor (dark stone) — only used in small test area
   '#6b5b3a', // 2: wall (brown)
   '#8b7b5a', // 3: wall top (lighter brown)
   '#ff00ff', // 4: collision marker (magenta, never rendered)
@@ -30,6 +31,7 @@ const TILE_COLORS = [
   '#4a4a5a', // 6: floor alt 1 (slightly lighter) — animation frame
   '#2a2a3a', // 7: floor alt 2 (slightly darker) — animation frame
   '#5a3a3a', // 8: floor alt 3 (warm tint) — animation frame
+  '#3a3a4a', // 9: static floor (same color as tile 1, no animation)
 ];
 
 function createTilesetPNG() {
@@ -49,11 +51,12 @@ function createTilesetPNG() {
 
 // --- Map layers ---
 // Tile IDs are 1-indexed in Tiled format (0 = empty)
-const FLOOR = 1;
+const FLOOR_ANIM = 1; // animated floor — used sparingly
 const WALL = 2;
 const WALL_TOP = 3;
 const COLLISION = 4;
 const PLATFORM = 5;
+const FLOOR = 9; // static floor — most of the ground
 
 function makeLayer(name, data) {
   return {
@@ -101,6 +104,12 @@ function generateGroundData() {
   const elevation = generateElevationData();
   for (let i = 0; i < data.length; i++) {
     if (elevation[i] > 0) data[i] = PLATFORM;
+  }
+  // 2×2 animated floor patch (proves tile animations still work)
+  for (let y = 16; y <= 17; y++) {
+    for (let x = 2; x <= 3; x++) {
+      data[y * MAP_W + x] = FLOOR_ANIM;
+    }
   }
   return data;
 }

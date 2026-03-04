@@ -8,14 +8,13 @@ import { checkMantle, updateMantleState } from '../physics/MantlePhysics.js';
 import { createShadow, updateShadow } from './ShadowHelper.js';
 
 // --- Player ---
-// Wraps the local player sprite, handles 4-directional input, emits state
-// for network sync. Uses a lower-body hitbox for natural 3/4 view overlap.
+// Wraps the local player sprite, handles input (keyboard integers or analog
+// joystick floats), emits state for network sync. Uses a lower-body hitbox
+// for natural 3/4 view overlap.
 //
 // Z-axis: Characters have a ground position (_groundY) and a height above
 // ground (z). Physics body stays at _groundY; sprite.y = _groundY - z.
 // Depth sorting uses _groundY so jumping doesn't change render order.
-
-const SQRT2 = Math.sqrt(2);
 
 export class Player {
   constructor(scene, spawnX, spawnY, playerName) {
@@ -111,20 +110,27 @@ export class Player {
     let vx = moveX * speed;
     let vy = moveY * speed;
 
-    // Normalize diagonal so total speed equals current speed
-    if (moveX !== 0 && moveY !== 0) {
-      vx /= SQRT2;
-      vy /= SQRT2;
+    // Clamp velocity magnitude to speed — works for both integer keyboard
+    // input (where diagonal is √2 × speed) and analog joystick floats.
+    const mag = Math.sqrt(vx * vx + vy * vy);
+    if (mag > speed) {
+      vx = (vx / mag) * speed;
+      vy = (vy / mag) * speed;
     }
 
     this.sprite.setVelocity(vx, vy);
 
-    // Update facing direction — prefer vertical when both axes active
+    // Map input direction to nearest 4-way facing using dominant axis
     let newFacing = this.facing;
-    if (moveY < 0) newFacing = 'up';
-    else if (moveY > 0) newFacing = 'down';
-    else if (moveX < 0) newFacing = 'left';
-    else if (moveX > 0) newFacing = 'right';
+    const absX = Math.abs(moveX);
+    const absY = Math.abs(moveY);
+    if (absX > 0 || absY > 0) {
+      if (absY >= absX) {
+        newFacing = moveY < 0 ? 'up' : 'down';
+      } else {
+        newFacing = moveX < 0 ? 'left' : 'right';
+      }
+    }
 
     if (newFacing !== this.facing) {
       this.facing = newFacing;

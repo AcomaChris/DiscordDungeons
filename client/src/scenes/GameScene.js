@@ -108,6 +108,7 @@ export class GameScene extends Phaser.Scene {
     // --- Input ---
     this.inputManager = new InputManager(this);
     this.touchManager = new TouchManager();
+    this.touchManager.setAbilityManager(this.player.abilities);
     this.touchManager.show();
 
     // --- Camera ---

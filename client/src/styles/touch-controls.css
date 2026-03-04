@@ -12,34 +12,61 @@
   display: block;
 }
 
-/* Hide on devices with a mouse/trackpad (desktop fallback) */
-@media (hover: hover) and (pointer: fine) {
-  #touch-controls {
-    display: none !important;
-  }
-}
+/* --- Joystick Area (left side) --- */
 
-/* --- D-pad container --- */
-
-#touch-controls .dpad {
+#touch-controls .joystick-area {
   position: absolute;
-  bottom: 24px;
-  left: 24px;
-  display: grid;
-  grid-template-columns: 64px 64px 64px;
-  grid-template-rows: 64px 64px;
-  gap: 4px;
+  bottom: 16px;
+  left: 16px;
+  width: 160px;
+  height: 160px;
+  pointer-events: auto;
 }
 
-/* --- Buttons --- */
+#touch-controls .joystick-base {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+}
 
-#touch-controls button {
+#touch-controls .joystick-knob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+/* --- Action Buttons (right side) --- */
+
+#touch-controls .action-buttons {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+#touch-controls .btn-action {
   pointer-events: auto;
   border: none;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.18);
   color: rgba(255, 255, 255, 0.7);
-  font-size: 24px;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,59 +74,38 @@
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
   outline: none;
-  width: 100%;
-  height: 100%;
+  width: 64px;
+  height: 64px;
 }
 
-#touch-controls button:active {
+#touch-controls .btn-action:active {
   background: rgba(255, 255, 255, 0.35);
 }
 
-/* --- D-pad layout (landscape default) --- */
+/* --- Portrait adjustments --- */
 
-#touch-controls .btn-up {
-  grid-column: 2;
-  grid-row: 1;
+#touch-controls.portrait .joystick-area {
+  bottom: 48px;
+  width: 180px;
+  height: 180px;
 }
 
-#touch-controls .btn-left {
-  grid-column: 1;
-  grid-row: 2;
+#touch-controls.portrait .joystick-base {
+  width: 160px;
+  height: 160px;
 }
 
-#touch-controls .btn-right {
-  grid-column: 3;
-  grid-row: 2;
+#touch-controls.portrait .joystick-knob {
+  width: 64px;
+  height: 64px;
 }
 
-#touch-controls .btn-down {
-  grid-column: 2;
-  grid-row: 2;
+#touch-controls.portrait .action-buttons {
+  bottom: 48px;
 }
 
-/* --- Jump button (right side) --- */
-
-#touch-controls .btn-jump {
-  position: absolute;
-  bottom: 24px;
-  right: 24px;
+#touch-controls.portrait .btn-action {
   width: 72px;
   height: 72px;
-}
-
-/* --- Portrait --- */
-
-#touch-controls.portrait .dpad {
-  bottom: 48px;
-  left: 24px;
-  grid-template-columns: 80px 80px 80px;
-  grid-template-rows: 80px 80px;
-  gap: 6px;
-}
-
-#touch-controls.portrait .btn-jump {
-  bottom: 48px;
-  right: 24px;
-  width: 80px;
-  height: 80px;
+  font-size: 12px;
 }

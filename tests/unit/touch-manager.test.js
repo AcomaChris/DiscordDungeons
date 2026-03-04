@@ -40,11 +40,16 @@ describe('TouchManager', () => {
     if (el) el.remove();
   });
 
-  it('creates DOM overlay with D-pad and jump buttons on touch devices', () => {
+  // --- DOM creation ---
+
+  it('creates DOM overlay with joystick and action buttons on touch devices', () => {
     const tm = new TouchManager();
     const container = document.getElementById('touch-controls');
     expect(container).not.toBeNull();
-    expect(container.querySelectorAll('button').length).toBe(5);
+    expect(container.querySelector('.joystick-base')).not.toBeNull();
+    expect(container.querySelector('.joystick-knob')).not.toBeNull();
+    expect(container.querySelector('.btn-jump')).not.toBeNull();
+    expect(container.querySelector('.btn-sprint')).not.toBeNull();
     tm.destroy();
   });
 
@@ -57,59 +62,114 @@ describe('TouchManager', () => {
     tm.destroy();
   });
 
+  // --- Default state ---
+
   it('getSnapshot returns neutral state by default', () => {
     const tm = new TouchManager();
     expect(tm.getSnapshot()).toEqual({ moveX: 0, moveY: 0, sprint: false, jump: false });
     tm.destroy();
   });
 
-  it('left button sets moveX to -1', () => {
+  // --- Joystick math ---
+
+  it('joystick touch right produces positive moveX', () => {
     const tm = new TouchManager();
-    const btn = document.querySelector('.btn-left');
+    tm._baseRadius = 70;
+    tm._baseCenterX = 100;
+    tm._baseCenterY = 100;
 
-    fireTouchEvent(btn, 'touchstart');
-    expect(tm.getSnapshot().moveX).toBe(-1);
-
-    fireTouchEvent(btn, 'touchend');
-    expect(tm.getSnapshot().moveX).toBe(0);
+    // Touch full right
+    tm._processJoystickTouch(170, 100);
+    const snap = tm.getSnapshot();
+    expect(snap.moveX).toBeCloseTo(1.0, 1);
+    expect(snap.moveY).toBeCloseTo(0, 1);
     tm.destroy();
   });
 
-  it('right button sets moveX to 1', () => {
+  it('joystick touch left produces negative moveX', () => {
     const tm = new TouchManager();
-    const btn = document.querySelector('.btn-right');
+    tm._baseRadius = 70;
+    tm._baseCenterX = 100;
+    tm._baseCenterY = 100;
 
-    fireTouchEvent(btn, 'touchstart');
-    expect(tm.getSnapshot().moveX).toBe(1);
-
-    fireTouchEvent(btn, 'touchend');
-    expect(tm.getSnapshot().moveX).toBe(0);
+    tm._processJoystickTouch(30, 100);
+    const snap = tm.getSnapshot();
+    expect(snap.moveX).toBeCloseTo(-1.0, 1);
+    expect(snap.moveY).toBeCloseTo(0, 1);
     tm.destroy();
   });
 
-  it('up button sets moveY to -1', () => {
+  it('joystick touch down produces positive moveY', () => {
     const tm = new TouchManager();
-    const btn = document.querySelector('.btn-up');
+    tm._baseRadius = 70;
+    tm._baseCenterX = 100;
+    tm._baseCenterY = 100;
 
-    fireTouchEvent(btn, 'touchstart');
-    expect(tm.getSnapshot().moveY).toBe(-1);
+    tm._processJoystickTouch(100, 170);
+    const snap = tm.getSnapshot();
+    expect(snap.moveX).toBeCloseTo(0, 1);
+    expect(snap.moveY).toBeCloseTo(1.0, 1);
+    tm.destroy();
+  });
 
-    fireTouchEvent(btn, 'touchend');
+  it('joystick dead zone returns zero', () => {
+    const tm = new TouchManager();
+    tm._baseRadius = 70;
+    tm._baseCenterX = 100;
+    tm._baseCenterY = 100;
+
+    // Touch within 15% = 10.5px of 70px radius
+    tm._processJoystickTouch(105, 100);
+    expect(tm.getSnapshot().moveX).toBe(0);
     expect(tm.getSnapshot().moveY).toBe(0);
     tm.destroy();
   });
 
-  it('down button sets moveY to 1', () => {
+  it('joystick clamps to unit circle when touch exceeds radius', () => {
     const tm = new TouchManager();
-    const btn = document.querySelector('.btn-down');
+    tm._baseRadius = 70;
+    tm._baseCenterX = 100;
+    tm._baseCenterY = 100;
 
-    fireTouchEvent(btn, 'touchstart');
-    expect(tm.getSnapshot().moveY).toBe(1);
-
-    fireTouchEvent(btn, 'touchend');
-    expect(tm.getSnapshot().moveY).toBe(0);
+    // Touch far beyond the base boundary
+    tm._processJoystickTouch(300, 100);
+    const snap = tm.getSnapshot();
+    expect(snap.moveX).toBeCloseTo(1.0, 1);
+    expect(snap.moveY).toBeCloseTo(0, 1);
     tm.destroy();
   });
+
+  it('diagonal joystick produces proportional values', () => {
+    const tm = new TouchManager();
+    tm._baseRadius = 70;
+    tm._baseCenterX = 100;
+    tm._baseCenterY = 100;
+
+    // Touch at 45 degrees (equal dx, dy)
+    tm._processJoystickTouch(170, 170);
+    const snap = tm.getSnapshot();
+    expect(snap.moveX).toBeGreaterThan(0);
+    expect(snap.moveY).toBeGreaterThan(0);
+    expect(Math.abs(snap.moveX - snap.moveY)).toBeLessThan(0.01);
+    tm.destroy();
+  });
+
+  it('partial joystick tilt produces values less than 1', () => {
+    const tm = new TouchManager();
+    tm._baseRadius = 70;
+    tm._baseCenterX = 100;
+    tm._baseCenterY = 100;
+
+    // Touch halfway right (35px of 70px radius)
+    tm._processJoystickTouch(135, 100);
+    const snap = tm.getSnapshot();
+    expect(snap.moveX).toBeGreaterThan(0);
+    expect(snap.moveX).toBeLessThan(1);
+    expect(snap.moveY).toBeCloseTo(0, 1);
+    tm.destroy();
+  });
+
+  // --- Action buttons ---
 
   it('jump button sets jump to true', () => {
     const tm = new TouchManager();
@@ -122,6 +182,59 @@ describe('TouchManager', () => {
     expect(tm.getSnapshot().jump).toBe(false);
     tm.destroy();
   });
+
+  it('sprint button sets sprint to true', () => {
+    const tm = new TouchManager();
+    const btn = document.querySelector('.btn-sprint');
+
+    fireTouchEvent(btn, 'touchstart');
+    expect(tm.getSnapshot().sprint).toBe(true);
+
+    fireTouchEvent(btn, 'touchend');
+    expect(tm.getSnapshot().sprint).toBe(false);
+    tm.destroy();
+  });
+
+  it('touchcancel on sprint button resets sprint', () => {
+    const tm = new TouchManager();
+    const btn = document.querySelector('.btn-sprint');
+
+    fireTouchEvent(btn, 'touchstart');
+    expect(tm.getSnapshot().sprint).toBe(true);
+
+    fireTouchEvent(btn, 'touchcancel');
+    expect(tm.getSnapshot().sprint).toBe(false);
+    tm.destroy();
+  });
+
+  // --- Ability visibility ---
+
+  it('hides jump button when jump ability not equipped', () => {
+    const tm = new TouchManager();
+    const mockAM = { has: (id) => id !== 'jump' };
+    tm.setAbilityManager(mockAM);
+    expect(document.querySelector('.btn-jump').style.display).toBe('none');
+    tm.destroy();
+  });
+
+  it('hides sprint button when movement ability not equipped', () => {
+    const tm = new TouchManager();
+    const mockAM = { has: (id) => id !== 'movement' };
+    tm.setAbilityManager(mockAM);
+    expect(document.querySelector('.btn-sprint').style.display).toBe('none');
+    tm.destroy();
+  });
+
+  it('shows both buttons when abilities are equipped', () => {
+    const tm = new TouchManager();
+    const mockAM = { has: () => true };
+    tm.setAbilityManager(mockAM);
+    expect(document.querySelector('.btn-jump').style.display).toBe('');
+    expect(document.querySelector('.btn-sprint').style.display).toBe('');
+    tm.destroy();
+  });
+
+  // --- Visibility & cleanup ---
 
   it('show/hide toggle visibility class', () => {
     const tm = new TouchManager();
@@ -141,17 +254,5 @@ describe('TouchManager', () => {
 
     tm.destroy();
     expect(document.getElementById('touch-controls')).toBeNull();
-  });
-
-  it('touchcancel resets move state', () => {
-    const tm = new TouchManager();
-    const btn = document.querySelector('.btn-left');
-
-    fireTouchEvent(btn, 'touchstart');
-    expect(tm.getSnapshot().moveX).toBe(-1);
-
-    fireTouchEvent(btn, 'touchcancel');
-    expect(tm.getSnapshot().moveX).toBe(0);
-    tm.destroy();
   });
 });
