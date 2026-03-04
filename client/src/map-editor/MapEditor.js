@@ -5,6 +5,7 @@
 import './map-editor.css';
 import { ViewTransform } from './ViewTransform.js';
 import { MapEditorCanvas } from './MapEditorCanvas.js';
+import { MapDocument } from './MapDocument.js';
 
 export class MapEditor {
   constructor() {
@@ -24,8 +25,17 @@ export class MapEditor {
 
   init() {
     // Canvas
+    // Document model
+    this.mapDocument = new MapDocument();
+
+    // Canvas
     const canvasEl = document.getElementById('map-canvas');
     this.canvas = new MapEditorCanvas(canvasEl, this.view);
+    this.canvas.setDocument(this.mapDocument);
+
+    // Redraw canvas when document changes
+    this.mapDocument.addListener(() => this.canvas.markDirty());
+    this.mapDocument.commandStack.onChange = () => this.canvas.markDirty();
 
     // Status bar refs
     this._statusCursor = document.getElementById('status-cursor');
