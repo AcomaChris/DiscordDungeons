@@ -15,6 +15,7 @@ import { EraserTool } from './tools/EraserTool.js';
 import { RectangleFillTool } from './tools/RectangleFillTool.js';
 import { FloodFillTool } from './tools/FloodFillTool.js';
 import { LineTool } from './tools/LineTool.js';
+import { SelectTool } from './tools/SelectTool.js';
 
 // Known tilesets that can be loaded from the server
 const AVAILABLE_TILESETS = [
@@ -133,6 +134,7 @@ export class MapEditor {
     this._rectFillTool = new RectangleFillTool(this);
     this._floodFillTool = new FloodFillTool(this);
     this._lineTool = new LineTool(this);
+    this._selectTool = new SelectTool(this);
 
     // ToolBar
     const toolBtnContainer = document.getElementById('tool-buttons');
@@ -143,6 +145,7 @@ export class MapEditor {
         { name: 'Rect', shortcut: 'R', tool: this._rectFillTool },
         { name: 'Fill', shortcut: 'G', tool: this._floodFillTool },
         { name: 'Line', shortcut: 'L', tool: this._lineTool },
+        { name: 'Select', shortcut: 'S', tool: this._selectTool },
       ]);
 
       this._toolbar.onToolSelect = (tool) => {
@@ -341,6 +344,7 @@ export class MapEditor {
       r: this._rectFillTool,
       g: this._floodFillTool,
       l: this._lineTool,
+      s: this._selectTool,
     };
     const toolMatch = toolKeys[e.key.toLowerCase()];
     if (toolMatch && !e.ctrlKey && !e.metaKey) {

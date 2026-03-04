@@ -60,9 +60,25 @@ export class BrushTool extends BaseTool {
     const layer = this._getActiveLayer();
     if (!layer) return;
 
+    const stamp = this.editor.selectedStamp;
+    if (stamp) {
+      // Paint multi-tile stamp anchored at (x, y)
+      for (let row = 0; row < stamp.rows; row++) {
+        for (let col = 0; col < stamp.cols; col++) {
+          const gid = stamp.gids[row][col];
+          if (gid === 0) continue;
+          this._paintSingleTile(layer, x + col, y + row, gid);
+        }
+      }
+      return;
+    }
+
     const gid = this._getBrushGid();
     if (gid === 0) return;
+    this._paintSingleTile(layer, x, y, gid);
+  }
 
+  _paintSingleTile(layer, x, y, gid) {
     const key = `${x},${y}`;
     const oldGid = this._changes.has(key)
       ? this._changes.get(key).oldGid  // preserve original old value
@@ -108,17 +124,58 @@ export class BrushTool extends BaseTool {
   renderPreview(ctx, viewTransform) {
     if (!this._cursorTile) return;
 
+    const tileSize = 16;
+    const s = tileSize * viewTransform.zoom;
+    const stamp = this.editor.selectedStamp;
+
+    if (stamp) {
+      // Multi-tile stamp preview
+      ctx.globalAlpha = 0.5;
+      ctx.imageSmoothingEnabled = false;
+      for (let row = 0; row < stamp.rows; row++) {
+        for (let col = 0; col < stamp.cols; col++) {
+          const gid = stamp.gids[row][col];
+          if (gid === 0) continue;
+          const resolved = this.editor.mapDocument?.resolveGid(gid);
+          if (resolved && resolved.tileset.image) {
+            const srcCol = resolved.localId % resolved.tileset.columns;
+            const srcRow = Math.floor(resolved.localId / resolved.tileset.columns);
+            const wx = (this._cursorTile.x + col) * tileSize;
+            const wy = (this._cursorTile.y + row) * tileSize;
+            const { x, y } = viewTransform.worldToScreen(wx, wy);
+            ctx.drawImage(
+              resolved.tileset.image,
+              srcCol * tileSize, srcRow * tileSize, tileSize, tileSize,
+              x, y, s, s,
+            );
+          }
+        }
+      }
+      ctx.globalAlpha = 1.0;
+
+      // Outline around the entire stamp
+      const topLeft = viewTransform.worldToScreen(
+        this._cursorTile.x * tileSize,
+        this._cursorTile.y * tileSize,
+      );
+      ctx.strokeStyle = '#00ccff';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(
+        Math.round(topLeft.x) + 0.5, Math.round(topLeft.y) + 0.5,
+        Math.round(stamp.cols * s) - 1, Math.round(stamp.rows * s) - 1,
+      );
+      return;
+    }
+
+    // Single tile preview
     const gid = this._getBrushGid();
     if (gid === 0) return;
 
-    const tileSize = 16;
     const { x, y } = viewTransform.worldToScreen(
       this._cursorTile.x * tileSize,
       this._cursorTile.y * tileSize,
     );
-    const s = tileSize * viewTransform.zoom;
 
-    // Draw ghost tile preview
     const resolved = this.editor.mapDocument?.resolveGid(gid);
     if (resolved && resolved.tileset.image) {
       const localCol = resolved.localId % resolved.tileset.columns;
@@ -134,7 +191,6 @@ export class BrushTool extends BaseTool {
       ctx.globalAlpha = 1.0;
     }
 
-    // Cursor outline
     ctx.strokeStyle = '#00ccff';
     ctx.lineWidth = 1;
     ctx.strokeRect(Math.round(x) + 0.5, Math.round(y) + 0.5, Math.round(s) - 1, Math.round(s) - 1);
