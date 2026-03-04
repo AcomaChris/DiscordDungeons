@@ -29,8 +29,8 @@ import authManager from '../auth/AuthManager.js';
 // AGENT: WS_URL is set at build time for production, falls back to localhost for dev.
 const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:3001';
 
-// Map selection: ?map=test overrides default. Used by E2E tests.
-const DEFAULT_MAP = 'tavern';
+// Map selection: ?map=X overrides default. Used by E2E tests.
+const DEFAULT_MAP = 'test';
 
 function getActiveMapId() {
   const params = new URLSearchParams(window.location.search);
@@ -68,7 +68,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     // --- NPC ---
-    this.npc = new NPC(this, 160, 200, {
+    this.npc = new NPC(this, 328, 264, {
       npcId: 'greta',
       name: 'Greta',
       color: 0x8B4513,
