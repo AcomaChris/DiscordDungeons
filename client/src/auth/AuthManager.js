@@ -4,7 +4,8 @@
 
 const AUTH_API_URL = import.meta.env.VITE_AUTH_URL || 'http://localhost:3001';
 const DISCORD_CLIENT_ID = import.meta.env.VITE_DISCORD_CLIENT_ID || '';
-const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI || (typeof window !== 'undefined' ? window.location.origin + '/' : '/');
+// Always use current origin so OAuth redirects back to the same domain the player entered from
+const REDIRECT_URI = typeof window !== 'undefined' ? window.location.origin + '/' : (import.meta.env.VITE_REDIRECT_URI || '/');
 
 const STORAGE_KEY = 'dd_player_identity';
 
