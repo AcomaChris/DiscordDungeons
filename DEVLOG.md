@@ -4,6 +4,17 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-03 — Tile Editor: Object Boundary Editing Tools (v0.22.0)
+
+**Commits:** 8e0acf4
+
+- **Merge tool**: Ctrl+click multi-select on canvas, property panel shows "Merge Objects" when 2+ selected. Combines all tiles into the primary object's grid, deletes consumed objects. Purple banner shows selection count.
+- **Resize handles**: 8 drag handles (corners + edge midpoints) around selected object bounding box. Dragging grows/shrinks by adding/removing adjacent tileset tiles. Dashed preview rect during drag. Reuses existing `_onTileReassign` handler.
+- **Split tool**: Toggle in property panel Grid section. Hover shows pink dashed split line inside object. Default vertical split, hold Alt for horizontal. Creates two objects — original keeps gridA, new `{id}_split` gets gridB with cloned properties but cleared colliders/nodes.
+- All three tools complement Auto-Detect: detect first, then merge incorrect splits, resize boundaries, split over-grouped objects.
+
+---
+
 ## 2026-03-02 — Tile Editor: Streamlined Object Annotation (v0.21.0)
 
 **Commits:** 0f3aea1, c120307, 766adad, 6cf0cae
