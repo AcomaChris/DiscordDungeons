@@ -6,12 +6,29 @@ import './map-editor.css';
 import { ViewTransform } from './ViewTransform.js';
 import { MapEditorCanvas } from './MapEditorCanvas.js';
 import { MapDocument } from './MapDocument.js';
+import { FloatingPanel } from './FloatingPanel.js';
+import { TilePalette } from './TilePalette.js';
+
+// Known tilesets that can be loaded from the server
+const AVAILABLE_TILESETS = [
+  'Interior_1st_floor',
+  'Walls_interior',
+  'Animation_windows_doors',
+];
 
 export class MapEditor {
   constructor() {
     this.view = new ViewTransform();
     this.canvas = null;
     this.mapDocument = null;
+
+    // Components
+    this._palettePanel = null;
+    this._palette = null;
+
+    // Current brush state (set by palette selection)
+    this.selectedGid = 0;
+    this.selectedStamp = null; // {gids[][], cols, rows}
 
     // DOM refs (set in init)
     this._statusCursor = null;
@@ -24,7 +41,6 @@ export class MapEditor {
   }
 
   init() {
-    // Canvas
     // Document model
     this.mapDocument = new MapDocument();
 
@@ -60,6 +76,9 @@ export class MapEditor {
       });
     }
 
+    // Create floating panels
+    this._createPalette();
+
     // Global keyboard shortcuts
     window.addEventListener('keydown', (e) => this._onGlobalKeyDown(e));
 
@@ -67,6 +86,116 @@ export class MapEditor {
     this._updateZoomStatus(this.view.zoom);
 
     console.log('[MapEditor] Initialized');
+  }
+
+  // --- Tile Palette ---
+
+  _createPalette() {
+    this._palettePanel = new FloatingPanel({
+      title: 'Tile Palette',
+      id: 'palette-panel',
+      x: window.innerWidth - 300,
+      y: 50,
+      width: 280,
+    });
+
+    this._palette = new TilePalette(this._palettePanel.getContentElement());
+
+    this._palette.onTileSelect = (gid) => {
+      this.selectedGid = gid;
+      this.selectedStamp = null;
+    };
+
+    this._palette.onStampSelect = (gids, cols, rows) => {
+      this.selectedGid = 0;
+      this.selectedStamp = { gids, cols, rows };
+    };
+
+    this._palette.onAddTileset = () => this._showAddTilesetDialog();
+
+    this._palette.updateTilesets(this.mapDocument.tilesets);
+  }
+
+  async _showAddTilesetDialog() {
+    // Build list of tilesets not yet added
+    const loaded = new Set(this.mapDocument.tilesets.map(ts => ts.name));
+    const available = AVAILABLE_TILESETS.filter(n => !loaded.has(n));
+
+    if (available.length === 0) {
+      this.showToast('All available tilesets are already loaded');
+      return;
+    }
+
+    // Simple selection via prompt (will be replaced by a proper dialog later)
+    const name = available.length === 1
+      ? available[0]
+      : prompt(`Add tileset:\n${available.map((n, i) => `${i + 1}. ${n}`).join('\n')}\n\nEnter name:`);
+
+    if (!name || !available.includes(name)) {
+      // Try by number
+      const idx = parseInt(name, 10) - 1;
+      if (idx >= 0 && idx < available.length) {
+        await this._loadTileset(available[idx]);
+      }
+      return;
+    }
+    await this._loadTileset(name);
+  }
+
+  async _loadTileset(name) {
+    try {
+      // Load image
+      const img = await this._loadImage(`tilesets/${name}.png`);
+      const columns = Math.floor(img.naturalWidth / 16);
+      const rows = Math.floor(img.naturalHeight / 16);
+
+      // Load tile metadata (optional)
+      let metadata = null;
+      try {
+        const resp = await fetch(`tile-metadata/${name}.json`);
+        if (resp.ok) metadata = await resp.json();
+      } catch { /* no metadata available */ }
+
+      // Load object defs (optional)
+      let objectDefs = null;
+      try {
+        const resp = await fetch(`object-defs/${name}.objects.json`);
+        if (resp.ok) {
+          const data = await resp.json();
+          objectDefs = data.objects || data;
+        }
+      } catch { /* no object defs available */ }
+
+      // Add to document
+      this.mapDocument.addTileset({
+        name,
+        image: img,
+        imagePath: `tilesets/${name}.png`,
+        columns,
+        rows,
+        tileCount: columns * rows,
+        tileWidth: 16,
+        tileHeight: 16,
+        metadata,
+        objectDefs,
+      });
+
+      // Update palette
+      this._palette.updateTilesets(this.mapDocument.tilesets);
+      this.showToast(`Loaded tileset: ${name}`);
+    } catch (err) {
+      this.showToast(`Failed to load tileset: ${err.message}`);
+      console.error('[MapEditor] Tileset load error:', err);
+    }
+  }
+
+  _loadImage(src) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
+      img.src = src;
+    });
   }
 
   // --- Status bar ---
