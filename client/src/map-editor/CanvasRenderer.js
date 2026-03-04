@@ -198,7 +198,57 @@ export class CanvasRenderer {
     ctx.textBaseline = 'alphabetic';
   }
 
-  // Placeholder: renderObjects will be added in Commit 8
+  // Draw placed map objects using their tileset tile definitions
+  renderObjects(objects, mapDocument) {
+    if (!objects || objects.length === 0) return;
+
+    const { ctx, view } = this;
+    ctx.imageSmoothingEnabled = false;
+
+    for (const obj of objects) {
+      const tileset = mapDocument.getTilesetByName(obj.tilesetName);
+      if (!tileset || !tileset.image) continue;
+
+      const objectDef = tileset.objectDefs?.find(d => d.id === obj.defId);
+
+      const screen = view.worldToScreen(obj.x, obj.y);
+      const s = TILE_SIZE * view.zoom;
+
+      if (objectDef && objectDef.tiles) {
+        // Draw using tile definition
+        for (let row = 0; row < objectDef.tiles.length; row++) {
+          for (let col = 0; col < objectDef.tiles[row].length; col++) {
+            const tile = objectDef.tiles[row][col];
+            if (!tile) continue;
+            ctx.drawImage(
+              tileset.image,
+              tile.col * TILE_SIZE, tile.row * TILE_SIZE, TILE_SIZE, TILE_SIZE,
+              screen.x + col * s, screen.y + row * s, s, s,
+            );
+          }
+        }
+      } else {
+        // Fallback: draw colored rectangle with label
+        const w = (obj.width || 16) * view.zoom;
+        const h = (obj.height || 16) * view.zoom;
+        ctx.fillStyle = 'rgba(255, 165, 0, 0.3)';
+        ctx.fillRect(screen.x, screen.y, w, h);
+        ctx.strokeStyle = '#ffa500';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(screen.x + 0.5, screen.y + 0.5, w - 1, h - 1);
+
+        if (s >= 8) {
+          ctx.fillStyle = '#ffa500';
+          ctx.font = `${Math.max(8, s * 0.5)}px sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(obj.type || '?', screen.x + w / 2, screen.y + h / 2);
+          ctx.textAlign = 'start';
+          ctx.textBaseline = 'alphabetic';
+        }
+      }
+    }
+  }
 }
 
 // Resolve a GID to its tileset and local tile ID

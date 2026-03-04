@@ -244,6 +244,9 @@ export class MapEditorCanvas {
           this.renderer.renderTileLayer(layer, tilesets, w, h, opacity);
         }
       }
+
+      // Render objects (between tile layers and grid)
+      this.renderer.renderObjects(this.mapDocument.objects, this.mapDocument);
     }
 
     if (this.showGrid) {

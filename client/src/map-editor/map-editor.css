@@ -419,6 +419,36 @@ body {
 
 /* --- Object palette --- */
 
+.object-search {
+  width: 100%;
+  padding: 4px 8px;
+  background: #1a1a2e;
+  border: 1px solid #3a3a5a;
+  border-radius: 4px;
+  color: #e0e0e0;
+  font-size: 0.8rem;
+  margin-bottom: 6px;
+}
+
+.object-search:focus {
+  outline: none;
+  border-color: #00ccff;
+}
+
+.object-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.object-name {
+  flex: 1;
+}
+
+.object-size {
+  color: #7a7aaa;
+  font-size: 0.7rem;
+}
+
 .object-list-item {
   display: flex;
   align-items: center;

@@ -16,6 +16,8 @@ import { RectangleFillTool } from './tools/RectangleFillTool.js';
 import { FloodFillTool } from './tools/FloodFillTool.js';
 import { LineTool } from './tools/LineTool.js';
 import { SelectTool } from './tools/SelectTool.js';
+import { ObjectTool } from './tools/ObjectTool.js';
+import { ObjectPalette } from './ObjectPalette.js';
 
 // Known tilesets that can be loaded from the server
 const AVAILABLE_TILESETS = [
@@ -41,6 +43,11 @@ export class MapEditor {
     this.selectedGid = 0;
     this.selectedStamp = null; // {gids[][], cols, rows}
     this.activeLayerName = 'Ground';
+
+    // Object placement state (set by ObjectPalette)
+    this.selectedObjectDef = null;
+    this.selectedObjectTileset = null;
+    this.snapToGrid = true;
 
     // DOM refs (set in init)
     this._statusCursor = null;
@@ -91,6 +98,7 @@ export class MapEditor {
     // Create floating panels
     this._createPalette();
     this._createLayerPanel();
+    this._createObjectPalette();
 
     // Global keyboard shortcuts
     window.addEventListener('keydown', (e) => this._onGlobalKeyDown(e));
@@ -135,6 +143,7 @@ export class MapEditor {
     this._floodFillTool = new FloodFillTool(this);
     this._lineTool = new LineTool(this);
     this._selectTool = new SelectTool(this);
+    this._objectTool = new ObjectTool(this);
 
     // ToolBar
     const toolBtnContainer = document.getElementById('tool-buttons');
@@ -146,6 +155,7 @@ export class MapEditor {
         { name: 'Fill', shortcut: 'G', tool: this._floodFillTool },
         { name: 'Line', shortcut: 'L', tool: this._lineTool },
         { name: 'Select', shortcut: 'S', tool: this._selectTool },
+        { name: 'Object', shortcut: 'O', tool: this._objectTool },
       ]);
 
       this._toolbar.onToolSelect = (tool) => {
@@ -186,6 +196,30 @@ export class MapEditor {
     };
 
     this._updateLayerStatus();
+  }
+
+  // --- Object Palette ---
+
+  _createObjectPalette() {
+    this._objectPalettePanel = new FloatingPanel({
+      title: 'Objects',
+      id: 'object-palette-panel',
+      x: window.innerWidth - 300,
+      y: 400,
+      width: 280,
+    });
+
+    this._objectPalette = new ObjectPalette(this._objectPalettePanel.getContentElement());
+
+    this._objectPalette.onObjectSelect = (objectDef, tilesetEntry) => {
+      this.selectedObjectDef = objectDef;
+      this.selectedObjectTileset = tilesetEntry;
+      // Auto-switch to object tool
+      this.canvas.setTool(this._objectTool);
+      if (this._toolbar) this._toolbar.setActiveTool(this._objectTool);
+    };
+
+    this._objectPalette.updateTilesets(this.mapDocument.tilesets);
   }
 
   _updateLayerStatus() {
@@ -260,8 +294,9 @@ export class MapEditor {
         objectDefs,
       });
 
-      // Update palette
+      // Update palettes
       this._palette.updateTilesets(this.mapDocument.tilesets);
+      if (this._objectPalette) this._objectPalette.updateTilesets(this.mapDocument.tilesets);
       this.showToast(`Loaded tileset: ${name}`);
     } catch (err) {
       this.showToast(`Failed to load tileset: ${err.message}`);
@@ -345,6 +380,7 @@ export class MapEditor {
       g: this._floodFillTool,
       l: this._lineTool,
       s: this._selectTool,
+      o: this._objectTool,
     };
     const toolMatch = toolKeys[e.key.toLowerCase()];
     if (toolMatch && !e.ctrlKey && !e.metaKey) {
