@@ -19,6 +19,7 @@ import { SelectTool } from './tools/SelectTool.js';
 import { ObjectTool } from './tools/ObjectTool.js';
 import { ObjectPalette } from './ObjectPalette.js';
 import { PropertyPanel } from './PropertyPanel.js';
+import { exportToTiledJSON, importFromTiledJSON, downloadJSON } from './MapExporter.js';
 
 // Known tilesets that can be loaded from the server
 const AVAILABLE_TILESETS = [
@@ -58,6 +59,8 @@ export class MapEditor {
     this._gridToggleBtn = null;
     this._undoBtn = null;
     this._redoBtn = null;
+    this._exportBtn = null;
+    this._importBtn = null;
   }
 
   init() {
@@ -83,6 +86,8 @@ export class MapEditor {
     this._gridToggleBtn = document.getElementById('grid-toggle-btn');
     this._undoBtn = document.getElementById('undo-btn');
     this._redoBtn = document.getElementById('redo-btn');
+    this._exportBtn = document.getElementById('export-btn');
+    this._importBtn = document.getElementById('import-btn');
 
     // Wire callbacks
     this.canvas.onCursorMove = (pos) => this._updateCursorStatus(pos);
@@ -94,6 +99,14 @@ export class MapEditor {
         const on = this.canvas.toggleGrid();
         this._gridToggleBtn.classList.toggle('active', on);
       });
+    }
+
+    // Export / Import buttons
+    if (this._exportBtn) {
+      this._exportBtn.addEventListener('click', () => this._exportMap());
+    }
+    if (this._importBtn) {
+      this._importBtn.addEventListener('click', () => this._importMap());
     }
 
     // Create floating panels
@@ -342,6 +355,52 @@ export class MapEditor {
     });
   }
 
+  // --- Export / Import ---
+
+  _exportMap() {
+    const json = exportToTiledJSON(this.mapDocument);
+    const filename = `${this.mapDocument.metadata.name || 'map'}.json`;
+    downloadJSON(json, filename);
+    this.showToast('Map exported');
+  }
+
+  _importMap() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.addEventListener('change', async () => {
+      const file = input.files[0];
+      if (!file) return;
+
+      try {
+        const text = await file.text();
+        const json = JSON.parse(text);
+        const { tilesetNames } = importFromTiledJSON(json, this.mapDocument);
+
+        // Load referenced tilesets
+        for (const name of tilesetNames) {
+          const clean = name.replace(/\.(tsx|png)$/, '').replace(/^tilesets\//, '');
+          const alreadyLoaded = this.mapDocument.tilesets.some(ts => ts.name === clean);
+          if (!alreadyLoaded) {
+            await this._loadTileset(clean);
+          }
+        }
+
+        // Update UI
+        this._palette.updateTilesets(this.mapDocument.tilesets);
+        if (this._objectPalette) this._objectPalette.updateTilesets(this.mapDocument.tilesets);
+        if (this._layerPanel) this._layerPanel.refresh?.();
+        this.canvas.markDirty();
+
+        this.showToast(`Imported: ${file.name}`);
+      } catch (err) {
+        this.showToast(`Import failed: ${err.message}`);
+        console.error('[MapEditor] Import error:', err);
+      }
+    });
+    input.click();
+  }
+
   // --- Status bar ---
 
   _updateCursorStatus(pos) {
@@ -372,6 +431,13 @@ export class MapEditor {
   _onGlobalKeyDown(e) {
     // Don't intercept when typing in an input/textarea
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+
+    // Ctrl+S: export map
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+      e.preventDefault();
+      this._exportMap();
+      return;
+    }
 
     // Ctrl+G: toggle grid
     if ((e.ctrlKey || e.metaKey) && e.key === 'g') {
