@@ -9,8 +9,12 @@ import { MapDocument } from './MapDocument.js';
 import { FloatingPanel } from './FloatingPanel.js';
 import { TilePalette } from './TilePalette.js';
 import { LayerPanel } from './LayerPanel.js';
+import { ToolBar } from './ToolBar.js';
 import { BrushTool } from './tools/BrushTool.js';
 import { EraserTool } from './tools/EraserTool.js';
+import { RectangleFillTool } from './tools/RectangleFillTool.js';
+import { FloodFillTool } from './tools/FloodFillTool.js';
+import { LineTool } from './tools/LineTool.js';
 
 // Known tilesets that can be loaded from the server
 const AVAILABLE_TILESETS = [
@@ -30,6 +34,7 @@ export class MapEditor {
     this._palette = null;
     this._layerPanel = null;
     this._layerPanelPanel = null;
+    this._toolbar = null;
 
     // Current brush state (set by palette selection)
     this.selectedGid = 0;
@@ -122,10 +127,32 @@ export class MapEditor {
 
     this._palette.updateTilesets(this.mapDocument.tilesets);
 
-    // Default tool: brush
+    // Create tools
     this._brushTool = new BrushTool(this);
     this._eraserTool = new EraserTool(this);
+    this._rectFillTool = new RectangleFillTool(this);
+    this._floodFillTool = new FloodFillTool(this);
+    this._lineTool = new LineTool(this);
+
+    // ToolBar
+    const toolBtnContainer = document.getElementById('tool-buttons');
+    if (toolBtnContainer) {
+      this._toolbar = new ToolBar(toolBtnContainer, [
+        { name: 'Brush', shortcut: 'B', tool: this._brushTool },
+        { name: 'Eraser', shortcut: 'E', tool: this._eraserTool },
+        { name: 'Rect', shortcut: 'R', tool: this._rectFillTool },
+        { name: 'Fill', shortcut: 'G', tool: this._floodFillTool },
+        { name: 'Line', shortcut: 'L', tool: this._lineTool },
+      ]);
+
+      this._toolbar.onToolSelect = (tool) => {
+        this.canvas.setTool(tool);
+      };
+    }
+
+    // Default tool: brush
     this.canvas.setTool(this._brushTool);
+    if (this._toolbar) this._toolbar.setActiveTool(this._brushTool);
   }
 
   // --- Layer Panel ---
@@ -307,15 +334,18 @@ export class MapEditor {
       return;
     }
 
-    // B: brush tool
-    if (e.key === 'b' || e.key === 'B') {
-      this.canvas.setTool(this._brushTool);
-      return;
-    }
-
-    // E: eraser tool
-    if (e.key === 'e' || e.key === 'E') {
-      this.canvas.setTool(this._eraserTool);
+    // Tool shortcuts
+    const toolKeys = {
+      b: this._brushTool,
+      e: this._eraserTool,
+      r: this._rectFillTool,
+      g: this._floodFillTool,
+      l: this._lineTool,
+    };
+    const toolMatch = toolKeys[e.key.toLowerCase()];
+    if (toolMatch && !e.ctrlKey && !e.metaKey) {
+      this.canvas.setTool(toolMatch);
+      if (this._toolbar) this._toolbar.setActiveTool(toolMatch);
       return;
     }
 
