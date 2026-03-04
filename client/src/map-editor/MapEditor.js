@@ -18,6 +18,7 @@ import { LineTool } from './tools/LineTool.js';
 import { SelectTool } from './tools/SelectTool.js';
 import { ObjectTool } from './tools/ObjectTool.js';
 import { ObjectPalette } from './ObjectPalette.js';
+import { PropertyPanel } from './PropertyPanel.js';
 
 // Known tilesets that can be loaded from the server
 const AVAILABLE_TILESETS = [
@@ -99,6 +100,7 @@ export class MapEditor {
     this._createPalette();
     this._createLayerPanel();
     this._createObjectPalette();
+    this._createPropertyPanel();
 
     // Global keyboard shortcuts
     window.addEventListener('keydown', (e) => this._onGlobalKeyDown(e));
@@ -144,6 +146,7 @@ export class MapEditor {
     this._lineTool = new LineTool(this);
     this._selectTool = new SelectTool(this);
     this._objectTool = new ObjectTool(this);
+    this._objectTool.onSelectionChange = (obj) => this._onObjectSelected(obj);
 
     // ToolBar
     const toolBtnContainer = document.getElementById('tool-buttons');
@@ -220,6 +223,32 @@ export class MapEditor {
     };
 
     this._objectPalette.updateTilesets(this.mapDocument.tilesets);
+  }
+
+  // --- Property Panel ---
+
+  _createPropertyPanel() {
+    this._propertyPanelPanel = new FloatingPanel({
+      title: 'Properties',
+      id: 'property-panel',
+      x: 10,
+      y: 350,
+      width: 240,
+    });
+
+    this._propertyPanel = new PropertyPanel(this._propertyPanelPanel.getContentElement());
+    this._propertyPanel.setContext(this.mapDocument);
+  }
+
+  // Update the property panel when an object is selected/deselected
+  _onObjectSelected(obj) {
+    if (this._propertyPanel) {
+      if (obj) {
+        this._propertyPanel.setObject(obj);
+      } else {
+        this._propertyPanel.clear();
+      }
+    }
   }
 
   _updateLayerStatus() {

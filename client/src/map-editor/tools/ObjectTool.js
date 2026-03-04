@@ -59,6 +59,7 @@ export class ObjectTool extends BaseTool {
     } else {
       this._selectedObject = null;
     }
+    if (this.onSelectionChange) this.onSelectionChange(this._selectedObject);
   }
 
   onMouseMove(worldX, worldY, _tileX, _tileY, _event) {
@@ -109,6 +110,7 @@ export class ObjectTool extends BaseTool {
       const cmd = new DeleteObjectCommand(this.editor.mapDocument, this._selectedObject);
       this.editor.mapDocument.commandStack.execute(cmd);
       this._selectedObject = null;
+      if (this.onSelectionChange) this.onSelectionChange(null);
     }
   }
 
@@ -137,6 +139,7 @@ export class ObjectTool extends BaseTool {
     const cmd = new PlaceObjectCommand(this.editor.mapDocument, obj);
     this.editor.mapDocument.commandStack.execute(cmd);
     this._selectedObject = obj;
+    if (this.onSelectionChange) this.onSelectionChange(obj);
   }
 
   // --- Hit testing ---
