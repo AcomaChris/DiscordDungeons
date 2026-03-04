@@ -167,6 +167,67 @@ describe('MapDocument', () => {
     });
   });
 
+  describe('autoPopulateCollision', () => {
+    it('marks tiles with collision:solid metadata', () => {
+      const doc = new MapDocument();
+      doc.addTileset({
+        name: 'walls', tileCount: 16, columns: 4, rows: 4,
+        metadata: {
+          tiles: {
+            '0': { collision: 'solid' },
+            '1': { collision: 'none' },
+            '2': { collision: 'solid' },
+          },
+        },
+      });
+
+      // Place tiles: GID 1 = localId 0 (solid), GID 2 = localId 1 (none), GID 3 = localId 2 (solid)
+      doc.getLayer('Ground').set(0, 0, 1);
+      doc.getLayer('Ground').set(1, 0, 2);
+      doc.getLayer('Walls').set(2, 0, 3);
+
+      const count = doc.autoPopulateCollision();
+      const collision = doc.getLayer('Collision');
+
+      expect(count).toBe(2);
+      expect(collision.get(0, 0)).toBe(1);  // solid
+      expect(collision.get(1, 0)).toBe(0);  // not solid
+      expect(collision.get(2, 0)).toBe(1);  // solid
+    });
+
+    it('clears existing collision data first', () => {
+      const doc = new MapDocument();
+      doc.addTileset({
+        name: 'test', tileCount: 16, columns: 4, rows: 4,
+        metadata: { tiles: {} },
+      });
+
+      doc.getLayer('Collision').set(5, 5, 1);
+      doc.autoPopulateCollision();
+
+      expect(doc.getLayer('Collision').get(5, 5)).toBe(0);
+    });
+
+    it('returns 0 when no tiles have collision metadata', () => {
+      const doc = new MapDocument();
+      doc.addTileset({
+        name: 'test', tileCount: 16, columns: 4, rows: 4,
+        metadata: { tiles: { '0': { collision: 'none' } } },
+      });
+      doc.getLayer('Ground').set(0, 0, 1);
+
+      expect(doc.autoPopulateCollision()).toBe(0);
+    });
+
+    it('returns 0 when tileset has no metadata', () => {
+      const doc = new MapDocument();
+      doc.addTileset({ name: 'test', tileCount: 16, columns: 4, rows: 4 });
+      doc.getLayer('Ground').set(0, 0, 1);
+
+      expect(doc.autoPopulateCollision()).toBe(0);
+    });
+  });
+
   describe('layer groups', () => {
     it('LAYER_GROUPS covers all tile layers except Objects', () => {
       const grouped = Object.values(LAYER_GROUPS).flat();

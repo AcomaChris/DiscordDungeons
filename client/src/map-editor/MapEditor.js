@@ -61,6 +61,8 @@ export class MapEditor {
     this._redoBtn = null;
     this._exportBtn = null;
     this._importBtn = null;
+    this._newMapBtn = null;
+    this._autoCollisionBtn = null;
   }
 
   init() {
@@ -88,6 +90,8 @@ export class MapEditor {
     this._redoBtn = document.getElementById('redo-btn');
     this._exportBtn = document.getElementById('export-btn');
     this._importBtn = document.getElementById('import-btn');
+    this._newMapBtn = document.getElementById('new-map-btn');
+    this._autoCollisionBtn = document.getElementById('auto-collision-btn');
 
     // Wire callbacks
     this.canvas.onCursorMove = (pos) => this._updateCursorStatus(pos);
@@ -101,12 +105,36 @@ export class MapEditor {
       });
     }
 
-    // Export / Import buttons
+    // Undo / Redo buttons
+    if (this._undoBtn) {
+      this._undoBtn.addEventListener('click', () => {
+        if (this.mapDocument.commandStack.canUndo()) {
+          this.mapDocument.commandStack.undo();
+          this.canvas.markDirty();
+        }
+      });
+    }
+    if (this._redoBtn) {
+      this._redoBtn.addEventListener('click', () => {
+        if (this.mapDocument.commandStack.canRedo()) {
+          this.mapDocument.commandStack.redo();
+          this.canvas.markDirty();
+        }
+      });
+    }
+
+    // Export / Import / New buttons
     if (this._exportBtn) {
       this._exportBtn.addEventListener('click', () => this._exportMap());
     }
     if (this._importBtn) {
       this._importBtn.addEventListener('click', () => this._importMap());
+    }
+    if (this._newMapBtn) {
+      this._newMapBtn.addEventListener('click', () => this._newMap());
+    }
+    if (this._autoCollisionBtn) {
+      this._autoCollisionBtn.addEventListener('click', () => this._autoCollision());
     }
 
     // Create floating panels
@@ -353,6 +381,26 @@ export class MapEditor {
       img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
       img.src = src;
     });
+  }
+
+  // --- New Map ---
+
+  _newMap() {
+    if (!confirm('Create a new map? All unsaved changes will be lost.')) return;
+    this.mapDocument.reset();
+    this._palette.updateTilesets(this.mapDocument.tilesets);
+    if (this._objectPalette) this._objectPalette.updateTilesets(this.mapDocument.tilesets);
+    if (this._propertyPanel) this._propertyPanel.clear();
+    this.canvas.markDirty();
+    this.showToast('New map created');
+  }
+
+  // --- Auto Collision ---
+
+  _autoCollision() {
+    const count = this.mapDocument.autoPopulateCollision();
+    this.canvas.markDirty();
+    this.showToast(`Collision auto-populated: ${count} tiles`);
   }
 
   // --- Export / Import ---

@@ -152,6 +152,45 @@ export class MapDocument {
     };
   }
 
+  // --- Collision auto-populate ---
+  // Scan all tile layers for tiles with collision: 'solid' metadata
+  // and populate the Collision layer. Returns the number of tiles set.
+  autoPopulateCollision() {
+    const collisionLayer = this.getLayer('Collision');
+    if (!collisionLayer) return 0;
+
+    // Use GID 1 as the collision marker (any non-zero GID)
+    const COLLISION_GID = 1;
+    const tileLayers = ['Ground', 'GroundDecor', 'Walls', 'WallTops', 'Overlay'];
+    let count = 0;
+
+    // Clear existing collision data
+    collisionLayer.clear();
+
+    for (const layerName of tileLayers) {
+      const layer = this.getLayer(layerName);
+      if (!layer || layer.size === 0) continue;
+
+      layer.forEach((x, y, gid) => {
+        // Already marked as collision — skip
+        if (collisionLayer.get(x, y) !== 0) return;
+
+        const resolved = this.resolveGid(gid);
+        if (!resolved) return;
+
+        const { tileset, localId } = resolved;
+        const meta = tileset.metadata?.tiles?.[String(localId)];
+        if (meta && meta.collision === 'solid') {
+          collisionLayer.set(x, y, COLLISION_GID);
+          count++;
+        }
+      });
+    }
+
+    this._notify();
+    return count;
+  }
+
   // --- Reset ---
 
   reset() {
