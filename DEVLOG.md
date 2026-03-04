@@ -4,6 +4,19 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-03 — Map Editor: Complete Toolset + Export/Import (v0.26.1)
+
+**Commits:** 1cea19d → 71efdca (7 commits)
+
+- **Layer panel** (`LayerPanel.js`): Grouped by Floor/Structures/System, visibility toggles, opacity sliders, active layer selection, number key shortcuts (1-7). Special rendering for Collision (red X overlay) and Elevation (numbered blue tiles).
+- **Full toolset**: Rectangle fill (drag-to-fill), flood fill (BFS with 10k safety limit), line tool (Bresenham), select/copy/paste/cut (rubber-band + Ctrl+C/V/X), multi-tile stamp brush. All tools produce undoable commands.
+- **Object system**: ObjectPalette (searchable list with canvas thumbnails), ObjectTool (place/select/drag/delete), PropertyPanel (editable object properties). Auto-switches to object tool when palette item selected.
+- **Export/Import**: Tiled 1.10 JSON export (bounding-box trimmed sparse layers → dense arrays, tileset refs, object groups). Import parses Tiled JSON back + auto-loads referenced tilesets. Ctrl+S shortcut. 19 unit tests with round-trip verification.
+- **Polish**: Undo/Redo toolbar buttons, New Map with confirmation, Auto Collision button (scans tile metadata for `collision:'solid'` and populates Collision layer).
+- 713 total tests (43 new this session). All passing.
+
+---
+
 ## 2026-03-03 — Animation-Aware Tileset Auto-Setup (v0.25.0)
 
 - **TMX animation parser** (`scripts/parse-tmx-animations.js`): Parses 4 TMX files, extracts per-tileset animation data (142 entries on Animation_windows_doors, ~900 character animations). Detects bank structure (4 banks of 10 cols), identifies frame-only tiles, deduplicates across TMX files. Outputs 25 `.animations.json` files.
