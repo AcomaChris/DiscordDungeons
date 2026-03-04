@@ -2,8 +2,15 @@
 import { test, expect } from '@playwright/test';
 
 // --- E2E: Touch Controls (Joystick + Action Buttons) ---
-// Verifies that touch controls appear on touch-capable devices, including
-// hybrid devices like Chromebooks that have both touch and a trackpad.
+// Verifies touch control visibility rules:
+// - Hidden on desktop (no touch) — DOM not created by JS
+// - Visible on touch device (phone/tablet) — JS creates DOM, CSS allows it
+// - Visible with ?touch=1 override — force-touch class bypasses CSS media query
+// - Action buttons hide/show based on equipped abilities
+//
+// Note: Chromebook (touch + fine pointer) can't be perfectly simulated in
+// Playwright — hasTouch changes media features to coarse/none. The CSS
+// media query hiding is verified via unit tests and real-device testing.
 
 const GAME_URL = 'http://localhost:8081';
 
@@ -29,14 +36,15 @@ async function skipMainMenu(page) {
   await waitForScene(page, 'GameScene');
 }
 
-async function bootGameWithTouch(browser, opts = {}) {
+async function bootGameWithTouch(browser, { forceTouch = false, ...opts } = {}) {
   const context = await browser.newContext({
     viewport: { width: 800, height: 600 },
     hasTouch: true,
     ...opts,
   });
   const page = await context.newPage();
-  await page.goto(`${GAME_URL}?map=test`, { waitUntil: 'domcontentloaded' });
+  const touchParam = forceTouch ? '&touch=1' : '';
+  await page.goto(`${GAME_URL}?map=test${touchParam}`, { waitUntil: 'domcontentloaded' });
   // Extended timeout for cold-start — first Vite transform can take 30s+
   await page.waitForFunction(() => globalThis.__PHASER_GAME__, {
     timeout: 50_000,
@@ -47,32 +55,11 @@ async function bootGameWithTouch(browser, opts = {}) {
 }
 
 test.describe('Touch controls', () => {
-  test('joystick and action buttons are visible on touch device', async ({ browser }) => {
-    const { context, page } = await bootGameWithTouch(browser);
-
-    const container = page.locator('#touch-controls');
-    await expect(container).toBeVisible();
-
-    const joystick = page.locator('.joystick-base');
-    await expect(joystick).toBeVisible();
-
-    const knob = page.locator('.joystick-knob');
-    await expect(knob).toBeVisible();
-
-    const jumpBtn = page.locator('.btn-jump');
-    await expect(jumpBtn).toBeVisible();
-
-    const sprintBtn = page.locator('.btn-sprint');
-    await expect(sprintBtn).toBeVisible();
-
-    await context.close();
-  });
-
   test('touch controls are hidden on non-touch device', async ({ page }) => {
     // Default Playwright context has no touch — simulates desktop
     await page.goto(`${GAME_URL}?map=test`, { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(() => globalThis.__PHASER_GAME__, {
-      timeout: 30_000,
+      timeout: 50_000,
       polling: 200,
     });
     await skipMainMenu(page);
@@ -82,25 +69,29 @@ test.describe('Touch controls', () => {
     await expect(container).toHaveCount(0);
   });
 
-  test('joystick and buttons visible on hybrid device (touch + trackpad)', async ({ browser }) => {
-    // Chromebook-like: has touch AND fine pointer (trackpad)
-    const context = await browser.newContext({
-      viewport: { width: 1366, height: 768 },
-      hasTouch: true,
-    });
-    const page = await context.newPage();
-    await page.goto(`${GAME_URL}?map=test`, { waitUntil: 'domcontentloaded' });
-    await page.waitForFunction(() => globalThis.__PHASER_GAME__, {
-      timeout: 30_000,
-      polling: 200,
-    });
-    await skipMainMenu(page);
+  test('joystick and action buttons visible on touch device', async ({ browser }) => {
+    // hasTouch=true simulates a phone (coarse pointer, no hover)
+    const { context, page } = await bootGameWithTouch(browser);
 
     const container = page.locator('#touch-controls');
     await expect(container).toBeVisible();
 
-    const joystick = page.locator('.joystick-base');
-    await expect(joystick).toBeVisible();
+    await expect(page.locator('.joystick-base')).toBeVisible();
+    await expect(page.locator('.joystick-knob')).toBeVisible();
+    await expect(page.locator('.btn-jump')).toBeVisible();
+    await expect(page.locator('.btn-sprint')).toBeVisible();
+
+    await context.close();
+  });
+
+  test('?touch=1 adds force-touch class for CSS override', async ({ browser }) => {
+    // Simulates /localtest mobile — ?touch=1 adds .force-touch to bypass
+    // the CSS media query on devices with hover+fine pointer (Chromebook)
+    const { context, page } = await bootGameWithTouch(browser, { forceTouch: true });
+
+    const container = page.locator('#touch-controls');
+    await expect(container).toBeVisible();
+    await expect(container).toHaveClass(/force-touch/);
 
     await context.close();
   });

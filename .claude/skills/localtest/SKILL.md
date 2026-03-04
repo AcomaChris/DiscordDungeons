@@ -19,7 +19,7 @@ user_invocable: true
 
 5. **Report**:
    - **Default**: Tell the user the server is running at `http://localhost:8080`.
-   - **If `mobile`**: Get the machine's LAN IP via `hostname -I | awk '{print $1}'` and tell the user to open `http://<LAN_IP>:8080` on their mobile/Chromebook device. Remind them both devices must be on the same network.
+   - **If `mobile`**: Get the machine's LAN IP via `hostname -I | awk '{print $1}'` and tell the user to open `http://<LAN_IP>:8080?touch=1` on their mobile/Chromebook device. The `?touch=1` param forces touch controls to appear on devices with a trackpad (like Chromebooks). Remind them both devices must be on the same network.
 
 ## Page arguments
 If `$ARGUMENTS` contains a page name, open that page instead of the default:

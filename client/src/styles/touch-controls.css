@@ -12,6 +12,17 @@
   display: block;
 }
 
+/* Hide on devices with a mouse/trackpad (e.g. Chromebooks, desktops).
+   Overridden by .force-touch when ?touch=1 is in the URL. */
+@media (hover: hover) and (pointer: fine) {
+  #touch-controls.visible {
+    display: none;
+  }
+  #touch-controls.visible.force-touch {
+    display: block;
+  }
+}
+
 /* --- Joystick Area (left side) --- */
 
 #touch-controls .joystick-area {

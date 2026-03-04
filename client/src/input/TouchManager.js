@@ -34,6 +34,8 @@ export class TouchManager {
   }
 
   static isTouchDevice() {
+    // ?touch=1 in the URL forces touch mode (used by /localtest mobile)
+    if (new URLSearchParams(window.location.search).get('touch') === '1') return true;
     return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   }
 
@@ -229,7 +231,12 @@ export class TouchManager {
   // --- Visibility ---
 
   show() {
-    if (this._container) this._container.classList.add('visible');
+    if (!this._container) return;
+    this._container.classList.add('visible');
+    // Override the hover+fine-pointer CSS hide when ?touch=1 is in the URL
+    if (new URLSearchParams(window.location.search).get('touch') === '1') {
+      this._container.classList.add('force-touch');
+    }
   }
 
   hide() {
