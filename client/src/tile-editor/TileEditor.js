@@ -104,9 +104,11 @@ class TileEditor {
     this.tileProperties.onClearTiles = (sel) => this._onClearTiles(sel);
 
     // Wire object mode callbacks
-    this.objectCanvas.onObjectSelect = (id) => this._onObjectSelect(id);
+    this.objectCanvas.onObjectSelect = (id, selectedIds) => this._onObjectSelect(id, selectedIds);
     this.objectCanvas.onObjectCreate = (info) => this._onObjectCreate(info);
     this.objectCanvas.onTileReassign = (info) => this._onTileReassign(info);
+    this.objectCanvas.onObjectResize = (info) => this._onTileReassign(info);
+    this.objectCanvas.onObjectSplit = (info) => this._onObjectSplit(info);
     this.objectList.onObjectSelect = (id) => this._onObjectSelect(id);
     this.objectList.onNewObject = () => this._openObjectWizard();
     this.objectList.onClearAll = () => this._onClearAllObjects();
@@ -114,6 +116,7 @@ class TileEditor {
     this.objectProperties.onDeleteObject = (id) => this._onDeleteObject(id);
     this.objectProperties.onRenameObject = (oldId, newId) => this._onRenameObject(oldId, newId);
     this.objectProperties.onDuplicateObject = (id) => this._onDuplicateObject(id);
+    this.objectProperties.onMergeObjects = (primaryId, ids) => this._onMergeObjects(primaryId, ids);
 
     // --- Tooltips ---
     this._tilesetSelect.title = 'Choose a tileset to edit';
@@ -367,11 +370,15 @@ class TileEditor {
   }
 
   // --- Object Mode: Object Selected ---
-  _onObjectSelect(objectId) {
+  _onObjectSelect(objectId, selectedIds) {
     // Sync selection across canvas, list, and properties
     this.objectCanvas.selectObject(objectId);
+    // Restore multi-select state if provided
+    if (selectedIds && selectedIds.size > 1) {
+      this.objectCanvas.selectedObjectIds = new Set(selectedIds);
+    }
     this.objectList.selectObject(objectId);
-    this.objectProperties.updateSelection(objectId, this.objectDefs, this.objectCanvas);
+    this.objectProperties.updateSelection(objectId, this.objectDefs, this.objectCanvas, selectedIds);
 
     if (objectId) {
       this.objectCanvas.scrollToObject(objectId);
@@ -496,6 +503,151 @@ class TileEditor {
     this.objectList.loadDefs(this.objectDefs, this._tilesetImage, this._tilesetColumns);
     this.objectProperties.updateSelection(objectId, this.objectDefs, this.objectCanvas);
     this._updateStatus();
+  }
+
+  // --- Object Mode: Merge Objects ---
+  _onMergeObjects(primaryId, selectedIds) {
+    const primaryDef = this.objectDefs[primaryId];
+    if (!primaryDef) return;
+
+    // Collect all tile indices from all selected objects
+    const allTiles = new Set();
+    for (const id of selectedIds) {
+      const def = this.objectDefs[id];
+      if (!def?.grid?.tiles) continue;
+      for (const row of def.grid.tiles) {
+        for (const tileIdx of row) {
+          if (tileIdx !== null && tileIdx !== undefined) {
+            allTiles.add(tileIdx);
+          }
+        }
+      }
+    }
+
+    // Compute bounding box
+    let minCol = Infinity, minRow = Infinity, maxCol = -1, maxRow = -1;
+    for (const tileIdx of allTiles) {
+      const col = tileIdx % this._tilesetColumns;
+      const row = Math.floor(tileIdx / this._tilesetColumns);
+      if (col < minCol) minCol = col;
+      if (col > maxCol) maxCol = col;
+      if (row < minRow) minRow = row;
+      if (row > maxRow) maxRow = row;
+    }
+
+    // Build new grid
+    const cols = maxCol - minCol + 1;
+    const rows = maxRow - minRow + 1;
+    const tiles = [];
+    for (let r = 0; r < rows; r++) {
+      const row = [];
+      for (let c = 0; c < cols; c++) {
+        const idx = (minRow + r) * this._tilesetColumns + (minCol + c);
+        row.push(allTiles.has(idx) ? idx : null);
+      }
+      tiles.push(row);
+    }
+
+    // Update primary object's grid
+    primaryDef.grid = { cols, rows, tiles };
+
+    // Delete consumed objects
+    for (const id of selectedIds) {
+      if (id !== primaryId) delete this.objectDefs[id];
+    }
+
+    this._objectDefsModified = true;
+    this.objectCanvas.loadDefs(this.objectDefs);
+    this.objectCanvas.selectObject(primaryId);
+    this.objectList.loadDefs(this.objectDefs, this._tilesetImage, this._tilesetColumns);
+    this.objectProperties.updateSelection(primaryId, this.objectDefs, this.objectCanvas);
+    this._updateStatus();
+    this._showToast(`Merged ${selectedIds.size} objects into "${primaryId}"`);
+  }
+
+  // --- Object Mode: Split Object ---
+  _onObjectSplit({ objectId, axis, position }) {
+    const def = this.objectDefs[objectId];
+    if (!def?.grid?.tiles) return;
+
+    // Partition tiles based on split axis and position
+    const tilesA = [];
+    const tilesB = [];
+    for (const row of def.grid.tiles) {
+      for (const tileIdx of row) {
+        if (tileIdx === null || tileIdx === undefined) continue;
+        const col = tileIdx % this._tilesetColumns;
+        const r = Math.floor(tileIdx / this._tilesetColumns);
+        if (axis === 'v') {
+          if (col < position) tilesA.push(tileIdx);
+          else tilesB.push(tileIdx);
+        } else {
+          if (r < position) tilesA.push(tileIdx);
+          else tilesB.push(tileIdx);
+        }
+      }
+    }
+
+    if (tilesA.length === 0 || tilesB.length === 0) return;
+
+    // Build grid from flat tile list
+    const buildGrid = (tileList) => {
+      let minC = Infinity, maxC = -1, minR = Infinity, maxR = -1;
+      for (const t of tileList) {
+        const c = t % this._tilesetColumns;
+        const r = Math.floor(t / this._tilesetColumns);
+        if (c < minC) minC = c;
+        if (c > maxC) maxC = c;
+        if (r < minR) minR = r;
+        if (r > maxR) maxR = r;
+      }
+      const cols = maxC - minC + 1;
+      const rows = maxR - minR + 1;
+      const tileSet = new Set(tileList);
+      const grid = [];
+      for (let r = 0; r < rows; r++) {
+        const row = [];
+        for (let c = 0; c < cols; c++) {
+          const idx = (minR + r) * this._tilesetColumns + (minC + c);
+          row.push(tileSet.has(idx) ? idx : null);
+        }
+        grid.push(row);
+      }
+      return { cols, rows, tiles: grid };
+    };
+
+    const gridA = buildGrid(tilesA);
+    const gridB = buildGrid(tilesB);
+
+    // Update original with grid A
+    def.grid = gridA;
+
+    // Create new object with grid B (clone properties, clear geometry-dependent fields)
+    let newId = `${objectId}_split`;
+    let counter = 1;
+    while (this.objectDefs[newId]) {
+      newId = `${objectId}_split${counter++}`;
+    }
+
+    const clone = structuredClone(def);
+    clone.id = newId;
+    clone.name = `${def.name || objectId} (split)`;
+    clone.grid = gridB;
+    clone.colliders = [];
+    clone.nodes = [];
+
+    this.objectDefs[newId] = clone;
+    this._objectDefsModified = true;
+
+    // Exit split mode
+    this.objectCanvas.exitSplitMode();
+
+    // Refresh
+    this.objectCanvas.loadDefs(this.objectDefs);
+    this.objectList.loadDefs(this.objectDefs, this._tilesetImage, this._tilesetColumns);
+    this._onObjectSelect(objectId);
+    this._updateStatus();
+    this._showToast(`Split "${objectId}" into "${objectId}" and "${newId}"`);
   }
 
   // --- Object Mode: Clear All ---
@@ -792,8 +944,11 @@ class TileEditor {
     }
   }
 
-  // Exit any active batch editor (paint, connection, collision) before entering another
+  // Exit any active batch editor (paint, connection, collision, split) before entering another
   _exitActiveBatchEditor() {
+    if (this.objectCanvas.isInSplitMode()) {
+      this.objectCanvas.exitSplitMode();
+    }
     if (this.objectCanvas.isInPaintMode()) {
       this.objectCanvas.setPaintMode(null);
       if (this._categoryPainter) this._categoryPainter.deactivate();

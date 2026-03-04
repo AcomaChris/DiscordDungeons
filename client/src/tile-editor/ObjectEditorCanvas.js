@@ -45,6 +45,7 @@ export class ObjectEditorCanvas {
 
     this.objectDefs = {};
     this.selectedObjectId = null;
+    this.selectedObjectIds = new Set();
     this.hoveredTile = -1;
 
     // Tile index → object ID lookup for click-to-select
@@ -73,6 +74,17 @@ export class ObjectEditorCanvas {
     this._showEdgeIndicators = false;
     this._edgeObjectId = null;
 
+    // Split mode
+    this._splitMode = false;
+    this._splitPreview = null;
+
+    // Resize handle state
+    this._resizeHandle = null;
+    this._resizeStart = null;
+    this._resizeCurrent = null;
+    this._resizeBounds = null;
+    this._isResizing = false;
+
     // Track whether this canvas is active (controls rendering + events)
     this._active = false;
     this._boundMouseMove = (e) => this._onMouseMove(e);
@@ -85,6 +97,8 @@ export class ObjectEditorCanvas {
     this.onObjectCreate = null;
     this.onTileReassign = null;
     this.onWizardSelect = null;
+    this.onObjectResize = null;
+    this.onObjectSplit = null;
   }
 
   setActive(active) {
@@ -139,6 +153,8 @@ export class ObjectEditorCanvas {
 
   selectObject(objectId) {
     this.selectedObjectId = objectId;
+    this.selectedObjectIds.clear();
+    if (objectId) this.selectedObjectIds.add(objectId);
     if (this._active) this.render();
   }
 
@@ -236,6 +252,28 @@ export class ObjectEditorCanvas {
     return this._paintMode;
   }
 
+  // --- Split mode ---
+
+  enterSplitMode() {
+    this._splitMode = true;
+    this._splitPreview = null;
+    this.canvas.style.cursor = 'col-resize';
+    this.canvas.title = 'Click inside the selected object to split along a tile line. Hold Alt for horizontal split.';
+    if (this._active) this.render();
+  }
+
+  exitSplitMode() {
+    this._splitMode = false;
+    this._splitPreview = null;
+    this.canvas.style.cursor = 'crosshair';
+    this.canvas.title = 'Click to select an object. Shift+drag to define a new object from tiles.';
+    if (this._active) this.render();
+  }
+
+  isInSplitMode() {
+    return this._splitMode;
+  }
+
   // --- Edge indicators ---
 
   setEdgeIndicators(objectId) {
@@ -299,14 +337,24 @@ export class ObjectEditorCanvas {
     this._drawGrid();
 
     // 5. Selected object detail overlays
-    if (this.selectedObjectId && this.objectDefs[this.selectedObjectId]) {
-      const def = this.objectDefs[this.selectedObjectId];
-      this._drawSelectedHighlight(def);
-      this._drawColliders(def);
-      this._drawNodes(def);
+    for (const selId of this.selectedObjectIds) {
+      const selDef = this.objectDefs[selId];
+      if (!selDef) continue;
+      this._drawSelectedHighlight(selDef);
+      // Only draw colliders/nodes for primary selection
+      if (selId === this.selectedObjectId) {
+        this._drawColliders(selDef);
+        this._drawNodes(selDef);
+      }
     }
 
-    // 5b. Edge indicators for ConnectionEditor
+    // 5b. Resize handles (single selection only)
+    if (this.selectedObjectIds.size === 1 && this.selectedObjectId) {
+      const rDef = this.objectDefs[this.selectedObjectId];
+      if (rDef) this._drawResizeHandles(rDef);
+    }
+
+    // 5c. Edge indicators for ConnectionEditor
     if (this._showEdgeIndicators && this._edgeObjectId) {
       const edgeDef = this.objectDefs[this._edgeObjectId];
       if (edgeDef) this._drawEdgeIndicators(edgeDef);
@@ -315,14 +363,26 @@ export class ObjectEditorCanvas {
     // 6. Drag rect
     this._drawDragRect();
 
+    // 6b. Resize preview
+    this._drawResizePreview();
+
     // 7. Hover
     this._drawHover();
+
+    // 7b. Split preview
+    this._drawSplitPreview();
 
     // 8. Mode banners
     if (this._reassignMode) this._drawModeBanner(`Draw new tiles for: ${this._reassignObjectId}`, '#ff9f43');
     if (this._wizardMode) this._drawModeBanner('Draw a rectangle to select object tiles', '#00ccff');
     if (this._paintMode && this._painter?.activeBrush) {
       this._drawModeBanner(`Painting: ${this._painter.activeBrush} — click objects to assign`, '#10ac84');
+    }
+    if (this._splitMode) {
+      this._drawModeBanner('Split mode — click to split object (Alt for horizontal)', '#ff6b9d');
+    }
+    if (this.selectedObjectIds.size > 1) {
+      this._drawModeBanner(`${this.selectedObjectIds.size} objects selected — Ctrl+click to add/remove`, '#c44dff');
     }
   }
 
@@ -367,7 +427,7 @@ export class ObjectEditorCanvas {
 
     for (const [objId, def] of Object.entries(this.objectDefs)) {
       if (!def.grid || !def.grid.tiles) continue;
-      if (objId === this.selectedObjectId) continue; // drawn separately
+      if (this.selectedObjectIds.has(objId)) continue; // drawn separately
 
       const color = CATEGORY_COLORS[def.category] || '#888888';
 
@@ -554,6 +614,165 @@ export class ObjectEditorCanvas {
     ctx.textBaseline = 'alphabetic';
   }
 
+  // --- Resize handles ---
+
+  _getHandleAt(col, row) {
+    if (this.selectedObjectIds.size !== 1 || !this.selectedObjectId) return null;
+    const def = this.objectDefs[this.selectedObjectId];
+    if (!def) return null;
+    const b = this._getObjectBounds(def);
+    if (!b) return null;
+
+    const onTop = (row === b.y - 1);
+    const onBottom = (row === b.y + b.h);
+    const onLeft = (col === b.x - 1);
+    const onRight = (col === b.x + b.w);
+    const inHRange = (col >= b.x && col < b.x + b.w);
+    const inVRange = (row >= b.y && row < b.y + b.h);
+
+    // Corners
+    if (onTop && onLeft) return 'nw';
+    if (onTop && onRight) return 'ne';
+    if (onBottom && onLeft) return 'sw';
+    if (onBottom && onRight) return 'se';
+    // Edges
+    if (onTop && inHRange) return 'n';
+    if (onBottom && inHRange) return 's';
+    if (onLeft && inVRange) return 'w';
+    if (onRight && inVRange) return 'e';
+    return null;
+  }
+
+  _drawResizeHandles(def) {
+    const b = this._getObjectBounds(def);
+    if (!b) return;
+    const { ctx, zoom } = this;
+    const s = TILE_SIZE * zoom;
+    const hs = Math.max(6, zoom * 2);
+
+    const positions = [
+      { x: b.x * s, y: b.y * s },                               // nw
+      { x: (b.x + b.w / 2) * s, y: b.y * s },                   // n
+      { x: (b.x + b.w) * s, y: b.y * s },                       // ne
+      { x: (b.x + b.w) * s, y: (b.y + b.h / 2) * s },           // e
+      { x: (b.x + b.w) * s, y: (b.y + b.h) * s },               // se
+      { x: (b.x + b.w / 2) * s, y: (b.y + b.h) * s },           // s
+      { x: b.x * s, y: (b.y + b.h) * s },                       // sw
+      { x: b.x * s, y: (b.y + b.h / 2) * s },                   // w
+    ];
+
+    for (const { x, y } of positions) {
+      ctx.fillStyle = '#00ccff';
+      ctx.fillRect(x - hs / 2, y - hs / 2, hs, hs);
+      ctx.strokeStyle = '#1a1a2e';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(x - hs / 2, y - hs / 2, hs, hs);
+    }
+  }
+
+  _drawResizePreview() {
+    if (!this._isResizing || !this._resizeCurrent) return;
+    const { ctx, zoom } = this;
+    const s = TILE_SIZE * zoom;
+    const b = this._resizeBounds;
+    const handle = this._resizeHandle;
+    const deltaCol = this._resizeCurrent.col - this._resizeStart.col;
+    const deltaRow = this._resizeCurrent.row - this._resizeStart.row;
+
+    let newX = b.x, newY = b.y, newW = b.w, newH = b.h;
+    if (handle.includes('n')) { newY += deltaRow; newH -= deltaRow; }
+    if (handle.includes('s')) { newH += deltaRow; }
+    if (handle.includes('w')) { newX += deltaCol; newW -= deltaCol; }
+    if (handle.includes('e')) { newW += deltaCol; }
+    if (newW < 1) { newW = 1; newX = b.x; }
+    if (newH < 1) { newH = 1; newY = b.y; }
+
+    ctx.strokeStyle = '#00ccff';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([4, 4]);
+    ctx.strokeRect(newX * s, newY * s, newW * s, newH * s);
+    ctx.setLineDash([]);
+  }
+
+  _computeAndEmitResize(endCol, endRow) {
+    const b = this._resizeBounds;
+    const handle = this._resizeHandle;
+    const deltaCol = endCol - this._resizeStart.col;
+    const deltaRow = endRow - this._resizeStart.row;
+
+    let newX = b.x, newY = b.y, newW = b.w, newH = b.h;
+    if (handle.includes('n')) { newY += deltaRow; newH -= deltaRow; }
+    if (handle.includes('s')) { newH += deltaRow; }
+    if (handle.includes('w')) { newX += deltaCol; newW -= deltaCol; }
+    if (handle.includes('e')) { newW += deltaCol; }
+    if (newW < 1) { newW = 1; newX = b.x; }
+    if (newH < 1) { newH = 1; newY = b.y; }
+
+    // Clamp to tileset bounds
+    newX = Math.max(0, Math.min(newX, this.columns - 1));
+    newY = Math.max(0, Math.min(newY, this.rows - 1));
+    newW = Math.min(newW, this.columns - newX);
+    newH = Math.min(newH, this.rows - newY);
+
+    // Build new tile grid
+    const tiles = [];
+    for (let r = 0; r < newH; r++) {
+      const row = [];
+      for (let c = 0; c < newW; c++) {
+        row.push((newY + r) * this.columns + (newX + c));
+      }
+      tiles.push(row);
+    }
+
+    if (this.onObjectResize) {
+      this.onObjectResize({
+        objectId: this.selectedObjectId,
+        cols: newW, rows: newH, tiles,
+      });
+    }
+  }
+
+  _drawSplitPreview() {
+    if (!this._splitMode || !this._splitPreview) return;
+    const { ctx, zoom } = this;
+    const s = TILE_SIZE * zoom;
+    const { axis, position, bounds } = this._splitPreview;
+
+    ctx.strokeStyle = '#ff6b9d';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 4]);
+
+    if (axis === 'v') {
+      const x = position * s;
+      ctx.beginPath();
+      ctx.moveTo(x, bounds.y * s);
+      ctx.lineTo(x, (bounds.y + bounds.h) * s);
+      ctx.stroke();
+    } else {
+      const y = position * s;
+      ctx.beginPath();
+      ctx.moveTo(bounds.x * s, y);
+      ctx.lineTo((bounds.x + bounds.w) * s, y);
+      ctx.stroke();
+    }
+    ctx.setLineDash([]);
+
+    // Light fill on each half
+    ctx.globalAlpha = 0.1;
+    if (axis === 'v') {
+      ctx.fillStyle = '#ff6b9d';
+      ctx.fillRect(bounds.x * s, bounds.y * s, (position - bounds.x) * s, bounds.h * s);
+      ctx.fillStyle = '#00ccff';
+      ctx.fillRect(position * s, bounds.y * s, (bounds.x + bounds.w - position) * s, bounds.h * s);
+    } else {
+      ctx.fillStyle = '#ff6b9d';
+      ctx.fillRect(bounds.x * s, bounds.y * s, bounds.w * s, (position - bounds.y) * s);
+      ctx.fillStyle = '#00ccff';
+      ctx.fillRect(bounds.x * s, position * s, bounds.w * s, (bounds.y + bounds.h - position) * s);
+    }
+    ctx.globalAlpha = 1;
+  }
+
   _drawDragRect() {
     if (!this._isDragging || !this._dragStart || !this._dragCurrent) return;
     const { ctx, zoom } = this;
@@ -663,6 +882,34 @@ export class ObjectEditorCanvas {
   _onMouseMove(e) {
     const { id, col, row } = this._getTileAt(e);
 
+    // Split mode: compute preview line
+    if (this._splitMode && this.selectedObjectId) {
+      const def = this.objectDefs[this.selectedObjectId];
+      const bounds = def ? this._getObjectBounds(def) : null;
+      this._splitPreview = null;
+      if (bounds && col >= bounds.x && col < bounds.x + bounds.w
+        && row >= bounds.y && row < bounds.y + bounds.h) {
+        const useHorizontal = e.altKey;
+        if (useHorizontal && row > bounds.y && bounds.h > 1) {
+          this._splitPreview = { axis: 'h', position: row, bounds };
+          this.canvas.style.cursor = 'row-resize';
+        } else if (!useHorizontal && col > bounds.x && bounds.w > 1) {
+          this._splitPreview = { axis: 'v', position: col, bounds };
+          this.canvas.style.cursor = 'col-resize';
+        }
+      }
+      this.hoveredTile = id;
+      this.render();
+      return;
+    }
+
+    // Active resize drag
+    if (this._isResizing) {
+      this._resizeCurrent = { col, row };
+      this.render();
+      return;
+    }
+
     // Paint mode: drag-paint on mousemove while button is held
     if (this._paintMode && this._isPainting && id >= 0) {
       this._tryPaint(id);
@@ -675,6 +922,22 @@ export class ObjectEditorCanvas {
       return;
     }
 
+    // Resize handle cursor hint (only for single selection, not in special modes)
+    if (!this._reassignMode && !this._wizardMode && !this._paintMode) {
+      const handle = this._getHandleAt(col, row);
+      if (handle) {
+        const cursorMap = {
+          n: 'ns-resize', s: 'ns-resize',
+          e: 'ew-resize', w: 'ew-resize',
+          nw: 'nwse-resize', se: 'nwse-resize',
+          ne: 'nesw-resize', sw: 'nesw-resize',
+        };
+        this.canvas.style.cursor = cursorMap[handle];
+      } else if (!this._paintMode) {
+        this.canvas.style.cursor = 'crosshair';
+      }
+    }
+
     if (id !== this.hoveredTile) {
       this.hoveredTile = id;
       this.render();
@@ -684,6 +947,18 @@ export class ObjectEditorCanvas {
   _onMouseDown(e) {
     const { id, col, row } = this._getTileAt(e);
     if (id < 0) return;
+
+    // Split mode: execute split at preview line
+    if (this._splitMode && this._splitPreview) {
+      if (this.onObjectSplit) {
+        this.onObjectSplit({
+          objectId: this.selectedObjectId,
+          axis: this._splitPreview.axis,
+          position: this._splitPreview.position,
+        });
+      }
+      return;
+    }
 
     // Paint mode: click to assign category
     if (this._paintMode) {
@@ -700,6 +975,20 @@ export class ObjectEditorCanvas {
       return;
     }
 
+    // Resize handle: start resize drag
+    if (!e.shiftKey && !(e.ctrlKey || e.metaKey)) {
+      const handle = this._getHandleAt(col, row);
+      if (handle) {
+        const def = this.objectDefs[this.selectedObjectId];
+        this._isResizing = true;
+        this._resizeHandle = handle;
+        this._resizeStart = { col, row };
+        this._resizeCurrent = { col, row };
+        this._resizeBounds = { ...this._getObjectBounds(def) };
+        return;
+      }
+    }
+
     // Shift+click starts drag for creating new objects
     if (e.shiftKey) {
       this._isDragging = true;
@@ -710,15 +999,33 @@ export class ObjectEditorCanvas {
 
     // Normal click: select the object at this tile
     const objectId = this._tileToObject.get(id);
+
+    // Ctrl+click: toggle in multi-select
+    if ((e.ctrlKey || e.metaKey) && objectId) {
+      if (this.selectedObjectIds.has(objectId)) {
+        this.selectedObjectIds.delete(objectId);
+      } else {
+        this.selectedObjectIds.add(objectId);
+      }
+      this.selectedObjectId = this.selectedObjectIds.size > 0
+        ? [...this.selectedObjectIds][0] : null;
+      this.render();
+      if (this.onObjectSelect) this.onObjectSelect(this.selectedObjectId, this.selectedObjectIds);
+      return;
+    }
+
     if (objectId && objectId !== this.selectedObjectId) {
       this.selectedObjectId = objectId;
+      this.selectedObjectIds.clear();
+      this.selectedObjectIds.add(objectId);
       this.render();
-      if (this.onObjectSelect) this.onObjectSelect(objectId);
+      if (this.onObjectSelect) this.onObjectSelect(objectId, this.selectedObjectIds);
     } else if (!objectId && this.selectedObjectId) {
       // Click on empty tile: deselect
       this.selectedObjectId = null;
+      this.selectedObjectIds.clear();
       this.render();
-      if (this.onObjectSelect) this.onObjectSelect(null);
+      if (this.onObjectSelect) this.onObjectSelect(null, this.selectedObjectIds);
     }
   }
 
@@ -729,6 +1036,19 @@ export class ObjectEditorCanvas {
   }
 
   _onMouseUp(e) {
+    // Resize completion
+    if (this._isResizing) {
+      this._isResizing = false;
+      const { col, row } = this._getTileAt(e);
+      this._computeAndEmitResize(col, row);
+      this._resizeHandle = null;
+      this._resizeStart = null;
+      this._resizeCurrent = null;
+      this._resizeBounds = null;
+      this.render();
+      return;
+    }
+
     if (this._isPainting) {
       this._isPainting = false;
       return;

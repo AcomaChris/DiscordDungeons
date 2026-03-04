@@ -29,6 +29,7 @@ export class ObjectEditorProperties {
     this.onDeleteObject = null;
     this.onRenameObject = null;
     this.onDuplicateObject = null;
+    this.onMergeObjects = null;
 
     // Section collapse state (persists across selections)
     this._collapsed = {
@@ -42,16 +43,23 @@ export class ObjectEditorProperties {
     this.socketTypes = types || [];
   }
 
-  updateSelection(objectId, objectDefs, canvasComponent) {
+  updateSelection(objectId, objectDefs, canvasComponent, selectedIds) {
     this.selectedId = objectId;
     this.objectDefs = objectDefs;
     this.canvasComponent = canvasComponent;
+    this._selectedIds = selectedIds || new Set(objectId ? [objectId] : []);
     this._render();
   }
 
   _render() {
     this.panel.innerHTML = '';
     this._updatePreview();
+
+    // Multi-select panel (merge UI)
+    if (this._selectedIds && this._selectedIds.size > 1) {
+      this._renderMultiSelectPanel();
+      return;
+    }
 
     if (!this.selectedId || !this.objectDefs[this.selectedId]) {
       const header = document.createElement('h3');
@@ -127,6 +135,44 @@ export class ObjectEditorProperties {
       <div>${this.selectedId}</div>
     `;
     this.previewEl.appendChild(info);
+  }
+
+  // --- Multi-Select Panel ---
+
+  _renderMultiSelectPanel() {
+    const header = document.createElement('h3');
+    header.textContent = 'Multi-Select';
+    this.panel.appendChild(header);
+
+    const info = document.createElement('div');
+    info.style.cssText = 'font-size:0.85rem;color:#c0c0e0;margin-bottom:12px';
+    info.textContent = `${this._selectedIds.size} objects selected`;
+    this.panel.appendChild(info);
+
+    // List selected object names
+    const list = document.createElement('div');
+    list.style.marginBottom = '12px';
+    for (const id of this._selectedIds) {
+      const def = this.objectDefs[id];
+      const item = document.createElement('div');
+      item.style.cssText = 'font-size:0.8rem;color:#c0c0e0;padding:2px 0';
+      item.textContent = `${def?.name || id} (${id})`;
+      list.appendChild(item);
+    }
+    this.panel.appendChild(list);
+
+    // Primary indicator
+    const primaryInfo = document.createElement('div');
+    primaryInfo.style.cssText = 'font-size:0.78rem;color:#7a7aaa;margin-bottom:12px';
+    primaryInfo.textContent = `Primary: ${this.selectedId} (properties kept on merge)`;
+    this.panel.appendChild(primaryInfo);
+
+    // Merge button
+    const mergeBtn = this._makeBtn('Merge Objects', 'btn btn-primary', () => {
+      if (!confirm(`Merge ${this._selectedIds.size} objects into "${this.selectedId}"? Non-primary objects will be deleted.`)) return;
+      if (this.onMergeObjects) this.onMergeObjects(this.selectedId, this._selectedIds);
+    }, 'Combine all selected objects into the primary object, keeping its properties');
+    this.panel.appendChild(mergeBtn);
   }
 
   // --- Section: Basic ---
@@ -213,6 +259,23 @@ export class ObjectEditorProperties {
       'Re-select tiles on the canvas to redefine this object\'s grid',
     );
     body.appendChild(reassignBtn);
+
+    // Split button
+    const inSplit = this.canvasComponent?.isInSplitMode?.();
+    const splitBtn = this._makeBtn(
+      inSplit ? 'Cancel Split' : 'Split Object',
+      inSplit ? 'btn btn-danger' : 'btn',
+      () => {
+        if (this.canvasComponent.isInSplitMode()) {
+          this.canvasComponent.exitSplitMode();
+        } else {
+          this.canvasComponent.enterSplitMode();
+        }
+        this._render();
+      },
+      'Enter split mode to divide this object into two along a tile line',
+    );
+    body.appendChild(splitBtn);
 
     this.panel.appendChild(header);
     this.panel.appendChild(body);
