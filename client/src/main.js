@@ -18,6 +18,7 @@ const debugPanel = new PlayerDebugPanel();
 bugReporter.addMenuItem('Player Debug', () => debugPanel.open());
 
 bugReporter.addMenuItem('Tile Editor', () => window.open('/editor.html', '_blank'));
+bugReporter.addMenuItem('Map Editor', () => window.open('/map-editor.html', '_blank'));
 
 const worldDebug = new WorldDebugOverlay();
 const worldDebugBtn = bugReporter.addMenuItem('World Debug', () => {
