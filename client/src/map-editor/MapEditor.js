@@ -8,6 +8,7 @@ import { MapEditorCanvas } from './MapEditorCanvas.js';
 import { MapDocument } from './MapDocument.js';
 import { FloatingPanel } from './FloatingPanel.js';
 import { TilePalette } from './TilePalette.js';
+import { LayerPanel } from './LayerPanel.js';
 import { BrushTool } from './tools/BrushTool.js';
 import { EraserTool } from './tools/EraserTool.js';
 
@@ -27,6 +28,8 @@ export class MapEditor {
     // Components
     this._palettePanel = null;
     this._palette = null;
+    this._layerPanel = null;
+    this._layerPanelPanel = null;
 
     // Current brush state (set by palette selection)
     this.selectedGid = 0;
@@ -81,6 +84,7 @@ export class MapEditor {
 
     // Create floating panels
     this._createPalette();
+    this._createLayerPanel();
 
     // Global keyboard shortcuts
     window.addEventListener('keydown', (e) => this._onGlobalKeyDown(e));
@@ -123,6 +127,44 @@ export class MapEditor {
     this._eraserTool = new EraserTool(this);
     this.canvas.setTool(this._brushTool);
   }
+
+  // --- Layer Panel ---
+
+  _createLayerPanel() {
+    this._layerPanelPanel = new FloatingPanel({
+      title: 'Layers',
+      id: 'layer-panel',
+      x: 10,
+      y: 50,
+      width: 220,
+    });
+
+    this._layerPanel = new LayerPanel(this._layerPanelPanel.getContentElement());
+
+    this._layerPanel.onActiveLayerChange = (name) => {
+      this.activeLayerName = name;
+      this._updateLayerStatus();
+      this.canvas.markDirty();
+    };
+
+    this._layerPanel.onVisibilityChange = (name, visible) => {
+      this.canvas.setLayerVisibility(name, visible);
+    };
+
+    this._layerPanel.onOpacityChange = (name, opacity) => {
+      this.canvas.setLayerOpacity(name, opacity);
+    };
+
+    this._updateLayerStatus();
+  }
+
+  _updateLayerStatus() {
+    if (this._statusLayer) {
+      this._statusLayer.textContent = `Layer: ${this.activeLayerName}`;
+    }
+  }
+
+  // --- Tileset Dialog ---
 
   async _showAddTilesetDialog() {
     // Build list of tilesets not yet added
@@ -274,6 +316,13 @@ export class MapEditor {
     // E: eraser tool
     if (e.key === 'e' || e.key === 'E') {
       this.canvas.setTool(this._eraserTool);
+      return;
+    }
+
+    // 1-7: quick layer switch
+    const num = parseInt(e.key, 10);
+    if (num >= 1 && num <= 7 && !e.ctrlKey && !e.metaKey) {
+      if (this._layerPanel) this._layerPanel.selectByIndex(num - 1);
       return;
     }
   }

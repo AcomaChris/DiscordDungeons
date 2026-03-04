@@ -121,6 +121,83 @@ export class CanvasRenderer {
     };
   }
 
+  // Draw the Collision layer as colored overlay (red = solid, green = passable)
+  renderCollisionLayer(layer, canvasWidth, canvasHeight, opacity = 1.0) {
+    if (!layer) return;
+
+    const { ctx, view } = this;
+    const range = this.getVisibleTileRange(canvasWidth, canvasHeight);
+
+    const prevAlpha = ctx.globalAlpha;
+    ctx.globalAlpha = opacity * 0.5;
+
+    for (let row = range.startRow; row <= range.endRow; row++) {
+      for (let col = range.startCol; col <= range.endCol; col++) {
+        const gid = layer.get(col, row);
+        if (gid <= 0) continue;
+
+        const screen = view.worldToScreen(col * TILE_SIZE, row * TILE_SIZE);
+        const s = TILE_SIZE * view.zoom;
+
+        ctx.fillStyle = '#ff4444';
+        ctx.fillRect(screen.x, screen.y, s, s);
+
+        // Draw X pattern
+        ctx.strokeStyle = '#ff8888';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(screen.x + 2, screen.y + 2);
+        ctx.lineTo(screen.x + s - 2, screen.y + s - 2);
+        ctx.moveTo(screen.x + s - 2, screen.y + 2);
+        ctx.lineTo(screen.x + 2, screen.y + s - 2);
+        ctx.stroke();
+      }
+    }
+
+    ctx.globalAlpha = prevAlpha;
+  }
+
+  // Draw the Elevation layer as numbered labels
+  renderElevationLayer(layer, canvasWidth, canvasHeight, opacity = 1.0) {
+    if (!layer) return;
+
+    const { ctx, view } = this;
+    const range = this.getVisibleTileRange(canvasWidth, canvasHeight);
+    const s = TILE_SIZE * view.zoom;
+
+    // Only draw labels if tiles are large enough to read
+    if (s < 12) return;
+
+    const prevAlpha = ctx.globalAlpha;
+    ctx.globalAlpha = opacity * 0.7;
+
+    const fontSize = Math.max(8, Math.min(14, s * 0.5));
+    ctx.font = `bold ${fontSize}px monospace`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    for (let row = range.startRow; row <= range.endRow; row++) {
+      for (let col = range.startCol; col <= range.endCol; col++) {
+        const gid = layer.get(col, row);
+        if (gid <= 0) continue;
+
+        const screen = view.worldToScreen(col * TILE_SIZE, row * TILE_SIZE);
+
+        // Background
+        ctx.fillStyle = 'rgba(0, 100, 255, 0.4)';
+        ctx.fillRect(screen.x, screen.y, s, s);
+
+        // Number label (GID serves as elevation value)
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(String(gid), screen.x + s / 2, screen.y + s / 2);
+      }
+    }
+
+    ctx.globalAlpha = prevAlpha;
+    ctx.textAlign = 'start';
+    ctx.textBaseline = 'alphabetic';
+  }
+
   // Placeholder: renderObjects will be added in Commit 8
 }
 

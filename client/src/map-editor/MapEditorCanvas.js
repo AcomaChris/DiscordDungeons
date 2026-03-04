@@ -234,7 +234,15 @@ export class MapEditorCanvas {
         if (visibility === false) continue;
 
         const opacity = this._layerOpacity?.[name] ?? 1.0;
-        this.renderer.renderTileLayer(layer, tilesets, w, h, opacity);
+
+        // Special rendering for system layers
+        if (name === 'Collision') {
+          this.renderer.renderCollisionLayer(layer, w, h, opacity);
+        } else if (name === 'Elevation') {
+          this.renderer.renderElevationLayer(layer, w, h, opacity);
+        } else {
+          this.renderer.renderTileLayer(layer, tilesets, w, h, opacity);
+        }
       }
     }
 
