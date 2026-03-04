@@ -28,6 +28,10 @@ export class MapEditorCanvas {
     this._dirty = true;
     this._animFrame = null;
 
+    // Layer visibility state (managed by LayerPanel later)
+    this._layerVisibility = {};
+    this._layerOpacity = {};
+
     this._bindEvents();
     this._startRenderLoop();
   }
@@ -217,14 +221,41 @@ export class MapEditorCanvas {
 
     this.renderer.clear(w, h);
 
-    // TODO: render tile layers (Commit 4)
-    // TODO: render objects (Commit 8)
+    // Render tile layers (back to front)
+    if (this.mapDocument) {
+      const layerOrder = ['Ground', 'GroundDecor', 'Walls', 'WallTops', 'Overlay', 'Collision', 'Elevation'];
+      const tilesets = this.mapDocument.tilesets;
+
+      for (const name of layerOrder) {
+        const layer = this.mapDocument.getLayer(name);
+        if (!layer) continue;
+
+        const visibility = this._layerVisibility?.[name];
+        if (visibility === false) continue;
+
+        const opacity = this._layerOpacity?.[name] ?? 1.0;
+        this.renderer.renderTileLayer(layer, tilesets, w, h, opacity);
+      }
+    }
 
     if (this.showGrid) {
       this.renderer.renderGrid(w, h);
     }
 
-    // TODO: render tool preview (Commit 4)
+    // Tool preview
+    if (this.activeTool) {
+      this.activeTool.renderPreview(this.ctx, this.view);
+    }
+  }
+
+  setLayerVisibility(name, visible) {
+    this._layerVisibility[name] = visible;
+    this._dirty = true;
+  }
+
+  setLayerOpacity(name, opacity) {
+    this._layerOpacity[name] = opacity;
+    this._dirty = true;
   }
 
   destroy() {

@@ -8,6 +8,8 @@ import { MapEditorCanvas } from './MapEditorCanvas.js';
 import { MapDocument } from './MapDocument.js';
 import { FloatingPanel } from './FloatingPanel.js';
 import { TilePalette } from './TilePalette.js';
+import { BrushTool } from './tools/BrushTool.js';
+import { EraserTool } from './tools/EraserTool.js';
 
 // Known tilesets that can be loaded from the server
 const AVAILABLE_TILESETS = [
@@ -29,6 +31,7 @@ export class MapEditor {
     // Current brush state (set by palette selection)
     this.selectedGid = 0;
     this.selectedStamp = null; // {gids[][], cols, rows}
+    this.activeLayerName = 'Ground';
 
     // DOM refs (set in init)
     this._statusCursor = null;
@@ -114,6 +117,11 @@ export class MapEditor {
     this._palette.onAddTileset = () => this._showAddTilesetDialog();
 
     this._palette.updateTilesets(this.mapDocument.tilesets);
+
+    // Default tool: brush
+    this._brushTool = new BrushTool(this);
+    this._eraserTool = new EraserTool(this);
+    this.canvas.setTool(this._brushTool);
   }
 
   async _showAddTilesetDialog() {
@@ -254,6 +262,18 @@ export class MapEditor {
         this.mapDocument.commandStack.redo();
         this.canvas.markDirty();
       }
+      return;
+    }
+
+    // B: brush tool
+    if (e.key === 'b' || e.key === 'B') {
+      this.canvas.setTool(this._brushTool);
+      return;
+    }
+
+    // E: eraser tool
+    if (e.key === 'e' || e.key === 'E') {
+      this.canvas.setTool(this._eraserTool);
       return;
     }
   }

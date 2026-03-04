@@ -71,6 +71,44 @@ export class CanvasRenderer {
     }
   }
 
+  // Draw a single tile layer from SparseLayer data
+  renderTileLayer(layer, tilesets, canvasWidth, canvasHeight, opacity = 1.0) {
+    if (!layer || !tilesets || tilesets.length === 0) return;
+
+    const { ctx, view } = this;
+    const range = this.getVisibleTileRange(canvasWidth, canvasHeight);
+
+    ctx.imageSmoothingEnabled = false;
+    const prevAlpha = ctx.globalAlpha;
+    ctx.globalAlpha = opacity;
+
+    for (let row = range.startRow; row <= range.endRow; row++) {
+      for (let col = range.startCol; col <= range.endCol; col++) {
+        const gid = layer.get(col, row);
+        if (gid <= 0) continue;
+
+        // Resolve GID to tileset + local tile ID
+        const resolved = resolveTileGid(gid, tilesets);
+        if (!resolved || !resolved.tileset.image) continue;
+
+        const { tileset, localId } = resolved;
+        const srcCol = localId % tileset.columns;
+        const srcRow = Math.floor(localId / tileset.columns);
+
+        const screen = view.worldToScreen(col * TILE_SIZE, row * TILE_SIZE);
+        const s = TILE_SIZE * view.zoom;
+
+        ctx.drawImage(
+          tileset.image,
+          srcCol * TILE_SIZE, srcRow * TILE_SIZE, TILE_SIZE, TILE_SIZE,
+          screen.x, screen.y, s, s,
+        );
+      }
+    }
+
+    ctx.globalAlpha = prevAlpha;
+  }
+
   // Compute visible tile range for a given canvas size
   getVisibleTileRange(canvasWidth, canvasHeight) {
     const topLeft = this.view.screenToWorld(0, 0);
@@ -83,7 +121,18 @@ export class CanvasRenderer {
     };
   }
 
-  // Placeholder: renderTileLayer will be added in Commit 4
   // Placeholder: renderObjects will be added in Commit 8
-  // Placeholder: renderToolPreview will be added in Commit 4
+}
+
+// Resolve a GID to its tileset and local tile ID
+function resolveTileGid(gid, tilesets) {
+  for (let i = tilesets.length - 1; i >= 0; i--) {
+    if (gid >= tilesets[i].firstgid) {
+      return {
+        tileset: tilesets[i],
+        localId: gid - tilesets[i].firstgid,
+      };
+    }
+  }
+  return null;
 }
