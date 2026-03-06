@@ -74,7 +74,7 @@ export class InteractionManager {
 
     // --- Dispatch interact on E key ---
     if (inputSnapshot.interact && this._target && this._interactCooldown <= 0) {
-      if (import.meta.env.DEV) console.debug(`[Interact] ${this._target.id}`);
+      if (import.meta.env.DEV) console.log(`[Interact] ${this._target.id}`);
       this._target.onInteract({ x: playerX, y: playerY });
       eventBus.emit(OBJECT_INTERACT, {
         objectId: this._target.id,
@@ -121,7 +121,7 @@ export class InteractionManager {
           currentTouching.add(obj.id);
           // Fire touch only on enter (not already touching)
           if (!this._touchingObjects.has(obj.id)) {
-            if (import.meta.env.DEV) console.debug(`[Touch] ${obj.id}`);
+            if (import.meta.env.DEV) console.log(`[Touch] ${obj.id}`);
             obj.onTouch({ x: playerX, y: playerY });
             eventBus.emit(OBJECT_TOUCH, { objectId: obj.id, playerX, playerY });
           }
@@ -129,7 +129,7 @@ export class InteractionManager {
         if (comp.trigger === 'step') {
           currentStepping.add(obj.id);
           if (!this._steppingObjects.has(obj.id)) {
-            if (import.meta.env.DEV) console.debug(`[Step] ${obj.id}`);
+            if (import.meta.env.DEV) console.log(`[Step] ${obj.id}`);
             obj.onStep({ x: playerX, y: playerY });
             eventBus.emit(OBJECT_STEP, { objectId: obj.id, playerX, playerY });
           }
