@@ -13,6 +13,9 @@ const maps = {
     jsonPath: 'maps/test2.json',
     tilesets: [
       { key: 'test-tiles', path: 'tilesets/test-tiles.png', tiledName: 'test-tiles', tileSize: 16 },
+      { key: 'anim-knight', path: 'tilesets/Animation_knight.png', tiledName: 'Animation_knight', tileSize: 16, hasAnimationJson: true },
+      { key: 'anim-dancer', path: 'tilesets/Animation_dancer.png', tiledName: 'Animation_dancer', tileSize: 16, hasAnimationJson: true },
+      { key: 'anim-windows-doors', path: 'tilesets/Animation_windows_doors.png', tiledName: 'Animation_windows_doors', tileSize: 16, hasAnimationJson: true },
     ],
   },
   tavern: {
