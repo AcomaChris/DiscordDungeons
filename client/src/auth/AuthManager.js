@@ -20,6 +20,9 @@ export class AuthManager {
     const code = params.get('code');
     if (!code) return false;
 
+    // Clear any stale session (e.g. guest) so OAuth result takes over
+    this.clear();
+
     // Clean the code from the URL so it doesn't persist
     window.history.replaceState({}, '', window.location.pathname);
 
