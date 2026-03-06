@@ -66,7 +66,7 @@ describe('TouchManager', () => {
 
   it('getSnapshot returns neutral state by default', () => {
     const tm = new TouchManager();
-    expect(tm.getSnapshot()).toEqual({ moveX: 0, moveY: 0, sprint: false, jump: false });
+    expect(tm.getSnapshot()).toEqual({ moveX: 0, moveY: 0, sprint: false, jump: false, interact: false });
     tm.destroy();
   });
 

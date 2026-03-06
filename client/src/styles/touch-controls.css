@@ -93,6 +93,15 @@
   background: rgba(255, 255, 255, 0.35);
 }
 
+#touch-controls .btn-interact {
+  background: rgba(255, 200, 50, 0.25);
+  color: rgba(255, 230, 150, 0.85);
+}
+
+#touch-controls .btn-interact:active {
+  background: rgba(255, 200, 50, 0.45);
+}
+
 /* --- Portrait adjustments --- */
 
 #touch-controls.portrait .joystick-area {

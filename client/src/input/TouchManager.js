@@ -12,6 +12,7 @@ export class TouchManager {
     this._moveY = 0;
     this._jump = false;
     this._sprint = false;
+    this._interact = false;
     this._container = null;
     this._orientationQuery = null;
     this._onOrientationChange = null;
@@ -26,6 +27,7 @@ export class TouchManager {
     // Action button references
     this._btnJump = null;
     this._btnSprint = null;
+    this._btnInteract = null;
 
     if (!TouchManager.isTouchDevice()) return;
 
@@ -66,8 +68,10 @@ export class TouchManager {
 
     this._btnJump = this._createButton('btn-action btn-jump', 'JUMP');
     this._btnSprint = this._createButton('btn-action btn-sprint', 'RUN');
+    this._btnInteract = this._createButton('btn-action btn-interact', 'ACT');
 
     actionArea.appendChild(this._btnSprint);
+    actionArea.appendChild(this._btnInteract);
     actionArea.appendChild(this._btnJump);
     container.appendChild(actionArea);
 
@@ -84,6 +88,10 @@ export class TouchManager {
     this._bindButton(this._btnSprint,
       () => { this._sprint = true; },
       () => { this._sprint = false; },
+    );
+    this._bindButton(this._btnInteract,
+      () => { this._interact = true; },
+      () => { this._interact = false; },
     );
   }
 
@@ -225,7 +233,7 @@ export class TouchManager {
   // --- Snapshot ---
 
   getSnapshot() {
-    return { moveX: this._moveX, moveY: this._moveY, sprint: this._sprint, jump: this._jump };
+    return { moveX: this._moveX, moveY: this._moveY, sprint: this._sprint, jump: this._jump, interact: this._interact };
   }
 
   // --- Visibility ---
