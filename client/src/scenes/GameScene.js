@@ -198,8 +198,9 @@ export class GameScene extends Phaser.Scene {
       this.tileMapManager.tilemap.width,
       this.tileMapManager.tilemap.height,
     );
-    // Only run AI when real players are on this map (saves API credits)
-    this.npcBrain.setHasPlayersCheck(() => this.remotePlayers.size > 0);
+    // AGENT: The hasPlayersCheck hook exists on NPCBrain for future use when
+    // Greta runs server-side. Currently she's client-side, so the local player
+    // is always present — no need to set a check here.
     this.npcBrain.init();
 
     globalThis.__NPC__ = this.npc;
