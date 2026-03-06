@@ -361,6 +361,43 @@ describe('round-trip export → import', () => {
     expect(doc2.objects[0].y).toBe(64);
   });
 
+  it('preserves __components and __connections through export/import cycle', () => {
+    const doc1 = makeDocument();
+    doc1.getLayer('Ground').set(0, 0, 1);
+
+    const components = JSON.stringify([
+      { id: 'door', isOpen: false, lockId: 'key_01' },
+      { id: 'interactable', promptText: 'Open Door' },
+    ]);
+    const connections = JSON.stringify([
+      { name: 'link1', targetId: 'lever1', event: 'switch:toggled' },
+    ]);
+
+    doc1.addObject({
+      name: 'test_door',
+      type: 'door',
+      x: 32,
+      y: 48,
+      width: 16,
+      height: 16,
+      properties: {
+        __components: components,
+        __connections: connections,
+        customProp: 'hello',
+      },
+    });
+
+    const json = exportToTiledJSON(doc1);
+    const doc2 = makeDocument();
+    importFromTiledJSON(json, doc2);
+
+    expect(doc2.objects.length).toBe(1);
+    const imported = doc2.objects[0];
+    expect(imported.properties.__components).toBe(components);
+    expect(imported.properties.__connections).toBe(connections);
+    expect(imported.properties.customProp).toBe('hello');
+  });
+
   it('produces identical JSON on double export', () => {
     const doc1 = makeDocument();
     doc1.getLayer('Ground').set(0, 0, 1);
