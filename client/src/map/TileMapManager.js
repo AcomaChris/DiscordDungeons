@@ -37,7 +37,7 @@ export class TileMapManager {
   // Call from scene.preload(). Loads the JSON map and all tileset images.
   preload(mapKey, jsonPath, tilesetEntries) {
     this.scene.load.tilemapTiledJSON(mapKey, jsonPath);
-    for (const { key, path, tileSize, tiledName } of tilesetEntries) {
+    for (const { key, path, tileSize, tiledName, hasAnimationJson } of tilesetEntries) {
       if (tileSize) {
         // Spritesheet loading creates numbered frames (0, 1, 2...) so individual
         // tiles can be used as sprite textures for Y-sorted wall rendering.
@@ -45,8 +45,9 @@ export class TileMapManager {
       } else {
         this.scene.load.image(key, path);
       }
-      // Attempt to load animation data for this tileset (404s are handled gracefully)
-      if (tiledName) {
+      // Load external animation data only if tileset opts in via hasAnimationJson flag.
+      // Tiled-embedded animations (in the map JSON) are always used regardless.
+      if (tiledName && hasAnimationJson) {
         this.scene.load.json(`anim-${tiledName}`, `tile-metadata/${tiledName}.animations.json`);
       }
     }
