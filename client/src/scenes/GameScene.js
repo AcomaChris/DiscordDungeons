@@ -62,7 +62,12 @@ export class GameScene extends Phaser.Scene {
   }
 
   create() {
-    this.remotePlayers = new Map();
+    // Detect whether this is a map transition restart or initial load
+    const isRestart = !!this.scene.settings.data?.mapId;
+
+    if (!isRestart) {
+      this.remotePlayers = new Map();
+    }
 
     // --- Tilemap ---
     this.tileMapManager.create(this._mapId);
@@ -90,43 +95,8 @@ export class GameScene extends Phaser.Scene {
       this.physics.add.collider(this.player.sprite, this.tileMapManager.collisionLayer);
     }
 
-    // --- NPC ---
-    this.npc = new NPC(this, 328, 264, {
-      npcId: 'greta',
-      name: 'Greta',
-      color: 0x8B4513,
-    });
-    if (this.tileMapManager.collisionLayer) {
-      this.physics.add.collider(this.npc.sprite, this.tileMapManager.collisionLayer);
-    }
-    this.physics.add.collider(this.player.sprite, this.npc.sprite);
-
-    // Pass collision grid for A* pathfinding
-    if (this.tileMapManager.collisionLayer) {
-      this.npc._collisionGrid = buildCollisionGrid(
-        this.tileMapManager.collisionLayer,
-        this.tileMapManager.tilemap.width,
-        this.tileMapManager.tilemap.height,
-      );
-    }
-
-    // --- NPC Brain ---
-    // AGENT: __BE_PROJECT_ID__ is injected at build time via Vite define.
-    // Falls back to the default DiscordDungeons project.
-    const beProjectId = (typeof __BE_PROJECT_ID__ !== 'undefined' && __BE_PROJECT_ID__)
-      || 'proj_3AQEfXcDaTOVWwsD5vyOvA7rACg';
-    this.npcBrain = new NPCBrain(this.npc, this.player, {
-      projectId: beProjectId,
-      proxyUrl: WS_URL.replace('ws://', 'http://').replace('wss://', 'https://'),
-    });
-    this.npcBrain.setMapSize(
-      this.tileMapManager.tilemap.width,
-      this.tileMapManager.tilemap.height,
-    );
-    this.npcBrain.init();
-
-    // Expose NPC for console testing (e.g. window.__NPC__.jump(), window.__NPC__.moveTo(5, 8))
-    globalThis.__NPC__ = this.npc;
+    // --- NPC (only on maps that define one — test map for now) ---
+    this._initNPC();
 
     // --- Input ---
     this.inputManager = new InputManager(this);
@@ -150,10 +120,56 @@ export class GameScene extends Phaser.Scene {
 
     // --- Network ---
     this._subscribeEvents();
-    this._connectNetwork();
+    if (!isRestart) {
+      this._connectNetwork();
+    }
 
     // Fade in from black (smooth entry after map transition or initial load)
     this.cameras.main.fadeIn(500);
+  }
+
+  // --- NPC ---
+  // AGENT: NPC is only created on maps that have one. Currently hardcoded
+  // to the test map. Will be data-driven from object layer later.
+
+  _initNPC() {
+    if (this._mapId !== 'test') {
+      this.npc = null;
+      this.npcBrain = null;
+      return;
+    }
+
+    this.npc = new NPC(this, 328, 264, {
+      npcId: 'greta',
+      name: 'Greta',
+      color: 0x8B4513,
+    });
+    if (this.tileMapManager.collisionLayer) {
+      this.physics.add.collider(this.npc.sprite, this.tileMapManager.collisionLayer);
+    }
+    this.physics.add.collider(this.player.sprite, this.npc.sprite);
+
+    if (this.tileMapManager.collisionLayer) {
+      this.npc._collisionGrid = buildCollisionGrid(
+        this.tileMapManager.collisionLayer,
+        this.tileMapManager.tilemap.width,
+        this.tileMapManager.tilemap.height,
+      );
+    }
+
+    const beProjectId = (typeof __BE_PROJECT_ID__ !== 'undefined' && __BE_PROJECT_ID__)
+      || 'proj_3AQEfXcDaTOVWwsD5vyOvA7rACg';
+    this.npcBrain = new NPCBrain(this.npc, this.player, {
+      projectId: beProjectId,
+      proxyUrl: WS_URL.replace('ws://', 'http://').replace('wss://', 'https://'),
+    });
+    this.npcBrain.setMapSize(
+      this.tileMapManager.tilemap.width,
+      this.tileMapManager.tilemap.height,
+    );
+    this.npcBrain.init();
+
+    globalThis.__NPC__ = this.npc;
   }
 
   // --- Lua Scripting ---
@@ -259,8 +275,8 @@ export class GameScene extends Phaser.Scene {
     // updateDepth run in the entity's postupdate handler, after Phaser's
     // body.postUpdate() has synced sprite.y from the physics body.
     this.player.updateJump(delta);
-    this.npc.update(delta);
-    this.npcBrain.update(delta);
+    if (this.npc) this.npc.update(delta);
+    if (this.npcBrain) this.npcBrain.update(delta);
     for (const rp of this.remotePlayers.values()) {
       rp.update(delta);
       rp.updateDepth();
@@ -289,7 +305,6 @@ export class GameScene extends Phaser.Scene {
     eventBus.off(NETWORK_PLAYER_IDENTITY, this._onPlayerIdentity);
     eventBus.off(OBJECT_STATE_CHANGED, this._onObjectStateChanged);
 
-    if (this.networkManager) this.networkManager.disconnect();
     if (this._luaBindings?.timer) this._luaBindings.timer.clearAll();
     luaEngine.destroy();
     objectStateStore.saveAll(this.objectManager);
@@ -299,12 +314,17 @@ export class GameScene extends Phaser.Scene {
     this.inputManager.destroy();
     this.touchManager.destroy();
     this.player.destroy();
-    this.npcBrain.destroy();
-    this.npc.destroy();
+    if (this.npcBrain) this.npcBrain.destroy();
+    if (this.npc) this.npc.destroy();
     this.tileMapManager.destroy();
     for (const rp of this.remotePlayers.values()) {
       rp.destroy();
     }
     this.remotePlayers.clear();
+
+    // Disconnect network only on full scene stop, not on map transition restart
+    if (!this._isMapTransition) {
+      if (this.networkManager) this.networkManager.disconnect();
+    }
   }
 }

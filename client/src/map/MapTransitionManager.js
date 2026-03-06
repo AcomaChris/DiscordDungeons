@@ -34,6 +34,8 @@ export class MapTransitionManager {
     this._scene.cameras.main.fade(FADE_DURATION, 0, 0, 0, false, (_camera, progress) => {
       if (progress < 1) return;
       objectStateStore.saveAll(this._scene.objectManager);
+      // Signal to GameScene.shutdown() that this is a map transition, not a full stop
+      this._scene._isMapTransition = true;
       this._scene.scene.restart({ mapId: targetMap, spawnTarget });
     });
   }
