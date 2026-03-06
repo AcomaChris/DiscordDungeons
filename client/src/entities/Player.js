@@ -275,7 +275,8 @@ export class Player {
     const tileH = map.tileHeight;
 
     // Only scan tiles near the player body to avoid full-map iteration
-    const body = this.sprite.body;
+    const body = this.sprite?.body;
+    if (!body) return;
     const startX = Math.max(0, Math.floor(body.left / tileW) - 1);
     const endX = Math.min(map.width - 1, Math.ceil(body.right / tileW) + 1);
     const startY = Math.max(0, Math.floor(body.top / tileH) - 1);

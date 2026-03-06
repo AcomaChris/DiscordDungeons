@@ -298,6 +298,7 @@ export class GameScene extends Phaser.Scene {
     this.objectManager.destroy();
     this.inputManager.destroy();
     this.touchManager.destroy();
+    this.player.destroy();
     this.npcBrain.destroy();
     this.npc.destroy();
     this.tileMapManager.destroy();
