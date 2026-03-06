@@ -196,6 +196,37 @@ function generateObjectLayer() {
         height: TILE,
         visible: true,
       },
+      // Test interactable objects for Phase 4
+      {
+        id: 2,
+        name: 'test_chest',
+        type: 'chest',
+        x: 7 * TILE,
+        y: 16 * TILE,
+        width: TILE,
+        height: TILE,
+        visible: true,
+        properties: [
+          { name: '__components', type: 'string', value: JSON.stringify([
+            { id: 'interactable', promptText: 'Open Chest' },
+          ]) },
+        ],
+      },
+      {
+        id: 3,
+        name: 'test_sign',
+        type: 'sign',
+        x: 3 * TILE,
+        y: 14 * TILE,
+        width: TILE,
+        height: TILE,
+        visible: true,
+        properties: [
+          { name: '__components', type: 'string', value: JSON.stringify([
+            { id: 'interactable', promptText: 'Read Sign' },
+          ]) },
+        ],
+      },
     ],
     draworder: 'topdown',
   };
@@ -222,7 +253,7 @@ function buildMap() {
     infinite: false,
     layers,
     nextlayerid: layers.length + 1,
-    nextobjectid: 2,
+    nextobjectid: 4,
     orientation: 'orthogonal',
     renderorder: 'right-down',
     tiledversion: '1.11.2',
