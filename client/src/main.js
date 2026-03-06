@@ -69,8 +69,10 @@ async function boot() {
       authManager.activityChannelId = result.channelId;
     }
   } else {
-    if (!authManager.restore()) {
-      await authManager.checkOAuthCallback();
+    // OAuth ?code= takes priority over stored session (e.g. guest switching to Discord login)
+    const hadOAuth = await authManager.checkOAuthCallback();
+    if (!hadOAuth) {
+      authManager.restore();
     }
   }
   const game = new Phaser.Game(config);
