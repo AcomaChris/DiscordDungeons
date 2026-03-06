@@ -7,6 +7,7 @@ import {
   NETWORK_PLAYER_LEFT,
   NETWORK_STATE_UPDATE,
   NETWORK_PLAYER_IDENTITY,
+  OBJECT_STATE_CHANGED,
 } from '../core/Events.js';
 import { CAMERA_ZOOM } from '../core/Constants.js';
 import { InputManager } from '../input/InputManager.js';
@@ -23,6 +24,7 @@ import { getMapConfig } from '../map/MapRegistry.js';
 import authManager from '../auth/AuthManager.js';
 import { ObjectManager } from '../objects/ObjectManager.js';
 import { InteractionManager } from '../objects/InteractionManager.js';
+import objectStateStore from '../objects/ObjectStateStore.js';
 
 // --- GameScene ---
 // Orchestrator: loads tilemap, creates player, wires input + network.
@@ -62,6 +64,7 @@ export class GameScene extends Phaser.Scene {
     // --- Interactive Objects ---
     this.objectManager = new ObjectManager();
     this.objectManager.createFromMapData(this.tileMapManager.objectData);
+    objectStateStore.restoreAll(this.objectManager);
     this.objectManager.createVisuals(this);
     console.log(`[GameScene] Loaded ${this.objectManager.size} interactive objects from map`);
 
@@ -149,6 +152,13 @@ export class GameScene extends Phaser.Scene {
     this._onPlayerLeft = (data) => this._removeRemotePlayer(data);
     this._onStateUpdate = (data) => this._updateRemotePlayers(data);
     this._onPlayerIdentity = (data) => this._updatePlayerIdentity(data);
+    this._onObjectStateChanged = ({ objectId, state }) => {
+      const obj = this.objectManager.getObjectById(objectId);
+      if (obj) {
+        const persistence = objectStateStore._getObjectPersistence(obj);
+        objectStateStore.save(objectId, state, persistence);
+      }
+    };
 
     eventBus.on(INPUT_ACTION, this._onInput);
     eventBus.on(NETWORK_ROOM_JOINED, this._onRoomJoined);
@@ -156,6 +166,7 @@ export class GameScene extends Phaser.Scene {
     eventBus.on(NETWORK_PLAYER_LEFT, this._onPlayerLeft);
     eventBus.on(NETWORK_STATE_UPDATE, this._onStateUpdate);
     eventBus.on(NETWORK_PLAYER_IDENTITY, this._onPlayerIdentity);
+    eventBus.on(OBJECT_STATE_CHANGED, this._onObjectStateChanged);
   }
 
   // --- Remote Players ---
@@ -234,8 +245,10 @@ export class GameScene extends Phaser.Scene {
     eventBus.off(NETWORK_PLAYER_LEFT, this._onPlayerLeft);
     eventBus.off(NETWORK_STATE_UPDATE, this._onStateUpdate);
     eventBus.off(NETWORK_PLAYER_IDENTITY, this._onPlayerIdentity);
+    eventBus.off(OBJECT_STATE_CHANGED, this._onObjectStateChanged);
 
     if (this.networkManager) this.networkManager.disconnect();
+    objectStateStore.saveAll(this.objectManager);
     this.interactionManager.destroy();
     this.objectManager.destroy();
     this.inputManager.destroy();
