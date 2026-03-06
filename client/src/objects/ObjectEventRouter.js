@@ -15,6 +15,10 @@ export class ObjectEventRouter {
   }
 
   _route({ sourceId, eventName, data }) {
+    if (import.meta.env.DEV) {
+      console.debug(`[ObjectEvent] ${sourceId} → ${eventName}`, data);
+    }
+
     const source = this._objectManager.getObjectById(sourceId);
     if (!source) return;
 
