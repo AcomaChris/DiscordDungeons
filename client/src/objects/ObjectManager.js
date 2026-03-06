@@ -10,6 +10,9 @@ import { TILE_SIZE, DEPTH_ABOVE_PLAYER } from '../core/Constants.js';
 import './components/InteractableComponent.js';
 import './components/DoorComponent.js';
 import './components/ContainerComponent.js';
+import './components/SwitchComponent.js';
+import './components/TrapComponent.js';
+import './components/DestructibleComponent.js';
 import '../scripting/ScriptComponent.js';
 
 // Debug colors per object type — distinct enough to tell apart at a glance
@@ -18,7 +21,9 @@ const TYPE_COLORS = {
   door: 0x8866cc,
   sign: 0x44aacc,
   lever: 0xcc6644,
+  switch: 0xcccc44,
   trap: 0xcc4444,
+  destructible: 0xcc8844,
   npc: 0x44cc66,
   script: 0xcc44cc,
 };

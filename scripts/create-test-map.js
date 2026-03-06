@@ -269,6 +269,59 @@ function generateObjectLayer() {
           ]) },
         ],
       },
+      // Switch connected to test_door — toggles door on interact
+      {
+        id: 6,
+        name: 'test_switch',
+        type: 'switch',
+        x: 13 * TILE,
+        y: 16 * TILE,
+        width: TILE,
+        height: TILE,
+        visible: true,
+        properties: [
+          { name: '__components', type: 'string', value: JSON.stringify([
+            { id: 'switch' },
+          ]) },
+          { name: '__connections', type: 'string', value: JSON.stringify([
+            { name: 'link1', targetId: 3, event: 'switch:toggled' },
+          ]) },
+        ],
+      },
+      // Trap — triggers on step, rearms after 3s
+      {
+        id: 7,
+        name: 'test_trap',
+        type: 'trap',
+        x: 15 * TILE,
+        y: 16 * TILE,
+        width: TILE,
+        height: TILE,
+        visible: true,
+        properties: [
+          { name: '__components', type: 'string', value: JSON.stringify([
+            { id: 'trap', damage: 5, rearmDelay: 3000 },
+          ]) },
+        ],
+      },
+      // Destructible barrel — takes damage via events
+      {
+        id: 8,
+        name: 'test_barrel',
+        type: 'destructible',
+        x: 17 * TILE,
+        y: 16 * TILE,
+        width: TILE,
+        height: TILE,
+        visible: true,
+        properties: [
+          { name: '__components', type: 'string', value: JSON.stringify([
+            { id: 'destructible', health: 30, maxHealth: 30, drops: [
+              { id: 'wood', name: 'Wood Plank', quantity: 2 },
+            ] },
+          ]) },
+        ],
+      },
     ],
     draworder: 'topdown',
   };
@@ -295,7 +348,7 @@ function buildMap() {
     infinite: false,
     layers,
     nextlayerid: layers.length + 1,
-    nextobjectid: 6,
+    nextobjectid: 9,
     orientation: 'orthogonal',
     renderorder: 'right-down',
     tiledversion: '1.11.2',

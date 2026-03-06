@@ -4380,13 +4380,69 @@
               "value": "[{\"id\":\"script\",\"trigger\":\"interact\",\"code\":\"function on_interact()\\n  log(\\\"Script object interacted! ID:\\\", self.id)\\n  local count = self.get(\\\"interactCount\\\") or 0\\n  count = count + 1\\n  self.set(\\\"interactCount\\\", count)\\n  log(\\\"Interact count:\\\", count)\\nend\"}]"
             }
           ]
+        },
+        {
+          "id": 6,
+          "name": "test_switch",
+          "type": "switch",
+          "x": 208,
+          "y": 256,
+          "width": 16,
+          "height": 16,
+          "visible": true,
+          "properties": [
+            {
+              "name": "__components",
+              "type": "string",
+              "value": "[{\"id\":\"switch\"}]"
+            },
+            {
+              "name": "__connections",
+              "type": "string",
+              "value": "[{\"name\":\"link1\",\"targetId\":3,\"event\":\"switch:toggled\"}]"
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "name": "test_trap",
+          "type": "trap",
+          "x": 240,
+          "y": 256,
+          "width": 16,
+          "height": 16,
+          "visible": true,
+          "properties": [
+            {
+              "name": "__components",
+              "type": "string",
+              "value": "[{\"id\":\"trap\",\"damage\":5,\"rearmDelay\":3000}]"
+            }
+          ]
+        },
+        {
+          "id": 8,
+          "name": "test_barrel",
+          "type": "destructible",
+          "x": 272,
+          "y": 256,
+          "width": 16,
+          "height": 16,
+          "visible": true,
+          "properties": [
+            {
+              "name": "__components",
+              "type": "string",
+              "value": "[{\"id\":\"destructible\",\"health\":30,\"maxHealth\":30,\"drops\":[{\"id\":\"wood\",\"name\":\"Wood Plank\",\"quantity\":2}]}]"
+            }
+          ]
         }
       ],
       "draworder": "topdown"
     }
   ],
   "nextlayerid": 9,
-  "nextobjectid": 6,
+  "nextobjectid": 9,
   "orientation": "orthogonal",
   "renderorder": "right-down",
   "tiledversion": "1.11.2",

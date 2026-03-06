@@ -29,6 +29,13 @@ export class DoorComponent extends Component {
     this.owner.emit(eventName, { doorId: this.owner.id });
   }
 
+  // React to routed events (e.g. switch:toggled from a connected switch)
+  onEvent(eventName, _data) {
+    if (eventName === 'switch:toggled' || eventName === 'switch:on' || eventName === 'switch:off') {
+      this.onInteract(null);
+    }
+  }
+
   // Update the prompt text based on current state
   get promptText() {
     return this.params.isOpen ? this.params.promptClose : this.params.promptOpen;

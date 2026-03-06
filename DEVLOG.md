@@ -4,6 +4,18 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-05 — Phase 4 Stage 5: Event Routing + Wave 2 Components (v0.33.0)
+
+- **ObjectEventRouter** (`ObjectEventRouter.js`): Listens to EventBus `OBJECT_EVENT`, resolves source object's `connections` array, routes to named targets via `receiveEvent()` or broadcasts within a tile radius. Wildcard `*` event filter supported. Wired into GameScene lifecycle.
+- **SwitchComponent**: Toggle on interact, emits `switch:on`/`switch:off` + `switch:toggled`. Dynamic prompt text based on state.
+- **TrapComponent**: Step-triggered, disarms on fire, rearms after configurable delay via setTimeout. Cleanup on destroy prevents stale timers.
+- **DestructibleComponent**: Event-driven (no player trigger), responds to `damage` events. Emits `destructible:damaged`/`destructible:destroyed` with drops. Ignores damage after death.
+- **DoorComponent onEvent**: Now reacts to `switch:toggled`/`switch:on`/`switch:off` by toggling — enables switch→door connections.
+- **Integration test**: Full switch→router→door chain verified end-to-end. Test map updated with switch (connected to door), trap, and destructible barrel.
+- 911 tests across 68 files, all passing. 31 new tests (switch: 9, trap: 8, destructible: 9, integration: 5).
+
+---
+
 ## 2026-03-05 — Phase 4 Stage 4: Editor Integration (v0.32.0)
 
 - **Tile editor components section** (`ObjectEditorProperties.js`): Collapsible Components section with add/remove dropdown, dynamic param editors (boolean→checkbox, number→input, string→text, code→textarea, array→JSON textarea, null→text). Trigger override select. Persistence/authority info badges.
