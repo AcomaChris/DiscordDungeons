@@ -21,6 +21,8 @@ import { buildCollisionGrid } from '../ai/Pathfinder.js';
 import { NPCBrain } from '../ai/NPCBrain.js';
 import { getMapConfig } from '../map/MapRegistry.js';
 import authManager from '../auth/AuthManager.js';
+import { ObjectManager } from '../objects/ObjectManager.js';
+import { InteractionManager } from '../objects/InteractionManager.js';
 
 // --- GameScene ---
 // Orchestrator: loads tilemap, creates player, wires input + network.
@@ -56,6 +58,10 @@ export class GameScene extends Phaser.Scene {
     this.tileMapManager.create(this._mapId);
     const { width, height } = this.tileMapManager.getWorldBounds();
     this.physics.world.setBounds(0, 0, width, height);
+
+    // --- Interactive Objects ---
+    this.objectManager = new ObjectManager();
+    this.objectManager.createFromMapData(this.tileMapManager.objectData);
 
     // --- Player ---
     const spawn = this.tileMapManager.spawnPoint;
@@ -110,6 +116,9 @@ export class GameScene extends Phaser.Scene {
     this.touchManager = new TouchManager();
     this.touchManager.setAbilityManager(this.player.abilities);
     this.touchManager.show();
+
+    // --- Interaction System ---
+    this.interactionManager = new InteractionManager(this.objectManager, this);
 
     // --- Camera ---
     this._updateCamera();
@@ -187,6 +196,11 @@ export class GameScene extends Phaser.Scene {
     // Tile animations — advance frame timers and swap indices
     this.tileMapManager.update(delta);
 
+    // Interactive objects — update components and check interactions
+    this.objectManager.update(delta);
+    const playerBody = this.player.sprite.body;
+    this.interactionManager.update(delta, playerBody.x, playerBody.y, merged);
+
     // Z-axis physics — velocity/height update only. syncGroundPosition and
     // updateDepth run in the entity's postupdate handler, after Phaser's
     // body.postUpdate() has synced sprite.y from the physics body.
@@ -220,6 +234,8 @@ export class GameScene extends Phaser.Scene {
     eventBus.off(NETWORK_PLAYER_IDENTITY, this._onPlayerIdentity);
 
     if (this.networkManager) this.networkManager.disconnect();
+    this.interactionManager.destroy();
+    this.objectManager.destroy();
     this.inputManager.destroy();
     this.touchManager.destroy();
     this.npcBrain.destroy();

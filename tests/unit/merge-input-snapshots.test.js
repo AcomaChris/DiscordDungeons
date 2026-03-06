@@ -39,7 +39,7 @@ describe('mergeInputSnapshots', () => {
       { moveX: 0, moveY: 0, sprint: false, jump: false },
       { moveX: 0, moveY: 0, sprint: false, jump: false },
     );
-    expect(result).toEqual({ moveX: 0, moveY: 0, sprint: false, jump: false });
+    expect(result).toEqual({ moveX: 0, moveY: 0, sprint: false, jump: false, interact: false });
   });
 
   it('merges axes independently', () => {
@@ -47,7 +47,7 @@ describe('mergeInputSnapshots', () => {
       { moveX: 1, moveY: -1, sprint: false, jump: false },
       { moveX: -1, moveY: 0, sprint: false, jump: false },
     );
-    expect(result).toEqual({ moveX: -1, moveY: -1, sprint: false, jump: false });
+    expect(result).toEqual({ moveX: -1, moveY: -1, sprint: false, jump: false, interact: false });
   });
 
   it('keyboard sprint propagates to result', () => {

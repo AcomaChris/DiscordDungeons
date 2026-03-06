@@ -29,6 +29,7 @@ export class TileMapManager {
     this.elevationData = null;
     this.spawnPoint = null;
     this.tileAnimator = null;
+    this.objectData = [];
   }
 
   // --- Preload ---
@@ -217,13 +218,37 @@ export class TileMapManager {
         x: (this.tilemap.widthInPixels / 2),
         y: (this.tilemap.heightInPixels / 2),
       };
+      this.objectData = [];
       return;
     }
 
+    this.objectData = [];
     for (const obj of objectLayer.objects) {
       if (obj.type === 'spawn' || obj.name === 'spawn') {
         this.spawnPoint = { x: obj.x + obj.width / 2, y: obj.y + obj.height / 2 };
+        continue;
       }
+
+      // Convert Tiled property array [{name, value}] to flat object
+      const properties = {};
+      if (Array.isArray(obj.properties)) {
+        for (const prop of obj.properties) {
+          properties[prop.name] = prop.value;
+        }
+      } else if (obj.properties) {
+        Object.assign(properties, obj.properties);
+      }
+
+      this.objectData.push({
+        id: obj.id,
+        name: obj.name || '',
+        type: obj.type || '',
+        x: obj.x,
+        y: obj.y,
+        width: obj.width || 0,
+        height: obj.height || 0,
+        properties,
+      });
     }
 
     // Fallback if no spawn object found
@@ -266,5 +291,6 @@ export class TileMapManager {
     this.collisionLayer = null;
     this.elevationData = null;
     this.spawnPoint = null;
+    this.objectData = [];
   }
 }

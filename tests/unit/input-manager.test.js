@@ -83,7 +83,7 @@ describe('InputManager', () => {
     im.update();
 
     expect(calls).toHaveLength(1);
-    expect(calls[0]).toEqual({ moveX: 0, moveY: 0, sprint: false, jump: false });
+    expect(calls[0]).toEqual({ moveX: 0, moveY: 0, sprint: false, jump: false, interact: false });
     im.destroy();
   });
 
@@ -201,7 +201,7 @@ describe('InputManager', () => {
     eventBusMod.default.on(INPUT_ACTION, (data) => calls.push(data));
 
     const snap = im.getSnapshot();
-    expect(snap).toEqual({ moveX: 1, moveY: -1, sprint: false, jump: false });
+    expect(snap).toEqual({ moveX: 1, moveY: -1, sprint: false, jump: false, interact: false });
     expect(calls).toHaveLength(0);
     im.destroy();
   });
@@ -222,7 +222,7 @@ describe('InputManager', () => {
 
     im.update();
 
-    expect(calls[0]).toEqual({ moveX: 0, moveY: 0, sprint: false, jump: false });
+    expect(calls[0]).toEqual({ moveX: 0, moveY: 0, sprint: false, jump: false, interact: false });
     // Keyboard disabled by constructor (initial state sync)
     expect(scene.input.keyboard.enabled).toBe(false);
 
@@ -274,7 +274,7 @@ describe('InputManager', () => {
 
     // Handler fires immediately — keyboard disabled and zero emitted
     expect(scene.input.keyboard.enabled).toBe(false);
-    expect(calls).toEqual([{ moveX: 0, moveY: 0, sprint: false, jump: false }]);
+    expect(calls).toEqual([{ moveX: 0, moveY: 0, sprint: false, jump: false, interact: false }]);
 
     im.destroy();
     _resetForTesting();
