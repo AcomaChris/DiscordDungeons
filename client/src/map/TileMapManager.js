@@ -38,19 +38,23 @@ export class TileMapManager {
   // --- Preload ---
   // Call from scene.preload(). Loads the JSON map and all tileset images.
   preload(mapKey, jsonPath, tilesetEntries) {
-    this.scene.load.tilemapTiledJSON(mapKey, jsonPath);
+    // AGENT: Static files in public/ don't get Vite content hashes, so browsers
+    // may serve stale versions after deploys. Append version to bust cache.
+    const cacheBust = typeof __APP_VERSION__ !== 'undefined' ? `?v=${__APP_VERSION__}` : '';
+
+    this.scene.load.tilemapTiledJSON(mapKey, jsonPath + cacheBust);
     for (const { key, path, tileSize, tiledName, hasAnimationJson } of tilesetEntries) {
       if (tileSize) {
         // Spritesheet loading creates numbered frames (0, 1, 2...) so individual
         // tiles can be used as sprite textures for Y-sorted wall rendering.
-        this.scene.load.spritesheet(key, path, { frameWidth: tileSize, frameHeight: tileSize });
+        this.scene.load.spritesheet(key, path + cacheBust, { frameWidth: tileSize, frameHeight: tileSize });
       } else {
-        this.scene.load.image(key, path);
+        this.scene.load.image(key, path + cacheBust);
       }
       // Load external animation data only if tileset opts in via hasAnimationJson flag.
       // Tiled-embedded animations (in the map JSON) are always used regardless.
       if (tiledName && hasAnimationJson) {
-        this.scene.load.json(`anim-${tiledName}`, `tile-metadata/${tiledName}.animations.json`);
+        this.scene.load.json(`anim-${tiledName}`, `tile-metadata/${tiledName}.animations.json` + cacheBust);
       }
     }
     this._mapKey = mapKey;
