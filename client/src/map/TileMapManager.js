@@ -35,13 +35,17 @@ export class TileMapManager {
   // Call from scene.preload(). Loads the JSON map and all tileset images.
   preload(mapKey, jsonPath, tilesetEntries) {
     this.scene.load.tilemapTiledJSON(mapKey, jsonPath);
-    for (const { key, path, tileSize } of tilesetEntries) {
+    for (const { key, path, tileSize, tiledName } of tilesetEntries) {
       if (tileSize) {
         // Spritesheet loading creates numbered frames (0, 1, 2...) so individual
         // tiles can be used as sprite textures for Y-sorted wall rendering.
         this.scene.load.spritesheet(key, path, { frameWidth: tileSize, frameHeight: tileSize });
       } else {
         this.scene.load.image(key, path);
+      }
+      // Attempt to load animation data for this tileset (404s are handled gracefully)
+      if (tiledName) {
+        this.scene.load.json(`anim-${tiledName}`, `tile-metadata/${tiledName}.animations.json`);
       }
     }
     this._mapKey = mapKey;
@@ -86,6 +90,10 @@ export class TileMapManager {
 
     // Parse object layer for spawn point and other objects
     this._parseObjects();
+
+    // Inject animation data from .animations.json files into tileset tileData
+    // so TileAnimator can pick them up without embedding data in map JSONs
+    this._injectAnimationData();
 
     // Tile animations — index-swapping engine driven by Tiled animation data
     this.tileAnimator = new TileAnimator();
@@ -146,6 +154,33 @@ export class TileMapManager {
       frame: gid - this.tilemap.tilesets[0].firstgid,
       firstgid: this.tilemap.tilesets[0].firstgid,
     };
+  }
+
+  // --- Inject Animation Data ---
+  // Populates tileset.tileData with animation definitions loaded from
+  // .animations.json files. This bridges the extracted TMX animation data
+  // into Phaser's tileset format so TileAnimator can use it.
+  _injectAnimationData() {
+    const cache = this.scene.cache.json;
+    for (const tileset of this.tilemap.tilesets) {
+      const animKey = `anim-${tileset.name}`;
+      if (!cache.has(animKey)) continue;
+
+      const animData = cache.get(animKey);
+      if (!animData || !animData.animations) continue;
+
+      if (!tileset.tileData) tileset.tileData = {};
+
+      for (const [localIdStr, frames] of Object.entries(animData.animations)) {
+        if (!tileset.tileData[localIdStr]) {
+          tileset.tileData[localIdStr] = {};
+        }
+        // Only inject if the tileset doesn't already have animation data for this tile
+        if (!tileset.tileData[localIdStr].animation) {
+          tileset.tileData[localIdStr].animation = frames;
+        }
+      }
+    }
   }
 
   _parseElevation(tilesets) {

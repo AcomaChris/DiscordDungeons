@@ -10,7 +10,7 @@
 
 // Layers whose tiles get index-swapped. Walls/WallTops are converted to
 // individual sprites by TileMapManager and handled separately.
-const ANIMATABLE_LAYERS = ['Ground', 'GroundDecor'];
+const ANIMATABLE_LAYERS = ['Ground', 'GroundDecor', 'Overlay'];
 
 export class TileAnimator {
   constructor() {

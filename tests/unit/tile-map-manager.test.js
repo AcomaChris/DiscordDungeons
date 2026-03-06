@@ -37,6 +37,10 @@ function createMockScene(tilemap) {
       tilemapTiledJSON: vi.fn(),
       image: vi.fn(),
       spritesheet: vi.fn(),
+      json: vi.fn(),
+    },
+    cache: {
+      json: { has: vi.fn(() => false), get: vi.fn(() => null) },
     },
     make: {
       tilemap: vi.fn(() => tilemap),
