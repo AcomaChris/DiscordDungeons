@@ -9,6 +9,12 @@ const maps = {
       { key: 'test-tiles', path: 'tilesets/test-tiles.png', tiledName: 'test-tiles', tileSize: 16 },
     ],
   },
+  test2: {
+    jsonPath: 'maps/test2.json',
+    tilesets: [
+      { key: 'test-tiles', path: 'tilesets/test-tiles.png', tiledName: 'test-tiles', tileSize: 16 },
+    ],
+  },
   tavern: {
     jsonPath: 'maps/tavern.json',
     tilesets: [

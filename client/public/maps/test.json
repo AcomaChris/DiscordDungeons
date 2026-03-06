@@ -4436,13 +4436,40 @@
               "value": "[{\"id\":\"destructible\",\"health\":30,\"maxHealth\":30,\"drops\":[{\"id\":\"wood\",\"name\":\"Wood Plank\",\"quantity\":2}]}]"
             }
           ]
+        },
+        {
+          "id": 9,
+          "name": "teleporter_test2",
+          "type": "teleporter",
+          "x": 320,
+          "y": 256,
+          "width": 16,
+          "height": 16,
+          "visible": true,
+          "properties": [
+            {
+              "name": "__components",
+              "type": "string",
+              "value": "[{\"id\":\"teleporter\",\"targetMap\":\"test2\",\"targetSpawn\":\"entrance\"}]"
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "name": "test2-return",
+          "type": "spawn",
+          "x": 304,
+          "y": 256,
+          "width": 16,
+          "height": 16,
+          "visible": true
         }
       ],
       "draworder": "topdown"
     }
   ],
   "nextlayerid": 9,
-  "nextobjectid": 9,
+  "nextobjectid": 11,
   "orientation": "orthogonal",
   "renderorder": "right-down",
   "tiledversion": "1.11.2",

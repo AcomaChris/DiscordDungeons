@@ -322,6 +322,33 @@ function generateObjectLayer() {
           ]) },
         ],
       },
+      // Teleporter to test2 map
+      {
+        id: 9,
+        name: 'teleporter_test2',
+        type: 'teleporter',
+        x: 20 * TILE,
+        y: 16 * TILE,
+        width: TILE,
+        height: TILE,
+        visible: true,
+        properties: [
+          { name: '__components', type: 'string', value: JSON.stringify([
+            { id: 'teleporter', targetMap: 'test2', targetSpawn: 'entrance' },
+          ]) },
+        ],
+      },
+      // Named spawn — return point from test2
+      {
+        id: 10,
+        name: 'test2-return',
+        type: 'spawn',
+        x: 19 * TILE,
+        y: 16 * TILE,
+        width: TILE,
+        height: TILE,
+        visible: true,
+      },
     ],
     draworder: 'topdown',
   };
@@ -348,7 +375,7 @@ function buildMap() {
     infinite: false,
     layers,
     nextlayerid: layers.length + 1,
-    nextobjectid: 9,
+    nextobjectid: 11,
     orientation: 'orthogonal',
     renderorder: 'right-down',
     tiledversion: '1.11.2',

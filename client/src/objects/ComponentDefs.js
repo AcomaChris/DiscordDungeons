@@ -57,6 +57,10 @@ export const COMPONENT_DEFS = {
       lockId: null,
       promptOpen: 'Open',
       promptClose: 'Close',
+      targetMap: null,
+      targetSpawn: null,
+      targetX: 0,
+      targetY: 0,
     },
   },
 
@@ -187,6 +191,7 @@ export const COMPONENT_DEFS = {
     trigger: TriggerType.STEP,
     params: {
       targetMap: null,
+      targetSpawn: null,
       targetX: 0,
       targetY: 0,
     },

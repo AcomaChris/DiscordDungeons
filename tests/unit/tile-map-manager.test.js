@@ -323,6 +323,14 @@ describe('MapRegistry', () => {
     expect(config.tilesets[0].tileSize).toBe(16);
 
     expect(getMapIds()).toContain('test');
+    expect(getMapIds()).toContain('test2');
+  });
+
+  it('returns config for test2 map', async () => {
+    const { getMapConfig } = await import('../../client/src/map/MapRegistry.js');
+    const config = getMapConfig('test2');
+    expect(config.jsonPath).toBe('maps/test2.json');
+    expect(config.tilesets[0].key).toBe('test-tiles');
   });
 
   it('throws for unknown maps', async () => {
