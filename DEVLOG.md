@@ -4,6 +4,18 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-05 — Phase 5: Map Transitions (v0.34.0)
+
+- **MapTransitionManager** (`MapTransitionManager.js`): Scene-level singleton listens for `MAP_TRANSITION_REQUEST`, fades camera to black, saves object state via `objectStateStore.saveAll()`, restarts scene with new map data. `_locked` flag prevents double-fire during fade.
+- **Named spawn system**: `TileMapManager.spawnPoints` Map stores all named spawns per map. `getSpawnTarget(target)` resolves strings (named lookup), `{x,y}` (pass-through), or null (default spawn). Backward-compatible with existing `spawnPoint` singular.
+- **GameScene integration**: Reads `scene.settings.data` for mapId/spawnTarget on restart, resolves spawn via `getSpawnTarget()`, adds `fadeIn(500)` on create for smooth arrival. MapTransitionManager lifecycle tied to scene shutdown.
+- **TeleporterComponent**: Step-triggered, emits `MAP_TRANSITION_REQUEST` with targetMap and spawnTarget (named or coordinate-based). Warns in dev mode if targetMap missing.
+- **DoorComponent portal mode**: When `targetMap` is set, interact emits `MAP_TRANSITION_REQUEST` instead of toggling. Normal toggle behavior unchanged when targetMap is null.
+- **Test map 2** (`create-test-map-2.js`): 20×16 map with `entrance` named spawn and return teleporter to test map. Test map 1 updated with teleporter at (20,16) and `test2-return` named spawn at (19,16). Both maps registered in MapRegistry.
+- 929 tests across 70 files, all passing. 18 new tests (MapTransitionManager: 6, TileMapManager spawns: 4, TeleporterComponent: 4, Door portal: 3, MapRegistry: 1).
+
+---
+
 ## 2026-03-05 — Phase 4 Stage 5: Event Routing + Wave 2 Components (v0.33.0)
 
 - **ObjectEventRouter** (`ObjectEventRouter.js`): Listens to EventBus `OBJECT_EVENT`, resolves source object's `connections` array, routes to named targets via `receiveEvent()` or broadcasts within a tile radius. Wildcard `*` event filter supported. Wired into GameScene lifecycle.
