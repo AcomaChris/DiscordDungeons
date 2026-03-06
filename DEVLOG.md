@@ -4,6 +4,18 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-06 — Bugfixes, UX, and State Display (v0.35.0 → v0.36.0)
+
+- **Map transition crash fixes** (v0.35.1, v0.35.2): Root cause was stale Phaser event handlers firing after scene restart. NPC's `_postUpdate` called `speechBubble.update()` → `_updatePosition()` → `_bg.setSize()` on a destroyed rectangle. Fixed by adding `if (!sprite?.body) return` guards to all pre/postupdate handlers in Player and NPC, `if (!_bg)` guard in SpeechBubble, and removing physics bodies from world before sprite destruction. Closes #14.
+- **Console log capture in bug reports** (v0.35.1): New `ConsoleCapture` utility intercepts console.log/warn/error + uncaught errors, buffers last 200 entries. Bug report dialog includes "Include console log" checkbox. Server renders logs in collapsible `<details>` block on GitHub issues. Already proved its value — console log in #14 pinpointed the exact crash.
+- **Mobile interact button** (v0.35.0): Added ACT touch button between RUN and JUMP with gold/amber tint. Bound to `_interact` state, included in touch snapshot. Closes #13.
+- **Auth persistence** (v0.35.3): Switched from `sessionStorage` to `localStorage` so Discord/guest identity survives browser restarts.
+- **Guest name prefill**: Guest login name field defaults to "Guest" for quick click-through.
+- **Player state display panel** (v0.36.0): Floating panel (cog menu → "Show State") with live pill badges for concurrent states: idle, moving, sprinting, jumping, mantling, floating, interacting, plus facing direction arrow. Updates every frame via RAF.
+- **Misc**: Crossed swords favicon, moved Greta NPC 3 tiles away from teleporter. Closed stale issues #3 (float) and #7 (mantling) — both already implemented in Phase 2.
+
+---
+
 ## 2026-03-05 — Phase 5: Map Transitions (v0.34.0)
 
 - **MapTransitionManager** (`MapTransitionManager.js`): Scene-level singleton listens for `MAP_TRANSITION_REQUEST`, fades camera to black, saves object state via `objectStateStore.saveAll()`, restarts scene with new map data. `_locked` flag prevents double-fire during fade.
