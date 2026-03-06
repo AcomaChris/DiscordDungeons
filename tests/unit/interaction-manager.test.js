@@ -23,17 +23,24 @@ describe('InteractionManager', () => {
   }
 
   // Mock scene with add.text() for InteractionPrompt
+  function makeMockGameObject() {
+    return {
+      setOrigin: vi.fn(),
+      setDepth: vi.fn(),
+      setVisible: vi.fn(),
+      setText: vi.fn(),
+      setPosition: vi.fn(),
+      setStrokeStyle: vi.fn(),
+      destroy: vi.fn(),
+    };
+  }
+
   function makeScene() {
     return {
       add: {
-        text: vi.fn(() => ({
-          setOrigin: vi.fn(),
-          setDepth: vi.fn(),
-          setVisible: vi.fn(),
-          setText: vi.fn(),
-          setPosition: vi.fn(),
-          destroy: vi.fn(),
-        })),
+        text: vi.fn(() => makeMockGameObject()),
+        rectangle: vi.fn(() => makeMockGameObject()),
+        container: vi.fn(() => makeMockGameObject()),
       },
     };
   }

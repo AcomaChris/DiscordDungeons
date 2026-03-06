@@ -9,6 +9,7 @@
 import eventBus from '../core/EventBus.js';
 import { OBJECT_INTERACT, OBJECT_TOUCH, OBJECT_STEP } from '../core/Events.js';
 import { InteractionPrompt } from './InteractionPrompt.js';
+import { ContainerUI } from './ContainerUI.js';
 
 // Default proximity radius for interact-triggered objects (pixels)
 const DEFAULT_INTERACT_RADIUS = 32;
@@ -22,6 +23,7 @@ export class InteractionManager {
     this._scene = scene;
     this._prompt = new InteractionPrompt();
     this._prompt.create(scene);
+    this._containerUI = new ContainerUI(scene);
 
     // Currently targeted object (closest interactable in range)
     this._target = null;
@@ -78,8 +80,26 @@ export class InteractionManager {
         playerX,
         playerY,
       });
+
+      // Show/hide container UI if the target has a container component
+      const containerComp = this._target.components.get('container');
+      if (containerComp) {
+        if (containerComp.isOpen) {
+          this._containerUI.show(this._target);
+        } else {
+          this._containerUI.hide();
+        }
+      }
+
       // Cooldown prevents rapid-fire from held key
       this._interactCooldown = 300;
+    }
+
+    // Auto-close container UI when player walks away
+    if (this._containerUI.isVisible && this._containerUI.activeObject !== this._target) {
+      const activeComp = this._containerUI.activeObject?.components.get('container');
+      if (activeComp?.isOpen) activeComp.close();
+      this._containerUI.hide();
     }
 
     // --- Touch and Step triggers ---
@@ -124,6 +144,7 @@ export class InteractionManager {
 
   destroy() {
     this._prompt.destroy();
+    this._containerUI.destroy();
     this._target = null;
     this._touchingObjects.clear();
     this._steppingObjects.clear();

@@ -4326,7 +4326,7 @@
             {
               "name": "__components",
               "type": "string",
-              "value": "[{\"id\":\"interactable\",\"promptText\":\"Open Chest\"}]"
+              "value": "[{\"id\":\"container\",\"items\":[{\"id\":\"gold\",\"name\":\"Gold Coin\",\"quantity\":5},{\"id\":\"potion\",\"name\":\"Health Potion\",\"quantity\":1}]}]"
             }
           ]
         },

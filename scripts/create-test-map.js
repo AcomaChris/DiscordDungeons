@@ -208,7 +208,10 @@ function generateObjectLayer() {
         visible: true,
         properties: [
           { name: '__components', type: 'string', value: JSON.stringify([
-            { id: 'interactable', promptText: 'Open Chest' },
+            { id: 'container', items: [
+              { id: 'gold', name: 'Gold Coin', quantity: 5 },
+              { id: 'potion', name: 'Health Potion', quantity: 1 },
+            ] },
           ]) },
         ],
       },
