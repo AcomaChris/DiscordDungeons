@@ -6,6 +6,9 @@
 import { InteractiveObject } from './InteractiveObject.js';
 import { TILE_SIZE, DEPTH_ABOVE_PLAYER } from '../core/Constants.js';
 
+// Self-registering component imports — each registers itself with componentRegistry
+import './components/InteractableComponent.js';
+
 // Debug colors per object type — distinct enough to tell apart at a glance
 const TYPE_COLORS = {
   chest: 0xccaa44,
