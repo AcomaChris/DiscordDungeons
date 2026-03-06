@@ -10,6 +10,7 @@ export const PLAYER_MOVED = 'player:moved';
 
 // Scenes
 export const SCENE_CHANGE = 'scene:change';
+export const MAP_TRANSITION_REQUEST = 'map:transitionRequest';
 
 // Objects
 export const OBJECT_INTERACT = 'object:interact';

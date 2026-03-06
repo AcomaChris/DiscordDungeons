@@ -171,6 +171,77 @@ describe('TileMapManager', () => {
     expect(scene.load.spritesheet).not.toHaveBeenCalled();
   });
 
+  it('parses named spawn points into spawnPoints Map', async () => {
+    const mod = await import('../../client/src/map/TileMapManager.js');
+    TileMapManager = mod.TileMapManager;
+
+    const tilemap = createMockTilemap({}, {
+      objects: [
+        { name: 'spawn', type: 'spawn', x: 80, y: 256, width: 16, height: 16 },
+        { name: 'entrance', type: 'spawn', x: 48, y: 64, width: 16, height: 16 },
+      ],
+    });
+    const scene = createMockScene(tilemap);
+    const mgr = new TileMapManager(scene);
+
+    mgr.preload('test', 'maps/test.json', [TILESET_ENTRY]);
+    mgr.create();
+
+    expect(mgr.spawnPoints.get('spawn')).toEqual({ x: 88, y: 264 });
+    expect(mgr.spawnPoints.get('entrance')).toEqual({ x: 56, y: 72 });
+    expect(mgr.spawnPoint).toEqual({ x: 88, y: 264 });
+  });
+
+  it('getSpawnTarget returns named spawn by string', async () => {
+    const mod = await import('../../client/src/map/TileMapManager.js');
+    TileMapManager = mod.TileMapManager;
+
+    const tilemap = createMockTilemap({}, {
+      objects: [
+        { name: 'spawn', type: 'spawn', x: 80, y: 256, width: 16, height: 16 },
+        { name: 'entrance', type: 'spawn', x: 48, y: 64, width: 16, height: 16 },
+      ],
+    });
+    const scene = createMockScene(tilemap);
+    const mgr = new TileMapManager(scene);
+    mgr.preload('test', 'maps/test.json', [TILESET_ENTRY]);
+    mgr.create();
+
+    expect(mgr.getSpawnTarget('entrance')).toEqual({ x: 56, y: 72 });
+  });
+
+  it('getSpawnTarget returns {x, y} coordinates as-is', async () => {
+    const mod = await import('../../client/src/map/TileMapManager.js');
+    TileMapManager = mod.TileMapManager;
+
+    const tilemap = createMockTilemap({}, {
+      objects: [{ name: 'spawn', type: 'spawn', x: 80, y: 256, width: 16, height: 16 }],
+    });
+    const scene = createMockScene(tilemap);
+    const mgr = new TileMapManager(scene);
+    mgr.preload('test', 'maps/test.json', [TILESET_ENTRY]);
+    mgr.create();
+
+    expect(mgr.getSpawnTarget({ x: 100, y: 200 })).toEqual({ x: 100, y: 200 });
+  });
+
+  it('getSpawnTarget falls back to default for unknown name', async () => {
+    const mod = await import('../../client/src/map/TileMapManager.js');
+    TileMapManager = mod.TileMapManager;
+
+    const tilemap = createMockTilemap({}, {
+      objects: [{ name: 'spawn', type: 'spawn', x: 80, y: 256, width: 16, height: 16 }],
+    });
+    const scene = createMockScene(tilemap);
+    const mgr = new TileMapManager(scene);
+    mgr.preload('test', 'maps/test.json', [TILESET_ENTRY]);
+    mgr.create();
+
+    expect(mgr.getSpawnTarget('nonexistent')).toEqual({ x: 88, y: 264 });
+    expect(mgr.getSpawnTarget(null)).toEqual({ x: 88, y: 264 });
+    expect(mgr.getSpawnTarget(undefined)).toEqual({ x: 88, y: 264 });
+  });
+
   it('falls back to map center when no spawn point exists', async () => {
     const mod = await import('../../client/src/map/TileMapManager.js');
     TileMapManager = mod.TileMapManager;

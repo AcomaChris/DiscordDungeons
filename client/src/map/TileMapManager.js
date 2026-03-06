@@ -28,6 +28,7 @@ export class TileMapManager {
     this.collisionLayer = null;
     this.elevationData = null;
     this.spawnPoint = null;
+    this.spawnPoints = new Map();
     this.tileAnimator = null;
     this.objectData = [];
   }
@@ -225,7 +226,9 @@ export class TileMapManager {
     this.objectData = [];
     for (const obj of objectLayer.objects) {
       if (obj.type === 'spawn' || obj.name === 'spawn') {
-        this.spawnPoint = { x: obj.x + obj.width / 2, y: obj.y + obj.height / 2 };
+        const pos = { x: obj.x + obj.width / 2, y: obj.y + obj.height / 2 };
+        if (!this.spawnPoint) this.spawnPoint = pos;
+        this.spawnPoints.set(obj.name || 'default', pos);
         continue;
       }
 
@@ -264,6 +267,17 @@ export class TileMapManager {
     if (this.tileAnimator) this.tileAnimator.update(delta);
   }
 
+  // Resolve a spawn target to {x, y} coordinates.
+  // Accepts: string (named spawn lookup), {x, y} (pass-through), or null (default spawn).
+  getSpawnTarget(target) {
+    if (!target) return this.spawnPoint;
+    if (typeof target === 'string') {
+      return this.spawnPoints.get(target) || this.spawnPoint;
+    }
+    if (typeof target.x === 'number' && typeof target.y === 'number') return target;
+    return this.spawnPoint;
+  }
+
   getWorldBounds() {
     if (!this.tilemap) return { width: 0, height: 0 };
     return {
@@ -291,6 +305,7 @@ export class TileMapManager {
     this.collisionLayer = null;
     this.elevationData = null;
     this.spawnPoint = null;
+    this.spawnPoints.clear();
     this.objectData = [];
   }
 }

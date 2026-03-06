@@ -26,6 +26,7 @@ import { ObjectManager } from '../objects/ObjectManager.js';
 import { InteractionManager } from '../objects/InteractionManager.js';
 import { ObjectEventRouter } from '../objects/ObjectEventRouter.js';
 import objectStateStore from '../objects/ObjectStateStore.js';
+import { MapTransitionManager } from '../map/MapTransitionManager.js';
 import luaEngine from '../scripting/LuaEngine.js';
 import { injectStandardBindings } from '../scripting/LuaBindings.js';
 
@@ -50,7 +51,11 @@ export class GameScene extends Phaser.Scene {
   }
 
   preload() {
-    this._mapId = getActiveMapId();
+    // Scene restart with init data takes priority over URL param
+    const initData = this.scene.settings.data;
+    this._mapId = initData?.mapId || getActiveMapId();
+    this._spawnTarget = initData?.spawnTarget || null;
+
     const mapConfig = getMapConfig(this._mapId);
     this.tileMapManager = new TileMapManager(this);
     this.tileMapManager.preload(this._mapId, mapConfig.jsonPath, mapConfig.tilesets);
@@ -76,7 +81,7 @@ export class GameScene extends Phaser.Scene {
     this._initLuaScripting();
 
     // --- Player ---
-    const spawn = this.tileMapManager.spawnPoint;
+    const spawn = this.tileMapManager.getSpawnTarget(this._spawnTarget);
     this.player = new Player(this, spawn.x, spawn.y, authManager.identity?.playerName);
     this.player.sprite.setCollideWorldBounds(true);
 
@@ -140,9 +145,15 @@ export class GameScene extends Phaser.Scene {
     this.cameras.main.startFollow(this.player.sprite);
     this.scale.on('resize', () => this._updateCamera(), this);
 
+    // --- Map Transitions ---
+    this.mapTransitionManager = new MapTransitionManager(this);
+
     // --- Network ---
     this._subscribeEvents();
     this._connectNetwork();
+
+    // Fade in from black (smooth entry after map transition or initial load)
+    this.cameras.main.fadeIn(500);
   }
 
   // --- Lua Scripting ---
@@ -268,6 +279,7 @@ export class GameScene extends Phaser.Scene {
   // AGENT: Must unsubscribe all EventBus listeners to prevent duplicates on scene restart
 
   shutdown() {
+    this.mapTransitionManager.destroy();
     this.scale.off('resize', this._updateCamera, this);
     eventBus.off(INPUT_ACTION, this._onInput);
     eventBus.off(NETWORK_ROOM_JOINED, this._onRoomJoined);
