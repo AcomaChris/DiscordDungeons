@@ -24,6 +24,7 @@ import { getMapConfig } from '../map/MapRegistry.js';
 import authManager from '../auth/AuthManager.js';
 import { ObjectManager } from '../objects/ObjectManager.js';
 import { InteractionManager } from '../objects/InteractionManager.js';
+import { ObjectEventRouter } from '../objects/ObjectEventRouter.js';
 import objectStateStore from '../objects/ObjectStateStore.js';
 import luaEngine from '../scripting/LuaEngine.js';
 import { injectStandardBindings } from '../scripting/LuaBindings.js';
@@ -127,6 +128,9 @@ export class GameScene extends Phaser.Scene {
     this.touchManager = new TouchManager();
     this.touchManager.setAbilityManager(this.player.abilities);
     this.touchManager.show();
+
+    // --- Event Routing ---
+    this.eventRouter = new ObjectEventRouter(this.objectManager);
 
     // --- Interaction System ---
     this.interactionManager = new InteractionManager(this.objectManager, this);
@@ -277,6 +281,7 @@ export class GameScene extends Phaser.Scene {
     if (this._luaBindings?.timer) this._luaBindings.timer.clearAll();
     luaEngine.destroy();
     objectStateStore.saveAll(this.objectManager);
+    this.eventRouter.destroy();
     this.interactionManager.destroy();
     this.objectManager.destroy();
     this.inputManager.destroy();
