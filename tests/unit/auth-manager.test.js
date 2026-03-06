@@ -7,7 +7,7 @@ describe('AuthManager', () => {
 
   beforeEach(() => {
     auth = new AuthManager();
-    sessionStorage.clear();
+    localStorage.clear();
   });
 
   it('starts unauthenticated', () => {
@@ -28,7 +28,7 @@ describe('AuthManager', () => {
     expect(auth.identity.playerName).toBe('Guest');
   });
 
-  it('restores identity from sessionStorage', () => {
+  it('restores identity from localStorage', () => {
     auth.setGuestIdentity('Stored');
     const auth2 = new AuthManager();
     expect(auth2.restore()).toBe(true);
@@ -45,6 +45,6 @@ describe('AuthManager', () => {
     auth.clear();
     expect(auth.isAuthenticated).toBe(false);
     expect(auth.identity).toBeNull();
-    expect(sessionStorage.getItem('dd_player_identity')).toBeNull();
+    expect(localStorage.getItem('dd_player_identity')).toBeNull();
   });
 });

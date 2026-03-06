@@ -1,6 +1,6 @@
 // --- AuthManager ---
 // Handles Discord OAuth2 and guest identity.
-// Stores player identity in sessionStorage so it survives the OAuth redirect page reload.
+// Stores player identity in localStorage so it persists across sessions.
 
 const AUTH_API_URL = import.meta.env.VITE_AUTH_URL || 'http://localhost:3001';
 const DISCORD_CLIENT_ID = import.meta.env.VITE_DISCORD_CLIENT_ID || '';
@@ -42,7 +42,7 @@ export class AuthManager {
         avatarUrl: data.avatarUrl,
         discordId: data.discordId,
       };
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(this._identity));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this._identity));
       return true;
     } catch (err) {
       console.error('[AuthManager] OAuth exchange failed:', err);
@@ -50,10 +50,10 @@ export class AuthManager {
     }
   }
 
-  // Loads identity from sessionStorage (survives page reloads)
+  // Loads identity from localStorage (persists across sessions)
   restore() {
     try {
-      const stored = sessionStorage.getItem(STORAGE_KEY);
+      const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         this._identity = JSON.parse(stored);
         return true;
@@ -73,7 +73,7 @@ export class AuthManager {
     window.location.href = `https://discord.com/oauth2/authorize?${params}`;
   }
 
-  // Sets identity from Discord Activity SDK auth (no sessionStorage — Activity re-auths each launch)
+  // Sets identity from Discord Activity SDK auth (no localStorage — Activity re-auths each launch)
   setDiscordActivityIdentity(user) {
     this._identity = {
       type: 'discord',
@@ -92,7 +92,7 @@ export class AuthManager {
       avatarUrl: null,
       discordId: null,
     };
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(this._identity));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(this._identity));
   }
 
   get identity() {
@@ -105,7 +105,7 @@ export class AuthManager {
 
   clear() {
     this._identity = null;
-    sessionStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(STORAGE_KEY);
   }
 }
 
