@@ -1,61 +1,44 @@
 // --- InteractionPrompt ---
-// Floating "E" key indicator shown above interactable objects when the
-// player is within range. Fades in/out smoothly. One instance reused
-// across all objects — moves to whichever object is currently targeted.
-// AGENT: Uses DOM overlay, not Phaser sprites, so it renders above the
-// game canvas at native resolution.
+// Floating key indicator shown above interactable objects when the player
+// is within range. Uses a Phaser Text object positioned in world space
+// so it tracks with the camera automatically.
+// AGENT: One instance reused across all objects — moves to whichever
+// object is currently targeted. Set depth high so it renders above everything.
 
-const FADE_DURATION = 150; // ms
+import { DEPTH_ABOVE_PLAYER } from '../core/Constants.js';
 
 export class InteractionPrompt {
   constructor() {
-    this._el = null;
+    this._text = null;
     this._visible = false;
-    this._fadeTimeout = null;
   }
 
-  // Create the DOM element. Call once during scene create.
-  create() {
-    this._el = document.createElement('div');
-    this._el.className = 'interaction-prompt';
-    this._el.textContent = 'E';
-    this._el.style.cssText = `
-      position: absolute;
-      pointer-events: none;
-      font-family: monospace;
-      font-size: 12px;
-      font-weight: bold;
-      color: #fff;
-      background: rgba(0, 0, 0, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      border-radius: 3px;
-      padding: 1px 5px;
-      opacity: 0;
-      transition: opacity ${FADE_DURATION}ms ease;
-      z-index: 100;
-      transform: translate(-50%, -100%);
-    `;
-    document.body.appendChild(this._el);
+  // Create the Phaser text object. Call once during scene create.
+  create(scene) {
+    this._text = scene.add.text(0, 0, '[E]', {
+      fontFamily: 'monospace',
+      fontSize: '10px',
+      color: '#ffffff',
+      backgroundColor: 'rgba(0,0,0,0.7)',
+      padding: { x: 3, y: 1 },
+    });
+    this._text.setOrigin(0.5, 1); // center-bottom anchor → sits above object
+    this._text.setDepth(DEPTH_ABOVE_PLAYER + 10);
+    this._text.setVisible(false);
   }
 
   // Show the prompt above a world position.
-  // screenX, screenY are the screen-space coordinates of the object.
-  show(screenX, screenY, text) {
-    if (!this._el) return;
-    if (this._fadeTimeout) {
-      clearTimeout(this._fadeTimeout);
-      this._fadeTimeout = null;
-    }
-    this._el.textContent = text || 'E';
-    this._el.style.left = `${screenX}px`;
-    this._el.style.top = `${screenY - 8}px`;
-    this._el.style.opacity = '1';
+  show(worldX, worldY, text) {
+    if (!this._text) return;
+    this._text.setText(text || '[E]');
+    this._text.setPosition(worldX, worldY - 4);
+    this._text.setVisible(true);
     this._visible = true;
   }
 
   hide() {
-    if (!this._el || !this._visible) return;
-    this._el.style.opacity = '0';
+    if (!this._text || !this._visible) return;
+    this._text.setVisible(false);
     this._visible = false;
   }
 
@@ -64,11 +47,10 @@ export class InteractionPrompt {
   }
 
   destroy() {
-    if (this._fadeTimeout) clearTimeout(this._fadeTimeout);
-    if (this._el && this._el.parentNode) {
-      this._el.parentNode.removeChild(this._el);
+    if (this._text) {
+      this._text.destroy();
+      this._text = null;
     }
-    this._el = null;
     this._visible = false;
   }
 }

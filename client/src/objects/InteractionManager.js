@@ -21,7 +21,7 @@ export class InteractionManager {
     this._objectManager = objectManager;
     this._scene = scene;
     this._prompt = new InteractionPrompt();
-    this._prompt.create();
+    this._prompt.create(scene);
 
     // Currently targeted object (closest interactable in range)
     this._target = null;
@@ -61,12 +61,13 @@ export class InteractionManager {
       }
     }
 
-    // Position prompt above target
-    if (this._target && this._scene.cameras?.main) {
-      const cam = this._scene.cameras.main;
-      const screenX = (this._target.centerX - cam.scrollX) * cam.zoom;
-      const screenY = (this._target.centerY - cam.scrollY) * cam.zoom;
-      this._prompt.show(screenX, screenY, this._target.promptText || 'E');
+    // Position prompt above target (world coordinates — Phaser handles camera)
+    if (this._target) {
+      this._prompt.show(
+        this._target.centerX,
+        this._target.y,
+        this._target.promptText || '[E]',
+      );
     }
 
     // --- Dispatch interact on E key ---

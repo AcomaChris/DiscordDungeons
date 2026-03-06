@@ -1,21 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { OBJECT_INTERACT, OBJECT_TOUCH, OBJECT_STEP } from '../../client/src/core/Events.js';
 
-// --- Minimal mocks ---
-// InteractionManager uses DOM for the prompt and EventBus for events.
-
-// Mock document.createElement/body for InteractionPrompt
-const mockEl = {
-  className: '',
-  textContent: '',
-  style: { cssText: '', left: '', top: '', opacity: '' },
-  parentNode: { removeChild: vi.fn() },
-};
-vi.stubGlobal('document', {
-  createElement: vi.fn(() => ({ ...mockEl, style: { ...mockEl.style } })),
-  body: { appendChild: vi.fn() },
-});
-
 describe('InteractionManager', () => {
   let InteractionManager, ObjectManager, eventBus;
 
@@ -37,10 +22,18 @@ describe('InteractionManager', () => {
     return mgr;
   }
 
+  // Mock scene with add.text() for InteractionPrompt
   function makeScene() {
     return {
-      cameras: {
-        main: { scrollX: 0, scrollY: 0, zoom: 1 },
+      add: {
+        text: vi.fn(() => ({
+          setOrigin: vi.fn(),
+          setDepth: vi.fn(),
+          setVisible: vi.fn(),
+          setText: vi.fn(),
+          setPosition: vi.fn(),
+          destroy: vi.fn(),
+        })),
       },
     };
   }
