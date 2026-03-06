@@ -5,6 +5,7 @@
 // elevated tile (labels scroll/zoom with the map).
 
 import { ELEVATION_STEP, DEPTH_ABOVE_PLAYER } from '../core/Constants.js';
+import { isInstancedMap } from '../map/MapRegistry.js';
 
 const DEBUG_TEXT_DEPTH = DEPTH_ABOVE_PLAYER + 100;
 
@@ -66,11 +67,13 @@ export class WorldDebugOverlay {
     if (this._active) return;
     this._active = true;
     this._mountPanel();
+    this._startMapInfoRefresh();
   }
 
   hide() {
     if (!this._active) return;
     this._active = false;
+    this._stopMapInfoRefresh();
     this._unmountPanel();
     this._destroyLabels();
     const scene = this._getScene();
@@ -81,7 +84,41 @@ export class WorldDebugOverlay {
   }
 
   destroy() {
+    this._stopMapInfoRefresh();
     this.hide();
+  }
+
+  // --- Map Info ---
+
+  _startMapInfoRefresh() {
+    this._mapInfoInterval = setInterval(() => this._updateMapInfo(), 2000);
+  }
+
+  _stopMapInfoRefresh() {
+    if (this._mapInfoInterval) {
+      clearInterval(this._mapInfoInterval);
+      this._mapInfoInterval = null;
+    }
+  }
+
+  _updateMapInfo() {
+    if (!this._mapInfoEl) return;
+    const scene = this._getScene();
+    const mapId = scene?._mapId || '?';
+    const instanced = isInstancedMap(mapId);
+    const nm = scene?.networkManager;
+    const playerCount = scene?.remotePlayers ? scene.remotePlayers.size + 1 : 1;
+
+    const typeLabel = instanced ? 'instanced' : 'shared';
+    const typeColor = instanced ? '#f90' : '#7d7';
+
+    let html = `<div style="font-size:10px;color:#888">Map</div>`;
+    html += `<div><span style="color:#fff">${mapId}</span> <span style="color:${typeColor}">[${typeLabel}]</span></div>`;
+    html += `<div style="font-size:10px;color:#888;margin-top:2px">Players on map: ${playerCount}</div>`;
+    if (nm?.playerId) {
+      html += `<div style="font-size:10px;color:#888">ID: ${nm.playerId}</div>`;
+    }
+    this._mapInfoEl.innerHTML = html;
   }
 
   // --- Panel ---
@@ -111,6 +148,12 @@ export class WorldDebugOverlay {
     title.textContent = 'World Debug';
     title.style.cssText = 'font-weight: bold; margin-bottom: 8px; color: #ffffff; border-bottom: 1px solid #444; padding-bottom: 4px;';
     panel.appendChild(title);
+
+    // --- Map Info section ---
+    this._mapInfoEl = document.createElement('div');
+    this._mapInfoEl.style.cssText = 'margin-bottom: 6px; padding: 4px 0; border-bottom: 1px solid #333;';
+    this._updateMapInfo();
+    panel.appendChild(this._mapInfoEl);
 
     // --- Height Debug section (open by default so users see it immediately) ---
     const details = document.createElement('details');
