@@ -99,6 +99,8 @@ export class GameScene extends Phaser.Scene {
     this._initNPC();
 
     // --- Input ---
+    // Re-enable keyboard after map transition (MapTransitionManager disables it during fade)
+    this.input.keyboard.enabled = true;
     this.inputManager = new InputManager(this);
     this.touchManager = new TouchManager();
     this.touchManager.setAbilityManager(this.player.abilities);
