@@ -17,14 +17,16 @@ export class RosterHUD {
     this._players = new Map(); // playerId → { playerName, mapId, colorIndex }
     this._localPlayerId = null;
     this._localMapId = null;
+    this._networkManager = null;
     this._badge = null;
     this._panel = null;
     this._expanded = false;
   }
 
-  init(localPlayerId, localMapId) {
+  init(localPlayerId, localMapId, networkManager) {
     this._localPlayerId = localPlayerId;
     this._localMapId = localMapId;
+    this._networkManager = networkManager;
     this._createBadge();
     this._subscribe();
   }
@@ -83,11 +85,27 @@ export class RosterHUD {
       html += `<div class="dd-roster-map">${mapId}</div>`;
       for (const p of players) {
         const cls = p.isSelf ? 'dd-roster-player self' : 'dd-roster-player';
-        html += `<div class="${cls}">${p.playerName}</div>`;
+        // Non-self players get an invite button
+        const inviteBtn = p.isSelf ? '' :
+          `<button class="dd-roster-invite" data-pid="${p.playerId}">Invite</button>`;
+        html += `<div class="${cls}">${p.playerName}${inviteBtn}</div>`;
       }
       html += `</div>`;
     }
     this._panel.innerHTML = html;
+
+    // Wire up invite buttons
+    if (this._networkManager) {
+      for (const btn of this._panel.querySelectorAll('.dd-roster-invite')) {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const targetId = btn.dataset.pid;
+          this._networkManager.sendPartyInvite(targetId);
+          btn.textContent = 'Sent';
+          btn.disabled = true;
+        });
+      }
+    }
   }
 
   _updateBadge() {

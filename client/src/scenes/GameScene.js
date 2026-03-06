@@ -242,7 +242,7 @@ export class GameScene extends Phaser.Scene {
       this.player.setColorIndex(colorIndex);
       // Deferred HUD init: playerId is only known after welcome
       if (this.rosterHUD && !this.rosterHUD._badge) {
-        this.rosterHUD.init(playerId, this._mapId);
+        this.rosterHUD.init(playerId, this._mapId, this.networkManager);
       }
     };
     this._onPlayerJoined = (data) => this._addRemotePlayer(data);

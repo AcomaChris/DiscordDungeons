@@ -61,6 +61,35 @@
   color: #7df;
 }
 
+.dd-roster-player {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.dd-roster-invite {
+  background: rgba(42, 170, 119, 0.3);
+  color: #2a7;
+  border: 1px solid #2a7;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.dd-roster-invite:hover {
+  background: rgba(42, 170, 119, 0.5);
+  color: #fff;
+}
+
+.dd-roster-invite:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
 /* --- Party Invite Toast --- */
 
 .dd-party-toast {
