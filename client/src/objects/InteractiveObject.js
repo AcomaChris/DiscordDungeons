@@ -116,10 +116,14 @@ export class InteractiveObject {
 
   // --- Prompt Text ---
 
-  // Returns the prompt text from the first interact-triggered component
+  // Returns the prompt text from the first interact-triggered component.
+  // Components with a promptText getter (e.g. DoorComponent) override params.
   get promptText() {
     const comp = this.components.getInteractTrigger();
-    return comp?.params?.promptText || comp?.params?.promptOpen || null;
+    if (!comp) return null;
+    // Prefer component getter over raw params (allows state-dependent text)
+    if (typeof comp.promptText === 'string') return comp.promptText;
+    return comp.params?.promptText || comp.params?.promptOpen || null;
   }
 
   destroy() {

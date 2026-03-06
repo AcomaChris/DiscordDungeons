@@ -4332,6 +4332,23 @@
         },
         {
           "id": 3,
+          "name": "test_door",
+          "type": "door",
+          "x": 144,
+          "y": 256,
+          "width": 16,
+          "height": 16,
+          "visible": true,
+          "properties": [
+            {
+              "name": "__components",
+              "type": "string",
+              "value": "[{\"id\":\"door\"}]"
+            }
+          ]
+        },
+        {
+          "id": 4,
           "name": "test_sign",
           "type": "sign",
           "x": 48,
@@ -4352,7 +4369,7 @@
     }
   ],
   "nextlayerid": 9,
-  "nextobjectid": 4,
+  "nextobjectid": 5,
   "orientation": "orthogonal",
   "renderorder": "right-down",
   "tiledversion": "1.11.2",

@@ -214,6 +214,21 @@ function generateObjectLayer() {
       },
       {
         id: 3,
+        name: 'test_door',
+        type: 'door',
+        x: 9 * TILE,
+        y: 16 * TILE,
+        width: TILE,
+        height: TILE,
+        visible: true,
+        properties: [
+          { name: '__components', type: 'string', value: JSON.stringify([
+            { id: 'door' },
+          ]) },
+        ],
+      },
+      {
+        id: 4,
         name: 'test_sign',
         type: 'sign',
         x: 3 * TILE,
@@ -253,7 +268,7 @@ function buildMap() {
     infinite: false,
     layers,
     nextlayerid: layers.length + 1,
-    nextobjectid: 4,
+    nextobjectid: 5,
     orientation: 'orthogonal',
     renderorder: 'right-down',
     tiledversion: '1.11.2',
