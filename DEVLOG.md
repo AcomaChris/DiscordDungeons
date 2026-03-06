@@ -4,6 +4,17 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-05 — Phase 4 Stage 4: Editor Integration (v0.32.0)
+
+- **Tile editor components section** (`ObjectEditorProperties.js`): Collapsible Components section with add/remove dropdown, dynamic param editors (boolean→checkbox, number→input, string→text, code→textarea, array→JSON textarea, null→text). Trigger override select. Persistence/authority info badges.
+- **Schema validation** (`object-def-schema.js`): Components array validated — each entry must have a valid `id` from ComponentDefs, duplicates rejected. 7 new unit tests.
+- **Map editor components UI** (`PropertyPanel.js`): Parses `__components` JSON from object properties. Full add/remove/edit UI with trigger select and typed param inputs. Changes write back as JSON string.
+- **Connections textarea**: Simple JSON editor for `__connections` property (format: `[{name, targetId, event}]`). Visual connection editor deferred to Stage 5+.
+- **Export round-trip verified**: `__components` and `__connections` survive Tiled JSON export→import cycle. New round-trip test confirms.
+- 873 tests across 63 files, all passing. 8 new tests (7 schema + 1 round-trip).
+
+---
+
 ## 2026-03-05 — Phase 4 Stage 3: Lua Scripting with Wasmoon (v0.31.0)
 
 - **Wasmoon over Fengari**: Chose Wasmoon (Lua 5.4 via WebAssembly, actively maintained) over fengari-web (unmaintained since 2018). ~500KB bundle addition but real Lua 5.4 support.
