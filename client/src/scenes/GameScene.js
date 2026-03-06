@@ -141,7 +141,7 @@ export class GameScene extends Phaser.Scene {
       return;
     }
 
-    this.npc = new NPC(this, 328, 264, {
+    this.npc = new NPC(this, 280, 216, {
       npcId: 'greta',
       name: 'Greta',
       color: 0x8B4513,
