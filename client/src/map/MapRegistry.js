@@ -4,12 +4,14 @@
 
 const maps = {
   test: {
+    instanced: false, // shared hub map
     jsonPath: 'maps/test.json',
     tilesets: [
       { key: 'test-tiles', path: 'tilesets/test-tiles.png', tiledName: 'test-tiles', tileSize: 16 },
     ],
   },
   test2: {
+    instanced: false,
     jsonPath: 'maps/test2.json',
     tilesets: [
       { key: 'test-tiles', path: 'tilesets/test-tiles.png', tiledName: 'test-tiles', tileSize: 16 },
@@ -19,6 +21,7 @@ const maps = {
     ],
   },
   tavern: {
+    instanced: false,
     jsonPath: 'maps/tavern.json',
     tilesets: [
       { key: 'walls-interior', path: 'tilesets/Walls_interior.png', tiledName: 'Walls_interior', tileSize: 16 },
@@ -55,4 +58,9 @@ export function getMapConfig(mapId) {
 
 export function getMapIds() {
   return Object.keys(maps);
+}
+
+export function isInstancedMap(mapId) {
+  const config = maps[mapId];
+  return config ? !!config.instanced : false;
 }

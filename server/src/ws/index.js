@@ -18,7 +18,10 @@ const BE_API_URL = process.env.BEHAVIOR_ENGINE_API_URL || 'https://api.artificia
 const BE_API_KEY = process.env.BEHAVIOR_ENGINE_API_KEY || '';
 const BE_API_VERSION = '2025-05-15';
 
+const { PartyManager } = require('./PartyManager.js');
+
 const rooms = new Map();
+const partyManager = new PartyManager();
 let nextPlayerId = 1;
 
 // --- Helpers ---
@@ -532,7 +535,10 @@ wss.on('connection', (ws, req) => {
   const room = rooms.get(roomId);
 
   const colorIndex = room.size;
-  const playerData = { ws, colorIndex, state: null, playerName: `Player ${playerId}`, avatarUrl: null };
+  const playerData = {
+    ws, colorIndex, state: null, playerName: `Player ${playerId}`, avatarUrl: null,
+    mapId: null, partyId: null, instanceId: null,
+  };
   room.set(playerId, playerData);
 
   console.log(`[connect] player=${playerId} room=${roomId} roomSize=${room.size}`);
@@ -540,16 +546,31 @@ wss.on('connection', (ws, req) => {
   // Tell the new player their ID
   ws.send(JSON.stringify({ type: 'welcome', playerId, roomId, colorIndex }));
 
+  // Send roster snapshot — full player list with names + maps
+  const rosterPlayers = [];
+  for (const [pid, peer] of room) {
+    if (pid !== playerId) {
+      rosterPlayers.push({
+        playerId: pid, colorIndex: peer.colorIndex,
+        playerName: peer.playerName, avatarUrl: peer.avatarUrl,
+        mapId: peer.mapId,
+      });
+    }
+  }
+  ws.send(JSON.stringify({ type: 'roster', players: rosterPlayers }));
+
   // Tell existing players about the new player, and vice versa
   for (const [pid, peer] of room) {
     if (pid !== playerId) {
       peer.ws.send(JSON.stringify({
         type: 'playerJoined', playerId, colorIndex,
         playerName: playerData.playerName, avatarUrl: playerData.avatarUrl,
+        mapId: playerData.mapId,
       }));
       ws.send(JSON.stringify({
         type: 'playerJoined', playerId: pid, colorIndex: peer.colorIndex,
         playerName: peer.playerName, avatarUrl: peer.avatarUrl,
+        mapId: peer.mapId,
       }));
     }
   }
@@ -568,6 +589,88 @@ wss.on('connection', (ws, req) => {
             playerName: playerData.playerName, avatarUrl: playerData.avatarUrl,
           }));
         }
+      } else if (msg.type === 'mapChange') {
+        const oldMapId = playerData.mapId;
+        playerData.mapId = msg.mapId || null;
+        // Compute instanceId: instanced maps use partyId (or playerId for solo) + mapId
+        if (msg.instanced && playerData.mapId) {
+          const groupKey = playerData.partyId || playerId;
+          playerData.instanceId = `${groupKey}:${playerData.mapId}`;
+        } else {
+          playerData.instanceId = null;
+        }
+        console.log(`[mapChange] player=${playerId} ${oldMapId} → ${playerData.mapId} instance=${playerData.instanceId || 'shared'}`);
+        // Broadcast map change to all room members
+        for (const [, peer] of room) {
+          peer.ws.send(JSON.stringify({
+            type: 'playerMapChanged', playerId,
+            fromMap: oldMapId, toMap: playerData.mapId,
+          }));
+        }
+      } else if (msg.type === 'partyInvite') {
+        const targetId = msg.targetId;
+        const target = room.get(targetId);
+        if (!target) {
+          ws.send(JSON.stringify({ type: 'partyError', error: 'Player not found' }));
+        } else {
+          const result = partyManager.invite(playerId, targetId);
+          if (result.error) {
+            ws.send(JSON.stringify({ type: 'partyError', error: result.error }));
+          } else {
+            target.ws.send(JSON.stringify({
+              type: 'partyInviteReceived', fromId: playerId,
+              fromName: playerData.playerName,
+            }));
+          }
+        }
+      } else if (msg.type === 'partyAccept') {
+        const result = partyManager.accept(playerId);
+        if (result.error) {
+          ws.send(JSON.stringify({ type: 'partyError', error: result.error }));
+        } else {
+          // Broadcast party update to all members
+          for (const memberId of result.party.members) {
+            const member = room.get(memberId);
+            if (member) {
+              member.ws.send(JSON.stringify({ type: 'partyUpdate', party: result.party }));
+              // Update partyId on player data
+              member.partyId = result.partyId;
+            }
+          }
+        }
+      } else if (msg.type === 'partyDecline') {
+        const result = partyManager.decline(playerId);
+        if (result.error) {
+          ws.send(JSON.stringify({ type: 'partyError', error: result.error }));
+        } else {
+          const from = room.get(result.fromId);
+          if (from) {
+            from.ws.send(JSON.stringify({
+              type: 'partyError', error: `${playerData.playerName} declined the invite`,
+            }));
+          }
+        }
+      } else if (msg.type === 'partyLeave') {
+        const result = partyManager.leave(playerId);
+        if (result.error) {
+          ws.send(JSON.stringify({ type: 'partyError', error: result.error }));
+        } else if (result.disbanded) {
+          for (const memberId of result.members) {
+            const member = room.get(memberId);
+            if (member) {
+              member.ws.send(JSON.stringify({ type: 'partyDisbanded' }));
+              member.partyId = null;
+            }
+          }
+          playerData.partyId = null;
+        } else {
+          playerData.partyId = null;
+          ws.send(JSON.stringify({ type: 'partyDisbanded' }));
+          for (const memberId of result.party.members) {
+            const member = room.get(memberId);
+            if (member) member.ws.send(JSON.stringify({ type: 'partyUpdate', party: result.party }));
+          }
+        }
       } else if (msg.type === 'state') {
         const peer = room.get(playerId);
         if (peer) peer.state = msg.payload;
@@ -580,6 +683,24 @@ wss.on('connection', (ws, req) => {
   // --- Disconnect ---
   ws.on('close', () => {
     console.log(`[disconnect] player=${playerId} room=${roomId}`);
+
+    // Clean up party membership
+    const partyResult = partyManager.removePlayer(playerId);
+    if (partyResult && partyResult.disbanded) {
+      for (const memberId of partyResult.members) {
+        const member = room.get(memberId);
+        if (member) {
+          member.ws.send(JSON.stringify({ type: 'partyDisbanded' }));
+          member.partyId = null;
+        }
+      }
+    } else if (partyResult && partyResult.party) {
+      for (const memberId of partyResult.party.members) {
+        const member = room.get(memberId);
+        if (member) member.ws.send(JSON.stringify({ type: 'partyUpdate', party: partyResult.party }));
+      }
+    }
+
     room.delete(playerId);
     for (const [, peer] of room) {
       peer.ws.send(JSON.stringify({ type: 'playerLeft', playerId }));
@@ -589,19 +710,47 @@ wss.on('connection', (ws, req) => {
 });
 
 // --- State broadcast ---
-// Sends all player states to all room members at a fixed rate.
-// Decoupled from per-client message rate to prevent flooding.
+// Sends player states grouped by broadcast key at a fixed rate.
+// Broadcast key = instanceId (for instanced maps) or mapId (for shared maps).
+// Players with mapId=null receive all states (backwards compat / pre-mapChange).
 setInterval(() => {
   for (const [, room] of rooms) {
-    const states = {};
+    // Group players by broadcast key (instanceId || mapId)
+    const groups = new Map(); // key → { states, recipients[] }
+    const unassigned = []; // players with no mapId yet
     for (const [pid, peer] of room) {
-      if (peer.state) states[pid] = peer.state;
+      const key = peer.instanceId || peer.mapId;
+      if (!key) {
+        unassigned.push(peer);
+        continue;
+      }
+      if (!groups.has(key)) groups.set(key, { states: {}, recipients: [] });
+      const group = groups.get(key);
+      if (peer.state) group.states[pid] = peer.state;
+      group.recipients.push(peer);
     }
-    if (Object.keys(states).length === 0) continue;
 
-    const msg = JSON.stringify({ type: 'stateUpdate', states });
-    for (const [, peer] of room) {
-      if (peer.ws.readyState === 1) peer.ws.send(msg);
+    // Send filtered updates per group
+    for (const [, group] of groups) {
+      if (Object.keys(group.states).length === 0) continue;
+      const msg = JSON.stringify({ type: 'stateUpdate', states: group.states });
+      for (const peer of group.recipients) {
+        if (peer.ws.readyState === 1) peer.ws.send(msg);
+      }
+    }
+
+    // Unassigned players get all states (backwards compat)
+    if (unassigned.length > 0) {
+      const allStates = {};
+      for (const [pid, peer] of room) {
+        if (peer.state) allStates[pid] = peer.state;
+      }
+      if (Object.keys(allStates).length > 0) {
+        const msg = JSON.stringify({ type: 'stateUpdate', states: allStates });
+        for (const peer of unassigned) {
+          if (peer.ws.readyState === 1) peer.ws.send(msg);
+        }
+      }
     }
   }
 }, BROADCAST_RATE);

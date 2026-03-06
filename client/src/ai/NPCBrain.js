@@ -79,6 +79,9 @@ export class NPCBrain {
     this._currentAction = null;  // { action, args }
     this._playerWasNear = false;
     this._mapSize = null;
+    // Callback to check if real players are present on this map.
+    // When set and returns false, the brain pauses to avoid burning API credits.
+    this._hasPlayersCheck = null;
 
     // --- Behavior Engine client ---
     this._client = new BehaviorEngineClient({ projectId, proxyUrl });
@@ -125,8 +128,20 @@ export class NPCBrain {
 
   // --- Update (called from GameScene.update each frame) ---
 
+  // Set a callback that returns true if real players are present on this map.
+  // When no players are present, the brain skips thinking to save API credits.
+  setHasPlayersCheck(fn) {
+    this._hasPlayersCheck = fn;
+  }
+
   update(delta) {
     if (this._state === STATE.INITIALIZING || this._state === STATE.ERROR) return;
+
+    // Pause AI when no real players are on this map
+    if (this._hasPlayersCheck && !this._hasPlayersCheck()) {
+      if (this._state === STATE.IDLE) this._idleTimer = 0;
+      return;
+    }
 
     if (this._state === STATE.IDLE) {
       this._idleTimer += delta;

@@ -7,6 +7,8 @@ import {
   NETWORK_PLAYER_LEFT,
   NETWORK_STATE_UPDATE,
   NETWORK_PLAYER_IDENTITY,
+  NETWORK_PLAYER_MAP_CHANGED,
+  NETWORK_ROSTER,
   OBJECT_STATE_CHANGED,
 } from '../core/Events.js';
 import { CAMERA_ZOOM } from '../core/Constants.js';
@@ -27,8 +29,11 @@ import { InteractionManager } from '../objects/InteractionManager.js';
 import { ObjectEventRouter } from '../objects/ObjectEventRouter.js';
 import objectStateStore from '../objects/ObjectStateStore.js';
 import { MapTransitionManager } from '../map/MapTransitionManager.js';
+import { playDepartureEffect, playArrivalEffect } from '../entities/TransitionEffect.js';
 import luaEngine from '../scripting/LuaEngine.js';
 import { injectStandardBindings } from '../scripting/LuaBindings.js';
+import { RosterHUD } from '../hud/RosterHUD.js';
+import { PartyUI } from '../hud/PartyUI.js';
 
 // --- GameScene ---
 // Orchestrator: loads tilemap, creates player, wires input + network.
@@ -124,6 +129,30 @@ export class GameScene extends Phaser.Scene {
     this._subscribeEvents();
     if (!isRestart) {
       this._connectNetwork();
+    } else {
+      // Restore networkManager from game-level reference (survives scene restart)
+      this.networkManager = this.game.__networkManager;
+    }
+
+    // Tell server which map we're on (include instanced flag for instance isolation)
+    if (this.networkManager) {
+      const mapConfig = getMapConfig(this._mapId);
+      this.networkManager.sendMapChange(this._mapId, { instanced: !!mapConfig.instanced });
+    }
+
+    // --- HUD ---
+    // RosterHUD and PartyUI are DOM-based, persist across map transitions.
+    if (!isRestart) {
+      this.rosterHUD = new RosterHUD();
+      this.partyUI = new PartyUI(this.networkManager);
+      this.partyUI.init();
+      // RosterHUD.init() deferred to _onRoomJoined (needs playerId from welcome)
+      this.game.__rosterHUD = this.rosterHUD;
+      this.game.__partyUI = this.partyUI;
+    } else {
+      this.rosterHUD = this.game.__rosterHUD;
+      this.partyUI = this.game.__partyUI;
+      if (this.rosterHUD) this.rosterHUD.setLocalMapId(this._mapId);
     }
 
     // Fade in from black (smooth entry after map transition or initial load)
@@ -169,6 +198,8 @@ export class GameScene extends Phaser.Scene {
       this.tileMapManager.tilemap.width,
       this.tileMapManager.tilemap.height,
     );
+    // Only run AI when real players are on this map (saves API credits)
+    this.npcBrain.setHasPlayersCheck(() => this.remotePlayers.size > 0);
     this.npcBrain.init();
 
     globalThis.__NPC__ = this.npc;
@@ -206,11 +237,19 @@ export class GameScene extends Phaser.Scene {
 
   _subscribeEvents() {
     this._onInput = (data) => this.player.handleInput(data);
-    this._onRoomJoined = ({ colorIndex }) => this.player.setColorIndex(colorIndex);
+    this._onRoomJoined = ({ colorIndex, playerId }) => {
+      this.player.setColorIndex(colorIndex);
+      // Deferred HUD init: playerId is only known after welcome
+      if (this.rosterHUD && !this.rosterHUD._badge) {
+        this.rosterHUD.init(playerId, this._mapId);
+      }
+    };
     this._onPlayerJoined = (data) => this._addRemotePlayer(data);
     this._onPlayerLeft = (data) => this._removeRemotePlayer(data);
     this._onStateUpdate = (data) => this._updateRemotePlayers(data);
     this._onPlayerIdentity = (data) => this._updatePlayerIdentity(data);
+    this._onPlayerMapChanged = (data) => this._handlePlayerMapChanged(data);
+    this._onRoster = (data) => this._handleRoster(data);
     this._onObjectStateChanged = ({ objectId, state }) => {
       const obj = this.objectManager.getObjectById(objectId);
       if (obj) {
@@ -225,12 +264,22 @@ export class GameScene extends Phaser.Scene {
     eventBus.on(NETWORK_PLAYER_LEFT, this._onPlayerLeft);
     eventBus.on(NETWORK_STATE_UPDATE, this._onStateUpdate);
     eventBus.on(NETWORK_PLAYER_IDENTITY, this._onPlayerIdentity);
+    eventBus.on(NETWORK_PLAYER_MAP_CHANGED, this._onPlayerMapChanged);
+    eventBus.on(NETWORK_ROSTER, this._onRoster);
     eventBus.on(OBJECT_STATE_CHANGED, this._onObjectStateChanged);
   }
 
   // --- Remote Players ---
+  // AGENT: _remotePlayerMaps tracks mapId per remote player. Only players on
+  // our map get sprites. Players on other maps are tracked but not rendered.
 
-  _addRemotePlayer({ playerId, colorIndex, playerName }) {
+  _addRemotePlayer({ playerId, colorIndex, playerName, mapId }) {
+    // Track their map even if they're not on ours
+    if (!this._remotePlayerMaps) this._remotePlayerMaps = new Map();
+    this._remotePlayerMaps.set(playerId, mapId || null);
+
+    // Only create sprite if they're on our map (or map unknown)
+    if (mapId && mapId !== this._mapId) return;
     if (this.remotePlayers.has(playerId)) return;
     const spawn = this.tileMapManager.spawnPoint;
     const rp = new RemotePlayer(this, colorIndex, spawn.x, spawn.y, playerName);
@@ -243,6 +292,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   _removeRemotePlayer({ playerId }) {
+    if (this._remotePlayerMaps) this._remotePlayerMaps.delete(playerId);
     const rp = this.remotePlayers.get(playerId);
     if (rp) {
       rp.destroy();
@@ -254,6 +304,35 @@ export class GameScene extends Phaser.Scene {
     for (const [playerId, state] of Object.entries(states)) {
       const rp = this.remotePlayers.get(playerId);
       if (rp) rp.applyState(state);
+    }
+  }
+
+  _handlePlayerMapChanged({ playerId, fromMap, toMap }) {
+    if (!this._remotePlayerMaps) this._remotePlayerMaps = new Map();
+    this._remotePlayerMaps.set(playerId, toMap);
+
+    // Ignore our own map changes
+    if (this.networkManager && playerId === this.networkManager.playerId) return;
+
+    if (toMap === this._mapId) {
+      // Player arrived on our map — arrival effect at spawn
+      const spawn = this.tileMapManager.spawnPoint;
+      playArrivalEffect(this, spawn.x, spawn.y);
+    } else if (fromMap === this._mapId) {
+      // Player left our map — departure effect at their last position, then destroy
+      const rp = this.remotePlayers.get(playerId);
+      if (rp) {
+        playDepartureEffect(this, rp.sprite.x, rp.sprite.y);
+        rp.destroy();
+        this.remotePlayers.delete(playerId);
+      }
+    }
+  }
+
+  _handleRoster({ players }) {
+    if (!this._remotePlayerMaps) this._remotePlayerMaps = new Map();
+    for (const p of players) {
+      this._remotePlayerMaps.set(p.playerId, p.mapId || null);
     }
   }
 
@@ -290,6 +369,8 @@ export class GameScene extends Phaser.Scene {
 
   _connectNetwork() {
     this.networkManager = new NetworkManager(WS_URL);
+    // Persist at game level so it survives scene restarts during map transitions
+    this.game.__networkManager = this.networkManager;
     const roomId = authManager.activityChannelId || 'default';
     this.networkManager.connect(roomId, authManager.identity);
   }
@@ -306,6 +387,8 @@ export class GameScene extends Phaser.Scene {
     eventBus.off(NETWORK_PLAYER_LEFT, this._onPlayerLeft);
     eventBus.off(NETWORK_STATE_UPDATE, this._onStateUpdate);
     eventBus.off(NETWORK_PLAYER_IDENTITY, this._onPlayerIdentity);
+    eventBus.off(NETWORK_PLAYER_MAP_CHANGED, this._onPlayerMapChanged);
+    eventBus.off(NETWORK_ROSTER, this._onRoster);
     eventBus.off(OBJECT_STATE_CHANGED, this._onObjectStateChanged);
 
     if (this._luaBindings?.timer) this._luaBindings.timer.clearAll();
@@ -325,9 +408,11 @@ export class GameScene extends Phaser.Scene {
     }
     this.remotePlayers.clear();
 
-    // Disconnect network only on full scene stop, not on map transition restart
+    // Disconnect network and destroy HUD only on full scene stop, not on map transition
     if (!this._isMapTransition) {
       if (this.networkManager) this.networkManager.disconnect();
+      if (this.rosterHUD) this.rosterHUD.destroy();
+      if (this.partyUI) this.partyUI.destroy();
     }
   }
 }

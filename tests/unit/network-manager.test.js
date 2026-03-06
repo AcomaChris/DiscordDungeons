@@ -7,6 +7,8 @@ import {
   NETWORK_STATE_UPDATE,
   NETWORK_ROOM_JOINED,
   NETWORK_PLAYER_IDENTITY,
+  NETWORK_PLAYER_MAP_CHANGED,
+  NETWORK_ROSTER,
 } from '../../client/src/core/Events.js';
 import { NetworkManager } from '../../client/src/network/NetworkManager.js';
 
@@ -88,7 +90,7 @@ describe('NetworkManager', () => {
     nm.connect('test-room');
     nm.ws._receive({ type: 'playerJoined', playerId: '99', colorIndex: 2, playerName: 'Hero' });
 
-    expect(calls[0]).toEqual({ playerId: '99', colorIndex: 2, playerName: 'Hero' });
+    expect(calls[0]).toEqual({ playerId: '99', colorIndex: 2, playerName: 'Hero', mapId: null });
     nm.disconnect();
   });
 
@@ -168,6 +170,71 @@ describe('NetworkManager', () => {
       playerName: 'Hero',
       avatarUrl: 'https://cdn.example.com/avatar.png',
     });
+    nm.disconnect();
+  });
+
+  // --- Map tracking ---
+
+  it('sends mapChange message via sendMapChange', () => {
+    const nm = new NetworkManager('ws://localhost:3001');
+    nm.connect('test-room');
+    nm.sendMapChange('tavern');
+
+    expect(nm.ws.sent).toContainEqual({ type: 'mapChange', mapId: 'tavern', instanced: false });
+    expect(nm.currentMapId).toBe('tavern');
+    nm.disconnect();
+  });
+
+  it('emits NETWORK_PLAYER_MAP_CHANGED on playerMapChanged message', () => {
+    const nm = new NetworkManager('ws://localhost:3001');
+    const calls = [];
+    eventBus.on(NETWORK_PLAYER_MAP_CHANGED, (data) => calls.push(data));
+
+    nm.connect('test-room');
+    nm.ws._receive({
+      type: 'playerMapChanged',
+      playerId: '5',
+      fromMap: 'tavern',
+      toMap: 'dungeon',
+    });
+
+    expect(calls[0]).toEqual({
+      playerId: '5',
+      fromMap: 'tavern',
+      toMap: 'dungeon',
+    });
+    nm.disconnect();
+  });
+
+  it('emits NETWORK_ROSTER on roster message', () => {
+    const nm = new NetworkManager('ws://localhost:3001');
+    const calls = [];
+    eventBus.on(NETWORK_ROSTER, (data) => calls.push(data));
+
+    nm.connect('test-room');
+    nm.ws._receive({
+      type: 'roster',
+      players: [
+        { playerId: '2', colorIndex: 1, playerName: 'Alice', mapId: 'tavern' },
+        { playerId: '3', colorIndex: 2, playerName: 'Bob', mapId: null },
+      ],
+    });
+
+    expect(calls[0].players).toHaveLength(2);
+    expect(calls[0].players[0].mapId).toBe('tavern');
+    nm.disconnect();
+  });
+
+  it('re-sends mapChange on reconnect (welcome after mapId set)', () => {
+    const nm = new NetworkManager('ws://localhost:3001');
+    nm.connect('test-room');
+    nm.sendMapChange('tavern');
+    nm.ws.sent.length = 0; // clear previous sends
+
+    // Simulate reconnect: new welcome message
+    nm.ws._receive({ type: 'welcome', playerId: '42', roomId: 'test-room', colorIndex: 0 });
+
+    expect(nm.ws.sent).toContainEqual({ type: 'mapChange', mapId: 'tavern', instanced: false });
     nm.disconnect();
   });
 });

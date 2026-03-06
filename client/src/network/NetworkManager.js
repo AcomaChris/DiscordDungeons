@@ -8,6 +8,12 @@ import {
   NETWORK_STATE_UPDATE,
   NETWORK_ROOM_JOINED,
   NETWORK_PLAYER_IDENTITY,
+  NETWORK_PLAYER_MAP_CHANGED,
+  NETWORK_ROSTER,
+  NETWORK_PARTY_INVITE,
+  NETWORK_PARTY_UPDATE,
+  NETWORK_PARTY_DISBANDED,
+  NETWORK_PARTY_ERROR,
 } from '../core/Events.js';
 import { NETWORK_SEND_RATE } from '../core/Constants.js';
 
@@ -22,6 +28,7 @@ export class NetworkManager {
     this.playerId = null;
     this._sendInterval = null;
     this._latestLocalState = null;
+    this._currentMapId = null;
   }
 
   connect(roomId, identity) {
@@ -87,6 +94,48 @@ export class NetworkManager {
     }
   }
 
+  // --- Map tracking ---
+
+  sendMapChange(mapId, { instanced = false } = {}) {
+    this._currentMapId = mapId;
+    this._currentMapInstanced = instanced;
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify({ type: 'mapChange', mapId, instanced }));
+    }
+    // Persist for reconnect
+    try { localStorage.setItem('dd_last_map', mapId); } catch { /* noop */ }
+  }
+
+  get currentMapId() {
+    return this._currentMapId;
+  }
+
+  // --- Party ---
+
+  sendPartyInvite(targetId) {
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify({ type: 'partyInvite', targetId }));
+    }
+  }
+
+  sendPartyAccept() {
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify({ type: 'partyAccept' }));
+    }
+  }
+
+  sendPartyDecline() {
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify({ type: 'partyDecline' }));
+    }
+  }
+
+  sendPartyLeave() {
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify({ type: 'partyLeave' }));
+    }
+  }
+
   _handleMessage(msg) {
     switch (msg.type) {
       case 'welcome':
@@ -96,12 +145,17 @@ export class NetworkManager {
           roomId: msg.roomId,
           colorIndex: msg.colorIndex,
         });
+        // Re-send map on reconnect
+        if (this._currentMapId) {
+          this.sendMapChange(this._currentMapId);
+        }
         break;
       case 'playerJoined':
         eventBus.emit(NETWORK_PLAYER_JOINED, {
           playerId: msg.playerId,
           colorIndex: msg.colorIndex,
           playerName: msg.playerName || null,
+          mapId: msg.mapId || null,
         });
         break;
       case 'playerLeft':
@@ -113,6 +167,28 @@ export class NetworkManager {
           playerName: msg.playerName,
           avatarUrl: msg.avatarUrl,
         });
+        break;
+      case 'playerMapChanged':
+        eventBus.emit(NETWORK_PLAYER_MAP_CHANGED, {
+          playerId: msg.playerId,
+          fromMap: msg.fromMap,
+          toMap: msg.toMap,
+        });
+        break;
+      case 'roster':
+        eventBus.emit(NETWORK_ROSTER, { players: msg.players });
+        break;
+      case 'partyInviteReceived':
+        eventBus.emit(NETWORK_PARTY_INVITE, { fromId: msg.fromId, fromName: msg.fromName });
+        break;
+      case 'partyUpdate':
+        eventBus.emit(NETWORK_PARTY_UPDATE, msg.party);
+        break;
+      case 'partyDisbanded':
+        eventBus.emit(NETWORK_PARTY_DISBANDED);
+        break;
+      case 'partyError':
+        eventBus.emit(NETWORK_PARTY_ERROR, { error: msg.error });
         break;
       case 'stateUpdate':
         // Exclude our own state from the update

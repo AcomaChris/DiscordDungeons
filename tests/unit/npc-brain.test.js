@@ -219,4 +219,31 @@ describe('NPCBrain', () => {
     brain.update(16); // proximity changed → triggers think
     expect(brain.state).toBe('thinking');
   });
+
+  // --- Player presence check ---
+
+  it('pauses AI when hasPlayersCheck returns false', async () => {
+    await brain.init();
+    brain.setHasPlayersCheck(() => false);
+
+    // Advance past idle timer — should NOT trigger thinking
+    brain.update(20000);
+    expect(brain.state).toBe('idle');
+    expect(mockGenerateAction).not.toHaveBeenCalled();
+  });
+
+  it('resumes AI when hasPlayersCheck returns true', async () => {
+    await brain.init();
+    let hasPlayers = false;
+    brain.setHasPlayersCheck(() => hasPlayers);
+
+    // No players — stays idle
+    brain.update(20000);
+    expect(brain.state).toBe('idle');
+
+    // Players arrive — should think on next update past idle timer
+    hasPlayers = true;
+    brain.update(20000);
+    expect(brain.state).toBe('thinking');
+  });
 });

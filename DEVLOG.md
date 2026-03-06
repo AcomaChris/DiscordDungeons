@@ -4,6 +4,19 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-06 — Phase 6: Party Dungeons (v0.38.0)
+
+- **Server map tracking** (Stage 1): Added `mapId`, `partyId`, `instanceId` fields to player data. New `mapChange` message handler updates player's map and broadcasts `playerMapChanged`. State broadcasts now grouped by map — players only receive states from same-map players. Roster snapshot sent after welcome with all connected players and their maps.
+- **Client map awareness** (Stage 2): NetworkManager tracks `_currentMapId`, sends `mapChange` on map load (including after scene restart), persists to localStorage for reconnect. GameScene destroys remote player sprites when they leave our map, plays arrival/departure effects.
+- **Instance management** (Stages 3+5): Maps have `instanced` flag in MapRegistry. Instanced maps get broadcast key `partyId:mapId` (or `playerId:mapId` for solo), isolating party instances. Shared maps group by mapId only.
+- **Party system** (Stage 4): New `PartyManager` on server — create, invite (with 30s timeout), accept, decline, leave, disconnect cleanup, leader promotion. Client sends `partyInvite`/`partyAccept`/`partyDecline`/`partyLeave`, receives `partyUpdate`/`partyDisbanded`/`partyInviteReceived`.
+- **Departure/arrival effects** (Stage 6): Scale+fade circle tweens when remote players transition maps. Departure at last position, arrival at spawn.
+- **Roster HUD + Party UI** (Stage 7): DOM-based overlays — RosterHUD badge (top-right, click to expand grouped by map), PartyUI (party members list, invite toast with accept/decline buttons).
+- **Greta AI optimization**: NPCBrain pauses thinking (skips API calls) when no real players are on the map, saving Behavior Engine API credits.
+- 969 tests across 73 files. 19 new tests for PartyManager, 11 for map tracking/filtering, 5 for instance isolation, 6 for NetworkManager map/party events, 2 for NPCBrain player check.
+
+---
+
 ## 2026-03-06 — Bugfixes, UX, and State Display (v0.35.0 → v0.36.0)
 
 - **Map transition crash fixes** (v0.35.1, v0.35.2): Root cause was stale Phaser event handlers firing after scene restart. NPC's `_postUpdate` called `speechBubble.update()` → `_updatePosition()` → `_bg.setSize()` on a destroyed rectangle. Fixed by adding `if (!sprite?.body) return` guards to all pre/postupdate handlers in Player and NPC, `if (!_bg)` guard in SpeechBubble, and removing physics bodies from world before sprite destruction. Closes #14.
