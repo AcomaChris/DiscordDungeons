@@ -62,6 +62,7 @@ export class GameScene extends Phaser.Scene {
     // --- Interactive Objects ---
     this.objectManager = new ObjectManager();
     this.objectManager.createFromMapData(this.tileMapManager.objectData);
+    this.objectManager.createVisuals(this);
     console.log(`[GameScene] Loaded ${this.objectManager.size} interactive objects from map`);
 
     // --- Player ---

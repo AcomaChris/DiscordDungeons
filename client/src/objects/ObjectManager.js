@@ -4,7 +4,18 @@
 // AGENT: One instance per GameScene. Created after TileMapManager.create().
 
 import { InteractiveObject } from './InteractiveObject.js';
-import { TILE_SIZE } from '../core/Constants.js';
+import { TILE_SIZE, DEPTH_ABOVE_PLAYER } from '../core/Constants.js';
+
+// Debug colors per object type — distinct enough to tell apart at a glance
+const TYPE_COLORS = {
+  chest: 0xccaa44,
+  door: 0x8866cc,
+  sign: 0x44aacc,
+  lever: 0xcc6644,
+  trap: 0xcc4444,
+  npc: 0x44cc66,
+};
+const DEFAULT_COLOR = 0x999999;
 
 export class ObjectManager {
   constructor() {
@@ -55,6 +66,29 @@ export class ObjectManager {
     // Initialize all objects after creation (connections can resolve)
     for (const obj of this._objects.values()) {
       obj.init();
+    }
+  }
+
+  // --- Debug Visuals ---
+  // Creates colored rectangles for each object so they're visible in-game.
+  // Call after createFromMapData() with the Phaser scene reference.
+  // AGENT: These are placeholder visuals — real sprites come from tilesets later.
+  createVisuals(scene) {
+    this._sprites = [];
+    for (const obj of this._objects.values()) {
+      const color = TYPE_COLORS[obj.type] || DEFAULT_COLOR;
+      const rect = scene.add.rectangle(
+        obj.x + obj.width / 2,
+        obj.y + obj.height / 2,
+        obj.width,
+        obj.height,
+        color,
+        0.8,
+      );
+      rect.setStrokeStyle(1, 0xffffff, 0.6);
+      rect.setDepth(obj.y + obj.height);
+      this._sprites.push(rect);
+      obj._debugSprite = rect;
     }
   }
 
@@ -109,6 +143,10 @@ export class ObjectManager {
   }
 
   destroy() {
+    for (const sprite of this._sprites || []) {
+      sprite.destroy();
+    }
+    this._sprites = [];
     for (const obj of this._objects.values()) {
       obj.destroy();
     }
