@@ -8,6 +8,8 @@
 
 import { Component } from '../Component.js';
 import { componentRegistry } from '../ComponentRegistry.js';
+import eventBus from '../../core/EventBus.js';
+import { MAP_TRANSITION_REQUEST } from '../../core/Events.js';
 
 export class DoorComponent extends Component {
   init() {
@@ -18,6 +20,15 @@ export class DoorComponent extends Component {
     if (this.params.lockId) {
       // TODO: check player inventory for matching key
       this.owner.emit('door:locked', { doorId: this.owner.id, lockId: this.params.lockId });
+      return;
+    }
+
+    // Portal mode — door leads to another map
+    if (this.params.targetMap) {
+      const { targetMap, targetSpawn, targetX, targetY } = this.params;
+      const spawnTarget = targetSpawn
+        || (targetX || targetY ? { x: targetX, y: targetY } : null);
+      eventBus.emit(MAP_TRANSITION_REQUEST, { targetMap, spawnTarget });
       return;
     }
 

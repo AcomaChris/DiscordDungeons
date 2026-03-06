@@ -13,6 +13,7 @@ import './components/ContainerComponent.js';
 import './components/SwitchComponent.js';
 import './components/TrapComponent.js';
 import './components/DestructibleComponent.js';
+import './components/TeleporterComponent.js';
 import '../scripting/ScriptComponent.js';
 
 // Debug colors per object type — distinct enough to tell apart at a glance
@@ -24,6 +25,7 @@ const TYPE_COLORS = {
   switch: 0xcccc44,
   trap: 0xcc4444,
   destructible: 0xcc8844,
+  teleporter: 0x44ffcc,
   npc: 0x44cc66,
   script: 0xcc44cc,
 };

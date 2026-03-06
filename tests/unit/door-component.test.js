@@ -117,6 +117,36 @@ describe('DoorComponent', () => {
     mgr2.destroy();
   });
 
+  it('emits MAP_TRANSITION_REQUEST when targetMap is set (portal mode)', async () => {
+    const { MAP_TRANSITION_REQUEST } = await import('../../client/src/core/Events.js');
+    const events = [];
+    eventBus.on(MAP_TRANSITION_REQUEST, (e) => events.push(e));
+
+    const { mgr, obj } = createDoor({ targetMap: 'test2', targetSpawn: 'entrance' });
+    obj.onInteract({ x: 0, y: 0 });
+
+    expect(events).toHaveLength(1);
+    expect(events[0].targetMap).toBe('test2');
+    expect(events[0].spawnTarget).toBe('entrance');
+    // Should NOT toggle state
+    expect(obj.components.get('door').params.isOpen).toBe(false);
+    mgr.destroy();
+  });
+
+  it('does not toggle state when acting as portal', () => {
+    const { mgr, obj } = createDoor({ targetMap: 'test2' });
+    obj.onInteract({ x: 0, y: 0 });
+    expect(obj.components.get('door').params.isOpen).toBe(false);
+    mgr.destroy();
+  });
+
+  it('still toggles normally when targetMap is null', () => {
+    const { mgr, obj } = createDoor();
+    obj.onInteract({ x: 0, y: 0 });
+    expect(obj.components.get('door').params.isOpen).toBe(true);
+    mgr.destroy();
+  });
+
   it('emits state changed notification', async () => {
     const { OBJECT_STATE_CHANGED } = await import('../../client/src/core/Events.js');
     const events = [];
