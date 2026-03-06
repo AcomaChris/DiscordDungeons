@@ -9,6 +9,7 @@ import { BugReporter } from './bug-report/BugReporter.js';
 import { PlayerDebugPanel } from './debug/PlayerDebugPanel.js';
 import { WorldDebugOverlay } from './debug/WorldDebugOverlay.js';
 import { BehaviorEnginePanel } from './behavior-engine/BehaviorEnginePanel.js';
+import { StateDisplayPanel } from './debug/StateDisplayPanel.js';
 import { BRAND_TITLE } from './core/BrandConfig.js';
 import { installConsoleCapture } from './bug-report/ConsoleCapture.js';
 
@@ -29,6 +30,12 @@ const worldDebug = new WorldDebugOverlay();
 const worldDebugBtn = bugReporter.addMenuItem('World Debug', () => {
   worldDebug.toggle();
   worldDebugBtn.textContent = worldDebug.active ? 'World Debug \u2713' : 'World Debug';
+});
+
+const statePanel = new StateDisplayPanel();
+const statePanelBtn = bugReporter.addMenuItem('Show State', () => {
+  statePanel.toggle();
+  statePanelBtn.textContent = statePanel.active ? 'Show State \u2713' : 'Show State';
 });
 
 const behaviorPanel = new BehaviorEnginePanel();

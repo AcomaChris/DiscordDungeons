@@ -263,6 +263,7 @@ export class GameScene extends Phaser.Scene {
     const kbSnap = this.inputManager.getSnapshot();
     const touchSnap = this.touchManager.getSnapshot();
     const merged = mergeInputSnapshots(kbSnap, touchSnap);
+    this._lastInput = merged;
     eventBus.emit(INPUT_ACTION, merged);
 
     // Tile animations — advance frame timers and swap indices
