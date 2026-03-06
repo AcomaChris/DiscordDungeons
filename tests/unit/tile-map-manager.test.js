@@ -45,10 +45,14 @@ function createMockScene(tilemap) {
     make: {
       tilemap: vi.fn(() => tilemap),
     },
+    textures: {
+      get: vi.fn(() => ({ key: 'test-tiles', source: [{ glTexture: {} }] })),
+    },
     add: {
       sprite: vi.fn(() => ({
         setDepth: vi.fn(),
         destroy: vi.fn(),
+        frame: { source: {} },
       })),
     },
   };
@@ -128,7 +132,7 @@ describe('TileMapManager', () => {
     const depthCalls = [];
     const scene = createMockScene(tilemap);
     scene.add.sprite = vi.fn(() => {
-      const mockSprite = { setDepth: vi.fn((d) => depthCalls.push(d)), destroy: vi.fn() };
+      const mockSprite = { setDepth: vi.fn((d) => depthCalls.push(d)), destroy: vi.fn(), frame: { source: {} } };
       return mockSprite;
     });
 

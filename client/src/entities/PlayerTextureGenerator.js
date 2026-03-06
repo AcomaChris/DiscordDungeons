@@ -60,4 +60,16 @@ export function generatePlayerTextures(scene, color, prefix) {
   gfx.generateTexture(`${prefix}-up`, w, h);
 
   gfx.destroy();
+
+  // Validate textures were created — log if any are missing or have null WebGL source
+  for (const dir of ['right', 'left', 'down', 'up']) {
+    const key = `${prefix}-${dir}`;
+    const tex = scene.textures.get(key);
+    if (!tex || tex.key === '__MISSING') {
+      console.error(`[PlayerTextureGenerator] Failed to generate texture: ${key}`);
+    } else if (tex.source[0] && !tex.source[0].glTexture && scene.renderer?.type === 2) {
+      // Type 2 = WEBGL; source exists but glTexture is null — texture upload failed
+      console.error(`[PlayerTextureGenerator] Texture "${key}" has null glTexture — WebGL upload failed`);
+    }
+  }
 }

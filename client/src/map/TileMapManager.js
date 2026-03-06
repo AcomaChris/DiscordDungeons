@@ -127,12 +127,28 @@ export class TileMapManager {
         if (tile.index <= 0) return;
 
         const { tilesetKey, frame, firstgid } = this._resolveTile(tile.index);
+
+        // Guard: skip tiles whose tileset texture doesn't exist or frame is invalid
+        const tex = this.scene.textures.get(tilesetKey);
+        if (!tex || tex.key === '__MISSING') {
+          console.warn(`[TileMapManager] Missing texture "${tilesetKey}" for tile GID ${tile.index} on layer "${layerName}"`);
+          return;
+        }
+
         const sprite = this.scene.add.sprite(
           tile.pixelX + tile.width / 2,
           tile.pixelY + tile.height / 2,
           tilesetKey,
           frame,
         );
+
+        // Guard: verify the sprite's frame source is valid (prevents glTexture null crash)
+        if (!sprite.frame || !sprite.frame.source) {
+          console.warn(`[TileMapManager] Invalid frame ${frame} in "${tilesetKey}" for tile GID ${tile.index}`);
+          sprite.destroy();
+          return;
+        }
+
         sprite.setDepth(tile.pixelY + tileHeight);
         // AGENT: TileAnimator reads _tileFirstgid to reconstruct GID from local frame
         sprite._tileFirstgid = firstgid;
