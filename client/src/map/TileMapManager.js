@@ -16,6 +16,8 @@ const LAYER_CONFIG = [
   { name: 'Ground', depth: 0 },
   { name: 'GroundDecor', depth: 1 },
   { name: 'Walls', depth: 2 },
+  { name: 'Furniture', depth: 2 },
+  { name: 'Characters', depth: 2 },
   { name: 'WallTops', depth: DEPTH_ABOVE_PLAYER },
   { name: 'Overlay', depth: DEPTH_ABOVE_PLAYER + 1 },
 ];
@@ -113,7 +115,7 @@ export class TileMapManager {
     this.wallSprites = [];
     const tileHeight = this.tilemap.tileHeight;
 
-    for (const layerName of ['Walls', 'WallTops']) {
+    for (const layerName of ['Walls', 'Furniture', 'Characters', 'WallTops']) {
       const layer = this.layers[layerName];
       if (!layer) continue;
 
