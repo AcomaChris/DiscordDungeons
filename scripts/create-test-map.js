@@ -245,6 +245,30 @@ function generateObjectLayer() {
           ]) },
         ],
       },
+      // Scripted object — Lua script that logs on interact
+      {
+        id: 5,
+        name: 'test_script',
+        type: 'script',
+        x: 11 * TILE,
+        y: 16 * TILE,
+        width: TILE,
+        height: TILE,
+        visible: true,
+        properties: [
+          { name: '__components', type: 'string', value: JSON.stringify([
+            { id: 'script', trigger: 'interact', code: [
+              'function on_interact()',
+              '  log("Script object interacted! ID:", self.id)',
+              '  local count = self.get("interactCount") or 0',
+              '  count = count + 1',
+              '  self.set("interactCount", count)',
+              '  log("Interact count:", count)',
+              'end',
+            ].join('\n') },
+          ]) },
+        ],
+      },
     ],
     draworder: 'topdown',
   };
@@ -271,7 +295,7 @@ function buildMap() {
     infinite: false,
     layers,
     nextlayerid: layers.length + 1,
-    nextobjectid: 5,
+    nextobjectid: 6,
     orientation: 'orthogonal',
     renderorder: 'right-down',
     tiledversion: '1.11.2',

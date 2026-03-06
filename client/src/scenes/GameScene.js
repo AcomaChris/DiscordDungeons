@@ -25,6 +25,8 @@ import authManager from '../auth/AuthManager.js';
 import { ObjectManager } from '../objects/ObjectManager.js';
 import { InteractionManager } from '../objects/InteractionManager.js';
 import objectStateStore from '../objects/ObjectStateStore.js';
+import luaEngine from '../scripting/LuaEngine.js';
+import { injectStandardBindings } from '../scripting/LuaBindings.js';
 
 // --- GameScene ---
 // Orchestrator: loads tilemap, creates player, wires input + network.
@@ -67,6 +69,10 @@ export class GameScene extends Phaser.Scene {
     objectStateStore.restoreAll(this.objectManager);
     this.objectManager.createVisuals(this);
     console.log(`[GameScene] Loaded ${this.objectManager.size} interactive objects from map`);
+
+    // --- Lua Scripting ---
+    // Init is async — scripts compile in background, ready before player can interact
+    this._initLuaScripting();
 
     // --- Player ---
     const spawn = this.tileMapManager.spawnPoint;
@@ -133,6 +139,26 @@ export class GameScene extends Phaser.Scene {
     // --- Network ---
     this._subscribeEvents();
     this._connectNetwork();
+  }
+
+  // --- Lua Scripting ---
+
+  async _initLuaScripting() {
+    await luaEngine.init();
+    if (!luaEngine.isReady) return;
+
+    this._luaBindings = injectStandardBindings(luaEngine, this.objectManager);
+
+    // Wire bindings into ScriptComponents and run their async init
+    for (const obj of this.objectManager.all) {
+      const scriptComp = obj.components.get('script');
+      if (scriptComp) {
+        scriptComp._bindings = this._luaBindings;
+        await scriptComp.init();
+      }
+    }
+
+    console.log('[GameScene] Lua scripting initialized');
   }
 
   // --- Camera ---
@@ -248,6 +274,8 @@ export class GameScene extends Phaser.Scene {
     eventBus.off(OBJECT_STATE_CHANGED, this._onObjectStateChanged);
 
     if (this.networkManager) this.networkManager.disconnect();
+    if (this._luaBindings?.timer) this._luaBindings.timer.clearAll();
+    luaEngine.destroy();
     objectStateStore.saveAll(this.objectManager);
     this.interactionManager.destroy();
     this.objectManager.destroy();

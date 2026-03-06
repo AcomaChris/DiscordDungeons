@@ -120,6 +120,18 @@ export const COMPONENT_DEFS = {
     },
   },
 
+  script: {
+    id: 'script',
+    name: 'Lua Script',
+    category: ComponentCategory.CORE,
+    authority: Authority.CLIENT,
+    persistence: Persistence.VOLATILE,
+    trigger: TriggerType.INTERACT,
+    params: {
+      code: '',
+    },
+  },
+
   // --- Wave 3: Effects ---
 
   light: {

@@ -4,6 +4,18 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-05 — Phase 4 Stage 3: Lua Scripting with Wasmoon (v0.31.0)
+
+- **Wasmoon over Fengari**: Chose Wasmoon (Lua 5.4 via WebAssembly, actively maintained) over fengari-web (unmaintained since 2018). ~500KB bundle addition but real Lua 5.4 support.
+- **LuaEngine** (`client/src/scripting/LuaEngine.js`): Singleton wrapper around Wasmoon — async WASM init, doString, global injection, graceful error handling. One engine shared per scene.
+- **LuaBindings** (`client/src/scripting/LuaBindings.js`): Game API injected into Lua — `self` (object state/emit), `world` (spatial queries), `timer` (delayed callbacks), `log`. Context-specific `self` set before each handler call.
+- **ScriptComponent** (`client/src/scripting/ScriptComponent.js`): Component subclass with Lua lifecycle handlers (`on_init`, `on_interact`, `on_update`, `on_event`, `on_touch`, `on_step`). Scripts wrapped in unique function scopes for namespace isolation. Self-registers with ComponentRegistry.
+- **Key gotcha**: Wasmoon maps JS `null` → Lua truthy userdata, but JS `undefined` → Lua `nil`. All "not found" returns must use `undefined`.
+- **Script component def** added to ComponentDefs.js. Test map has a scripted object that counts interactions via Lua.
+- 865 tests across 63 files, all passing. 36 new tests (LuaEngine: 14, LuaBindings: 11, ScriptComponent: 11).
+
+---
+
 ## 2026-03-03 — Map Editor: Complete Toolset + Export/Import (v0.26.2)
 
 **Commits:** 1cea19d → 98a9ae1 (9 commits)

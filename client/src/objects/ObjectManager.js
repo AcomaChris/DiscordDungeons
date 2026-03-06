@@ -10,6 +10,7 @@ import { TILE_SIZE, DEPTH_ABOVE_PLAYER } from '../core/Constants.js';
 import './components/InteractableComponent.js';
 import './components/DoorComponent.js';
 import './components/ContainerComponent.js';
+import '../scripting/ScriptComponent.js';
 
 // Debug colors per object type — distinct enough to tell apart at a glance
 const TYPE_COLORS = {
@@ -19,6 +20,7 @@ const TYPE_COLORS = {
   lever: 0xcc6644,
   trap: 0xcc4444,
   npc: 0x44cc66,
+  script: 0xcc44cc,
 };
 const DEFAULT_COLOR = 0x999999;
 

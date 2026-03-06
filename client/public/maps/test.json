@@ -4363,13 +4363,30 @@
               "value": "[{\"id\":\"interactable\",\"promptText\":\"Read Sign\"}]"
             }
           ]
+        },
+        {
+          "id": 5,
+          "name": "test_script",
+          "type": "script",
+          "x": 176,
+          "y": 256,
+          "width": 16,
+          "height": 16,
+          "visible": true,
+          "properties": [
+            {
+              "name": "__components",
+              "type": "string",
+              "value": "[{\"id\":\"script\",\"trigger\":\"interact\",\"code\":\"function on_interact()\\n  log(\\\"Script object interacted! ID:\\\", self.id)\\n  local count = self.get(\\\"interactCount\\\") or 0\\n  count = count + 1\\n  self.set(\\\"interactCount\\\", count)\\n  log(\\\"Interact count:\\\", count)\\nend\"}]"
+            }
+          ]
         }
       ],
       "draworder": "topdown"
     }
   ],
   "nextlayerid": 9,
-  "nextobjectid": 5,
+  "nextobjectid": 6,
   "orientation": "orthogonal",
   "renderorder": "right-down",
   "tiledversion": "1.11.2",
