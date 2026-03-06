@@ -11,6 +11,7 @@ import {
   validateObjectDef,
 } from '../map/object-def-schema.js';
 import { TILE_SURFACES } from '../map/tile-metadata-schema.js';
+import { COMPONENT_DEFS, TriggerType } from '../objects/ComponentDefs.js';
 
 const TILE_SIZE = 16;
 
@@ -35,7 +36,7 @@ export class ObjectEditorProperties {
     this._collapsed = {
       basic: false, grid: false, rendering: false,
       colliders: false, nodes: false,
-      parts: true, wfc: true,
+      parts: true, wfc: true, components: true,
     };
   }
 
@@ -86,6 +87,7 @@ export class ObjectEditorProperties {
     this._renderRenderingSection(def);
     this._renderCollidersSection(def);
     this._renderNodesSection(def);
+    this._renderComponentsSection(def);
     this._renderPartsSection(def);
     this._renderWfcSection(def);
     this._renderValidation(def);
@@ -584,6 +586,171 @@ export class ObjectEditorProperties {
   _emitNodeField(nodes, index, field, value) {
     const updated = nodes.map((n, i) => i === index ? { ...n, [field]: value } : n);
     this._emitChange('nodes', updated);
+  }
+
+  // --- Section: Components ---
+
+  _renderComponentsSection(def) {
+    const components = def.components || [];
+    const { header, body } = this._makeSection('components', 'Components', String(components.length));
+
+    // Add component dropdown
+    const addRow = document.createElement('div');
+    addRow.className = 'inline-fields';
+
+    const availableIds = Object.keys(COMPONENT_DEFS)
+      .filter(id => !components.some(c => c.id === id));
+
+    const select = document.createElement('select');
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = '— Select component —';
+    select.appendChild(placeholder);
+    for (const id of availableIds) {
+      const opt = document.createElement('option');
+      opt.value = id;
+      opt.textContent = `${COMPONENT_DEFS[id].name} (${COMPONENT_DEFS[id].category})`;
+      select.appendChild(opt);
+    }
+    addRow.appendChild(select);
+
+    const addBtn = this._makeBtn('+ Add', 'btn', () => {
+      if (!select.value) return;
+      const compDef = COMPONENT_DEFS[select.value];
+      const newComp = { id: select.value, ...structuredClone(compDef.params) };
+      if (compDef.trigger !== TriggerType.INTERACT) {
+        newComp.trigger = compDef.trigger;
+      }
+      this._emitChange('components', [...components, newComp]);
+    }, 'Add selected component to this object');
+    addRow.appendChild(addBtn);
+    body.appendChild(addRow);
+
+    for (let i = 0; i < components.length; i++) {
+      body.appendChild(this._makeComponentCard(components, i));
+    }
+
+    this.panel.appendChild(header);
+    this.panel.appendChild(body);
+  }
+
+  _makeComponentCard(components, index) {
+    const comp = components[index];
+    const compDef = COMPONENT_DEFS[comp.id];
+    const card = document.createElement('div');
+    card.className = 'item-card';
+
+    // Header
+    const cardHeader = document.createElement('div');
+    cardHeader.className = 'item-card-header';
+
+    const titleRow = document.createElement('span');
+    titleRow.className = 'card-title';
+    titleRow.textContent = compDef ? compDef.name : comp.id;
+
+    if (compDef) {
+      const badge = document.createElement('span');
+      badge.className = 'section-count';
+      badge.textContent = compDef.category;
+      badge.style.marginLeft = '6px';
+      titleRow.appendChild(badge);
+    }
+    cardHeader.appendChild(titleRow);
+
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'remove-btn';
+    removeBtn.textContent = 'Remove';
+    removeBtn.title = 'Remove this component';
+    removeBtn.addEventListener('click', () => {
+      const updated = components.filter((_, j) => j !== index);
+      this._emitChange('components', updated);
+    });
+    cardHeader.appendChild(removeBtn);
+    card.appendChild(cardHeader);
+
+    // Persistence badge (read-only info)
+    if (compDef) {
+      const info = document.createElement('div');
+      info.style.cssText = 'font-size:0.75rem;color:#7a7aaa;margin-bottom:4px';
+      info.textContent = `Persistence: ${compDef.persistence} · Authority: ${compDef.authority}`;
+      card.appendChild(info);
+    }
+
+    // Trigger select
+    const triggerOptions = Object.values(TriggerType);
+    const currentTrigger = comp.trigger || (compDef ? compDef.trigger : 'interact');
+    card.appendChild(this._makeSelect('Trigger', triggerOptions, currentTrigger, (val) => {
+      this._emitComponentField(components, index, 'trigger', val);
+    }, 'When this component activates'));
+
+    // Dynamic param editors from the component def
+    if (compDef) {
+      for (const [key, defaultVal] of Object.entries(compDef.params)) {
+        const currentVal = comp[key] !== undefined ? comp[key] : defaultVal;
+        card.appendChild(this._makeComponentParamEditor(
+          components, index, key, currentVal, defaultVal,
+        ));
+      }
+    }
+
+    return card;
+  }
+
+  _makeComponentParamEditor(components, index, key, value, defaultVal) {
+    const type = typeof defaultVal;
+
+    if (type === 'boolean') {
+      return this._makeCheckbox(key, !!value, (val) => {
+        this._emitComponentField(components, index, key, val);
+      }, `Component param: ${key}`);
+    }
+
+    if (type === 'number') {
+      return this._makeNumberInput(key, value ?? 0, (val) => {
+        this._emitComponentField(components, index, key, val);
+      }, undefined, undefined, undefined, `Component param: ${key}`);
+    }
+
+    if (type === 'string') {
+      // Multi-line textarea for code param
+      if (key === 'code') {
+        return this._makeTextarea(key, value || '', (val) => {
+          this._emitComponentField(components, index, key, val);
+        }, 'Lua script code');
+      }
+      return this._makeTextInput(key, value || '', (val) => {
+        this._emitComponentField(components, index, key, val);
+      }, false, `Component param: ${key}`);
+    }
+
+    if (Array.isArray(defaultVal)) {
+      // JSON textarea for array params (items, drops, lootTable)
+      return this._makeTextarea(key, JSON.stringify(value || [], null, 2), (val) => {
+        try {
+          const parsed = JSON.parse(val);
+          this._emitComponentField(components, index, key, parsed);
+        } catch (_e) {
+          // Invalid JSON — keep current value
+        }
+      }, `JSON array for ${key}`);
+    }
+
+    // null default — text input for optional references (lockId, linkedEvent, etc.)
+    if (defaultVal === null) {
+      return this._makeTextInput(key, value || '', (val) => {
+        this._emitComponentField(components, index, key, val || null);
+      }, false, `Component param: ${key} (optional)`);
+    }
+
+    // Fallback: text input
+    return this._makeTextInput(key, String(value ?? ''), (val) => {
+      this._emitComponentField(components, index, key, val);
+    }, false, `Component param: ${key}`);
+  }
+
+  _emitComponentField(components, index, field, value) {
+    const updated = components.map((c, i) => i === index ? { ...c, [field]: value } : c);
+    this._emitChange('components', updated);
   }
 
   // --- Section: Parts ---

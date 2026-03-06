@@ -3,6 +3,8 @@
 // connectivity, nodes, and WFC data. Shared between editor tools and runtime.
 // AGENT: Keep enums in sync with bootstrap-object-defs.js and any future editor.
 
+import { COMPONENT_DEFS } from '../objects/ComponentDefs.js';
+
 export const OBJECT_CATEGORIES = [
   'furniture', 'structure', 'container', 'decoration',
   'lighting', 'nature', 'effect',
@@ -169,6 +171,33 @@ export function validateObjectDef(def) {
   if (def.rendering) {
     if (def.rendering.depthMode && !DEPTH_MODES.includes(def.rendering.depthMode)) {
       errors.push(`rendering.depthMode must be one of: ${DEPTH_MODES.join(', ')}`);
+    }
+  }
+
+  // --- Components (optional) ---
+  if (def.components != null) {
+    if (!Array.isArray(def.components)) {
+      errors.push('components must be an array');
+    } else {
+      const seen = new Set();
+      for (let i = 0; i < def.components.length; i++) {
+        const comp = def.components[i];
+        if (!comp || typeof comp !== 'object') {
+          errors.push(`components[${i}] must be an object`);
+          continue;
+        }
+        if (!comp.id || typeof comp.id !== 'string') {
+          errors.push(`components[${i}].id is required and must be a string`);
+          continue;
+        }
+        if (!COMPONENT_DEFS[comp.id]) {
+          errors.push(`components[${i}].id "${comp.id}" is not a known component type`);
+        }
+        if (seen.has(comp.id)) {
+          errors.push(`components[${i}].id "${comp.id}" is duplicated`);
+        }
+        seen.add(comp.id);
+      }
     }
   }
 

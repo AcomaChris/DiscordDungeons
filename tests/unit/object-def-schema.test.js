@@ -333,6 +333,67 @@ describe('object-def-schema', () => {
     });
   });
 
+  // --- Validation: components field ---
+  describe('validateObjectDef — components', () => {
+    it('accepts object with no components field', () => {
+      const result = schema.validateObjectDef(makeValidObject());
+      expect(result.valid).toBe(true);
+    });
+
+    it('accepts valid components array', () => {
+      const result = schema.validateObjectDef(makeValidObject({
+        components: [
+          { id: 'door', isOpen: false },
+          { id: 'interactable', promptText: 'Open' },
+        ],
+      }));
+      expect(result.valid).toBe(true);
+    });
+
+    it('rejects non-array components', () => {
+      const result = schema.validateObjectDef(makeValidObject({
+        components: 'not-an-array',
+      }));
+      expect(result.valid).toBe(false);
+      expect(result.errors.some(e => e.includes('components') && e.includes('array'))).toBe(true);
+    });
+
+    it('rejects component without id', () => {
+      const result = schema.validateObjectDef(makeValidObject({
+        components: [{ promptText: 'Open' }],
+      }));
+      expect(result.valid).toBe(false);
+      expect(result.errors.some(e => e.includes('id') && e.includes('required'))).toBe(true);
+    });
+
+    it('rejects unknown component id', () => {
+      const result = schema.validateObjectDef(makeValidObject({
+        components: [{ id: 'nonexistent_comp' }],
+      }));
+      expect(result.valid).toBe(false);
+      expect(result.errors.some(e => e.includes('nonexistent_comp') && e.includes('not a known'))).toBe(true);
+    });
+
+    it('rejects duplicate component ids', () => {
+      const result = schema.validateObjectDef(makeValidObject({
+        components: [
+          { id: 'door' },
+          { id: 'door' },
+        ],
+      }));
+      expect(result.valid).toBe(false);
+      expect(result.errors.some(e => e.includes('door') && e.includes('duplicated'))).toBe(true);
+    });
+
+    it('rejects non-object component entry', () => {
+      const result = schema.validateObjectDef(makeValidObject({
+        components: [null],
+      }));
+      expect(result.valid).toBe(false);
+      expect(result.errors.some(e => e.includes('components[0]') && e.includes('object'))).toBe(true);
+    });
+  });
+
   // --- Validation: animation field ---
   describe('validateObjectDef — animation', () => {
     it('accepts valid animation field', () => {
