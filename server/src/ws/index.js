@@ -9,7 +9,8 @@ const { WebSocketServer } = require('ws');
 
 const PORT = process.env.WS_PORT || 3001;
 const BROADCAST_RATE = 100; // ms (10Hz)
-const CORS_ORIGIN = process.env.CORS_ORIGIN || '*';
+// Supports comma-separated origins (e.g. "https://discorddungeons.com,https://raveroyale.com")
+const CORS_ORIGINS = (process.env.CORS_ORIGIN || '*').split(',').map(s => s.trim());
 const GITHUB_TOKEN = process.env.GITHUB_API_TOKEN || '';
 const GITHUB_REPO = 'AcomaChris/DiscordDungeons';
 const GITHUB_API = 'https://api.github.com';
@@ -38,7 +39,11 @@ function readBody(req) {
 // --- HTTP Request Handler ---
 
 async function handleHttpRequest(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', CORS_ORIGIN);
+  // Reflect the request origin if it's in the allowlist (or allow all with '*')
+  const reqOrigin = req.headers.origin || '';
+  const allowOrigin = CORS_ORIGINS.includes('*') ? '*'
+    : CORS_ORIGINS.includes(reqOrigin) ? reqOrigin : CORS_ORIGINS[0];
+  res.setHeader('Access-Control-Allow-Origin', allowOrigin);
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -106,7 +111,8 @@ async function handleDiscordAuth(req, res) {
     });
 
     if (!tokenRes.ok) {
-      console.error('[auth] Token exchange failed:', tokenRes.status);
+      const errBody = await tokenRes.text();
+      console.error('[auth] Token exchange failed:', tokenRes.status, 'redirectUri:', redirectUri, 'body:', errBody);
       res.writeHead(401, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Token exchange failed' }));
       return;

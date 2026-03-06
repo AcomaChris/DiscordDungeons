@@ -10,4 +10,4 @@ services:
       - DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
       - GITHUB_API_TOKEN=${GITHUB_API_TOKEN}
       - BEHAVIOR_ENGINE_API_KEY=${BEHAVIOR_ENGINE_API_KEY}
-      - CORS_ORIGIN=https://discorddungeons.com
+      - CORS_ORIGIN=https://discorddungeons.com,https://raveroyale.com
