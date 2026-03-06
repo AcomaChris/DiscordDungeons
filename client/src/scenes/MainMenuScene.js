@@ -95,6 +95,7 @@ export class MainMenuScene extends Phaser.Scene {
     const input = document.createElement('input');
     input.type = 'text';
     input.placeholder = 'Enter your name';
+    input.value = 'Guest';
     input.maxLength = 20;
 
     const goBtn = document.createElement('button');
