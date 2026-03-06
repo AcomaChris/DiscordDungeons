@@ -70,6 +70,7 @@ export class NPC {
 
     // --- Phaser hooks ---
     this._preUpdate = () => {
+      if (!this.sprite?.body) return;
       if (this.z !== 0 || this._isJumping) {
         this.sprite.y = this._groundY;
       }
@@ -77,6 +78,7 @@ export class NPC {
     scene.events.on('preupdate', this._preUpdate);
 
     this._postUpdate = () => {
+      if (!this.sprite?.body) return;
       this._syncGroundPosition();
       this._updateDepth();
 
@@ -210,6 +212,9 @@ export class NPC {
     this.speechBubble.destroy();
     if (this._shadow) this._shadow.destroy();
     this.nameLabel.destroy();
+    if (this.sprite?.body) {
+      this.scene.physics.world.remove(this.sprite.body);
+    }
     this.sprite.destroy();
   }
 }

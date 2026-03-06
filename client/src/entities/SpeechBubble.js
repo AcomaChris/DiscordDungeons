@@ -93,7 +93,7 @@ export class SpeechBubble {
   }
 
   _updatePosition(x, y) {
-    if (!this._text) return;
+    if (!this._text || !this._bg) return;
 
     this._text.setPosition(x, y);
 

@@ -18,6 +18,7 @@ function createMockScene() {
   const eventHandlers = {};
   return {
     physics: {
+      world: { remove: vi.fn() },
       add: {
         sprite: vi.fn((_x, _y, _tex) => ({
           x: _x, y: _y, depth: 0,

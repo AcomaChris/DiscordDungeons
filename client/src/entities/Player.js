@@ -61,6 +61,7 @@ export class Player {
     // Restore ground-plane Y before physics so collisions work on the
     // floor plane, not the visually offset sprite position.
     this._preUpdate = () => {
+      if (!this.sprite?.body) return;
       if (this.z !== 0 || this._isJumping) {
         this.sprite.y = this._groundY;
       }
@@ -73,6 +74,7 @@ export class Player {
     // because body.postUpdate() fires on POST_UPDATE (after scene.update()).
     // Reading sprite.y in scene.update() gives the stale preupdate value.
     this._postUpdate = () => {
+      if (!this.sprite?.body) return;
       this.syncGroundPosition();
       this.updateDepth();
       this.nameLabel.setPosition(
