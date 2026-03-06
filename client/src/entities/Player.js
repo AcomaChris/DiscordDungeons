@@ -333,6 +333,11 @@ export class Player {
   destroy() {
     this.scene.events.off('preupdate', this._preUpdate);
     this.scene.events.off('postupdate', this._postUpdate);
+    // Remove body from physics world first so Phaser doesn't run
+    // Body._postUpdate on a stale body during the same frame.
+    if (this.sprite?.body) {
+      this.scene.physics.world.remove(this.sprite.body);
+    }
     if (this._shadow) this._shadow.destroy();
     this.sprite.destroy();
     this.nameLabel.destroy();

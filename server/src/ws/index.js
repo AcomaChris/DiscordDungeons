@@ -235,7 +235,7 @@ async function handleFileIssue(req, res) {
   try {
     const body = await readBody(req);
     const {
-      title, description, priority, screenshot,
+      title, description, priority, screenshot, consoleLogs,
       commit, version, buildTime,
       reporter, discordId, platform, device, resolution,
     } = JSON.parse(body);
@@ -258,6 +258,12 @@ async function handleFileIssue(req, res) {
     const bodyParts = [];
     if (description) bodyParts.push(description);
     if (screenshotUrl) bodyParts.push(`\n### Screenshot\n\n![Screenshot](${screenshotUrl})`);
+
+    if (consoleLogs) {
+      // Truncate to avoid hitting GitHub's body size limit (~65KB)
+      const trimmed = consoleLogs.length > 50000 ? consoleLogs.slice(-50000) : consoleLogs;
+      bodyParts.push(`\n### Console Log\n\n<details>\n<summary>Console output (click to expand)</summary>\n\n\`\`\`\n${trimmed}\n\`\`\`\n\n</details>`);
+    }
 
     bodyParts.push('\n### Metadata');
     if (reporter) bodyParts.push(`- **Reported by**: ${reporter}${discordId ? ` (${discordId})` : ''}`);

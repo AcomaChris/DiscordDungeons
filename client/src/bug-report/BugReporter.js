@@ -2,6 +2,7 @@ import './bug-report.css';
 import { acquireInputFocus, releaseInputFocus } from '../core/InputContext.js';
 import authManager from '../auth/AuthManager.js';
 import { isDiscordActivity } from '../discord/activitySdk.js';
+import { getConsoleLogs } from './ConsoleCapture.js';
 
 // --- Bug Reporter ---
 // Settings cog with "File Issue" option. Opens a dialog to file GitHub issues
@@ -121,6 +122,10 @@ export class BugReporter {
         <input type="checkbox" data-field="screenshot" checked />
         Include screenshot
       </label>
+      <label class="bug-report-checkbox-label">
+        <input type="checkbox" data-field="consoleLogs" checked />
+        Include console log
+      </label>
       <div class="bug-report-preview-container">
         <img class="bug-report-preview" alt="Screenshot preview" />
       </div>
@@ -196,6 +201,7 @@ export class BugReporter {
     const description = this._dialog.querySelector('[data-field="description"]').value.trim();
     const priority = this._dialog.querySelector('[data-field="priority"]').value;
     const includeScreenshot = this._dialog.querySelector('[data-field="screenshot"]').checked;
+    const includeConsoleLogs = this._dialog.querySelector('[data-field="consoleLogs"]').checked;
 
     if (!title) {
       this._showStatus('Title is required.', 'error');
@@ -211,6 +217,9 @@ export class BugReporter {
       const body = { title, description, priority };
       if (includeScreenshot && this._screenshotData) {
         body.screenshot = this._screenshotData;
+      }
+      if (includeConsoleLogs) {
+        body.consoleLogs = getConsoleLogs();
       }
 
       // Include build metadata and environment info for triage
