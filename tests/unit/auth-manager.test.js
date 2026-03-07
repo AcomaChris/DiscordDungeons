@@ -15,21 +15,21 @@ describe('AuthManager', () => {
     expect(auth.identity).toBeNull();
   });
 
-  it('sets guest identity', () => {
-    auth.setGuestIdentity('TestGuest');
+  it('sets guest identity', async () => {
+    await auth.setGuestIdentity('TestGuest');
     expect(auth.isAuthenticated).toBe(true);
     expect(auth.identity.playerName).toBe('TestGuest');
     expect(auth.identity.type).toBe('guest');
     expect(auth.identity.avatarUrl).toBeNull();
   });
 
-  it('defaults guest name to Guest when empty', () => {
-    auth.setGuestIdentity('');
+  it('defaults guest name to Guest when empty', async () => {
+    await auth.setGuestIdentity('');
     expect(auth.identity.playerName).toBe('Guest');
   });
 
-  it('restores identity from localStorage', () => {
-    auth.setGuestIdentity('Stored');
+  it('restores identity from localStorage', async () => {
+    await auth.setGuestIdentity('Stored');
     const auth2 = new AuthManager();
     expect(auth2.restore()).toBe(true);
     expect(auth2.identity.playerName).toBe('Stored');

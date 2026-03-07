@@ -148,6 +148,7 @@ describe('NetworkManager', () => {
       type: 'identify',
       playerName: 'TestUser',
       avatarUrl: null,
+      sessionToken: null,
     });
     nm.disconnect();
   });

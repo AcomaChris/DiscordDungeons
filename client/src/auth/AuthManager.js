@@ -14,6 +14,7 @@ const DISCORD_CLIENT_ID = import.meta.env.VITE_DISCORD_CLIENT_ID || '';
 const REDIRECT_URI = typeof window !== 'undefined' ? window.location.origin + '/' : (import.meta.env.VITE_REDIRECT_URI || '/');
 
 const STORAGE_KEY = 'dd_player_identity';
+const GUEST_TOKEN_KEY = 'dd_guest_token';
 
 export class AuthManager {
   constructor() {
@@ -47,6 +48,7 @@ export class AuthManager {
         playerName: data.username,
         avatarUrl: data.avatarUrl,
         discordId: data.discordId,
+        sessionToken: data.sessionToken || null,
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this._identity));
       return true;
@@ -80,7 +82,7 @@ export class AuthManager {
   }
 
   // Sets identity from Discord Activity SDK auth (no localStorage — Activity re-auths each launch)
-  setDiscordActivityIdentity(user) {
+  setDiscordActivityIdentity(user, sessionToken) {
     this._identity = {
       type: 'discord',
       playerName: user.global_name || user.username,
@@ -88,21 +90,59 @@ export class AuthManager {
         ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
         : null,
       discordId: user.id,
+      sessionToken: sessionToken || null,
     };
   }
 
-  setGuestIdentity(name) {
+  // Creates or logs into a guest account on the server
+  async setGuestIdentity(name) {
+    const playerName = name || 'Guest';
+    const existingToken = localStorage.getItem(GUEST_TOKEN_KEY);
+
+    try {
+      const res = await fetch(`${AUTH_API_URL}/auth/guest`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ guestToken: existingToken, playerName }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        // Store guestToken for future logins (only returned on creation)
+        if (data.guestToken) {
+          localStorage.setItem(GUEST_TOKEN_KEY, data.guestToken);
+        }
+        this._identity = {
+          type: 'guest',
+          playerName: data.playerName || playerName,
+          avatarUrl: null,
+          discordId: null,
+          sessionToken: data.sessionToken || null,
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(this._identity));
+        return;
+      }
+    } catch (err) {
+      console.warn('[AuthManager] Guest auth API failed, using local-only identity:', err);
+    }
+
+    // Fallback — server unreachable, play offline
     this._identity = {
       type: 'guest',
-      playerName: name || 'Guest',
+      playerName,
       avatarUrl: null,
       discordId: null,
+      sessionToken: null,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(this._identity));
   }
 
   get identity() {
     return this._identity;
+  }
+
+  get sessionToken() {
+    return this._identity?.sessionToken || null;
   }
 
   get isAuthenticated() {

@@ -19,6 +19,12 @@ const BE_API_KEY = process.env.BEHAVIOR_ENGINE_API_KEY || '';
 const BE_API_VERSION = '2025-05-15';
 
 const { PartyManager } = require('./PartyManager.js');
+const { connect: connectDb } = require('./db.js');
+const {
+  createGuestAccount, loginGuest,
+  findOrCreateDiscordAccount, getPlayerBySession,
+  linkGuestToDiscord, sanitizePlayer,
+} = require('./AccountManager.js');
 
 const rooms = new Map();
 const partyManager = new PartyManager();
@@ -48,7 +54,7 @@ async function handleHttpRequest(req, res) {
     : CORS_ORIGINS.includes(reqOrigin) ? reqOrigin : CORS_ORIGINS[0];
   res.setHeader('Access-Control-Allow-Origin', allowOrigin);
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
     res.writeHead(204);
@@ -65,6 +71,24 @@ async function handleHttpRequest(req, res) {
   // Activity SDK token exchange — simpler than /auth/discord (returns raw token)
   if (url.pathname === '/token' && req.method === 'POST') {
     return handleActivityToken(req, res);
+  }
+
+  // --- Account Endpoints ---
+
+  if (url.pathname === '/auth/guest' && req.method === 'POST') {
+    return handleGuestAuth(req, res);
+  }
+
+  if (url.pathname === '/auth/activity' && req.method === 'POST') {
+    return handleActivityAuth(req, res);
+  }
+
+  if (url.pathname === '/auth/link' && req.method === 'POST') {
+    return handleLinkAccount(req, res);
+  }
+
+  if (url.pathname === '/api/player' && req.method === 'GET') {
+    return handleGetPlayer(req, res);
   }
 
   if (url.pathname === '/api/issue' && req.method === 'POST') {
@@ -136,13 +160,22 @@ async function handleDiscordAuth(req, res) {
 
     const user = await userRes.json();
 
+    const playerName = user.global_name || user.username;
+    const avatarUrl = user.avatar
+      ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=64`
+      : null;
+
+    // Create or update MongoDB account
+    const account = await findOrCreateDiscordAccount(user.id, playerName, avatarUrl);
+
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
-      username: user.global_name || user.username,
-      avatarUrl: user.avatar
-        ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=64`
-        : null,
+      username: playerName,
+      avatarUrl,
       discordId: user.id,
+      sessionToken: account.sessionToken,
+      playerId: account.playerId,
+      isNew: account.isNew,
     }));
   } catch (err) {
     console.error('[auth] Error:', err);
@@ -183,6 +216,179 @@ async function handleActivityToken(req, res) {
     res.end(JSON.stringify({ access_token }));
   } catch (err) {
     console.error('[activity-auth] Error:', err);
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Internal server error' }));
+  }
+}
+
+// --- Guest Account Auth ---
+
+async function handleGuestAuth(req, res) {
+  try {
+    const body = await readBody(req);
+    const { guestToken, playerName } = JSON.parse(body);
+
+    // Returning guest — login with existing token
+    if (guestToken) {
+      const result = await loginGuest(guestToken);
+      if (result) {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(result));
+        return;
+      }
+      // Token not found — fall through to create new account
+    }
+
+    // New guest — create account
+    const result = await createGuestAccount(playerName);
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(result));
+  } catch (err) {
+    console.error('[auth/guest] Error:', err);
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Internal server error' }));
+  }
+}
+
+// --- Activity SDK Account Auth ---
+// Called after Activity SDK authenticate() — exchanges access_token for a
+// Discord user profile, then creates/updates the MongoDB account.
+
+async function handleActivityAuth(req, res) {
+  try {
+    const body = await readBody(req);
+    const { accessToken } = JSON.parse(body);
+
+    if (!accessToken) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'accessToken is required' }));
+      return;
+    }
+
+    // Fetch Discord user profile with the access token
+    const userRes = await fetch('https://discord.com/api/users/@me', {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+
+    if (!userRes.ok) {
+      console.error('[auth/activity] User fetch failed:', userRes.status);
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Failed to fetch Discord user' }));
+      return;
+    }
+
+    const user = await userRes.json();
+    const playerName = user.global_name || user.username;
+    const avatarUrl = user.avatar
+      ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=64`
+      : null;
+
+    const account = await findOrCreateDiscordAccount(user.id, playerName, avatarUrl);
+
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({
+      sessionToken: account.sessionToken,
+      playerId: account.playerId,
+      playerName,
+      avatarUrl,
+      discordId: user.id,
+      isNew: account.isNew,
+    }));
+  } catch (err) {
+    console.error('[auth/activity] Error:', err);
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Internal server error' }));
+  }
+}
+
+// --- Guest → Discord Linking ---
+
+async function handleLinkAccount(req, res) {
+  try {
+    const body = await readBody(req);
+    const { guestToken, code, redirectUri } = JSON.parse(body);
+
+    if (!guestToken || !code) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'guestToken and code are required' }));
+      return;
+    }
+
+    // Exchange OAuth code for Discord token
+    const tokenRes = await fetch('https://discord.com/api/oauth2/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        client_id: process.env.DISCORD_CLIENT_ID,
+        client_secret: process.env.DISCORD_CLIENT_SECRET,
+        grant_type: 'authorization_code',
+        code,
+        redirect_uri: redirectUri,
+      }),
+    });
+
+    if (!tokenRes.ok) {
+      console.error('[auth/link] Token exchange failed:', tokenRes.status);
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Token exchange failed' }));
+      return;
+    }
+
+    const { access_token } = await tokenRes.json();
+
+    // Fetch Discord profile
+    const userRes = await fetch('https://discord.com/api/users/@me', {
+      headers: { Authorization: `Bearer ${access_token}` },
+    });
+
+    if (!userRes.ok) {
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Failed to fetch Discord user' }));
+      return;
+    }
+
+    const user = await userRes.json();
+    const playerName = user.global_name || user.username;
+    const avatarUrl = user.avatar
+      ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=64`
+      : null;
+
+    const result = await linkGuestToDiscord(guestToken, user.id, playerName, avatarUrl);
+
+    if (result.error) {
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: result.error }));
+      return;
+    }
+
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(result));
+  } catch (err) {
+    console.error('[auth/link] Error:', err);
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Internal server error' }));
+  }
+}
+
+// --- Player Data Endpoint ---
+// Returns the authenticated player's account data (minus sensitive fields).
+
+async function handleGetPlayer(req, res) {
+  try {
+    const authHeader = req.headers.authorization || '';
+    const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+
+    const player = await getPlayerBySession(token);
+    if (!player) {
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Invalid or expired session' }));
+      return;
+    }
+
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(sanitizePlayer(player)));
+  } catch (err) {
+    console.error('[api/player] Error:', err);
     res.writeHead(500, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ error: 'Internal server error' }));
   }
@@ -576,12 +782,26 @@ wss.on('connection', (ws, req) => {
   }
 
   // --- Message handling ---
-  ws.on('message', (data) => {
+  ws.on('message', async (data) => {
     try {
       const msg = JSON.parse(data);
       if (msg.type === 'identify') {
-        playerData.playerName = sanitizeName(msg.playerName);
-        playerData.avatarUrl = msg.avatarUrl || null;
+        // If client sends a sessionToken, look up the account
+        if (msg.sessionToken) {
+          const account = await getPlayerBySession(msg.sessionToken);
+          if (account) {
+            playerData.playerName = sanitizeName(account.playerName);
+            playerData.avatarUrl = account.avatarUrl || null;
+            playerData.accountId = account._id;
+          } else {
+            // Invalid/expired token — fall back to provided name
+            playerData.playerName = sanitizeName(msg.playerName);
+            playerData.avatarUrl = msg.avatarUrl || null;
+          }
+        } else {
+          playerData.playerName = sanitizeName(msg.playerName);
+          playerData.avatarUrl = msg.avatarUrl || null;
+        }
         // Broadcast identity update to all room members
         for (const [, peer] of room) {
           peer.ws.send(JSON.stringify({
@@ -755,6 +975,16 @@ setInterval(() => {
   }
 }, BROADCAST_RATE);
 
-httpServer.listen(PORT, () => {
-  console.log(`WebSocket + HTTP server running on port ${PORT}`);
+// --- Startup ---
+
+async function start() {
+  await connectDb();
+  httpServer.listen(PORT, () => {
+    console.log(`WebSocket + HTTP server running on port ${PORT}`);
+  });
+}
+
+start().catch((err) => {
+  console.error('[startup] Fatal error:', err);
+  process.exit(1);
 });

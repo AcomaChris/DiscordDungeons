@@ -1,13 +1,28 @@
 services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=discorddungeons
+
   ws-server:
     build: .
     restart: unless-stopped
     ports:
       - "3001:3001"
+    depends_on:
+      - mongo
     environment:
       - WS_PORT=3001
+      - MONGO_URL=mongodb://mongo:27017/discorddungeons
       - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
       - DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
       - GITHUB_API_TOKEN=${GITHUB_API_TOKEN}
       - BEHAVIOR_ENGINE_API_KEY=${BEHAVIOR_ENGINE_API_KEY}
       - CORS_ORIGIN=https://discorddungeons.com,https://raveroyale.com
+      - SESSION_SECRET=${SESSION_SECRET}
+
+volumes:
+  mongo-data:

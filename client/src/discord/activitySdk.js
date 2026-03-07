@@ -44,9 +44,26 @@ export async function setupDiscordActivity() {
   // Authenticate with Discord using the token
   const auth = await discordSdk.commands.authenticate({ access_token });
 
+  // Create/update MongoDB account and get a session token
+  let sessionToken = null;
+  try {
+    const accountRes = await fetch('/api/auth/activity', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ accessToken: access_token }),
+    });
+    if (accountRes.ok) {
+      const accountData = await accountRes.json();
+      sessionToken = accountData.sessionToken;
+    }
+  } catch (err) {
+    console.warn('[ActivitySDK] Account creation failed, continuing without session:', err);
+  }
+
   return {
     user: auth.user,
     channelId: discordSdk.channelId,
+    sessionToken,
   };
 }
 

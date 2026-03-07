@@ -100,9 +100,11 @@ export class MainMenuScene extends Phaser.Scene {
 
     const goBtn = document.createElement('button');
     goBtn.textContent = 'Start Playing';
-    goBtn.addEventListener('click', () => {
+    goBtn.addEventListener('click', async () => {
+      goBtn.disabled = true;
+      goBtn.textContent = 'Connecting...';
       const name = input.value.trim() || 'Guest';
-      authManager.setGuestIdentity(name);
+      await authManager.setGuestIdentity(name);
       this._cleanupLoginUI();
       this._startGame();
     });

@@ -58,6 +58,7 @@ export class NetworkManager {
           type: 'identify',
           playerName: identity.playerName,
           avatarUrl: identity.avatarUrl || null,
+          sessionToken: identity.sessionToken || null,
         }));
       }
 

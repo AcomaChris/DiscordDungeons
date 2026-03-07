@@ -81,7 +81,7 @@ async function boot() {
   if (isDiscordActivity) {
     const result = await setupDiscordActivity();
     if (result) {
-      authManager.setDiscordActivityIdentity(result.user);
+      authManager.setDiscordActivityIdentity(result.user, result.sessionToken);
       authManager.activityChannelId = result.channelId;
     }
   } else {
