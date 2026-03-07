@@ -4,7 +4,7 @@ import globals from 'globals';
 
 export default [
   {
-    ignores: ['dist/', 'assets/', '.claude/'],
+    ignores: ['dist/', 'assets/', '.claude/', 'docs/.vitepress/'],
   },
   js.configs.recommended,
   prettier,
@@ -38,7 +38,7 @@ export default [
   },
   {
     // Build/generation scripts run in Node.js
-    files: ['scripts/**/*.js'],
+    files: ['scripts/**/*.js', 'scripts/**/*.mjs'],
     languageOptions: {
       globals: {
         ...globals.node,

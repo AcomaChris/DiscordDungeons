@@ -8,6 +8,18 @@ import { ENTRY_DOMAIN, BRAND_NAME } from '../core/BrandConfig.js';
 // Live-tweaking panel for player collision, color, and name.
 // Accessed via the cog menu. Changes replicate to all connected players.
 
+// @doc-dev 01:Debug Panel > Player Debug
+// Opens from the **cog menu** (top-right gear icon). Lets you live-edit:
+//
+// - **Collision Body** — adjust hitbox width/height in world pixels
+// - **Character Color** — RGB sliders + color picker (syncs to all players)
+// - **Identity** — edit your player name (syncs to all players)
+// - **Position** — real-time X, Y, Z coordinates (read-only)
+// - **Abilities** — equip/unequip abilities, tweak parameters, view active modifiers
+//
+// Click the game canvas to release input focus (move your character while panel is open).
+// Click the panel to re-acquire focus for typing.
+
 export class PlayerDebugPanel {
   constructor() {
     this._backdrop = null;
