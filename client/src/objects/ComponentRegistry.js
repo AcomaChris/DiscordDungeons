@@ -6,6 +6,14 @@
 import { Component } from './Component.js';
 import { getComponentDef } from './ComponentDefs.js';
 
+// @doc-creator-content 02:Components > Component Registry
+// Central registry that maps component IDs to their class constructors.
+// Components self-register at import time: `componentRegistry.register('door', DoorComponent)`.
+// `create(id, owner, overrides)` instantiates a component by looking up its definition
+// from `ComponentDefs` and its constructor from the registry. If no specific class is
+// registered for an ID, it falls back to the base `Component` class (useful for
+// data-only components that only need params and state, no custom behavior).
+
 class ComponentRegistryClass {
   constructor() {
     // Map<componentId, ComponentClass>

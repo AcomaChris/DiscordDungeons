@@ -3,6 +3,11 @@
 // a drag stroke and commits one PaintTilesCommand on mouseup.
 // Uses Bresenham line interpolation to avoid gaps at fast mouse movement.
 
+// @doc-creator-tools 01:Map Editor > Brush Tool
+// Paint tiles on the active layer. Select a tile from the **Tile Palette**,
+// then click or drag to paint. Handles fast mouse movement without gaps.
+// Shortcut: **B**.
+
 import { BaseTool } from './BaseTool.js';
 import { PaintTilesCommand } from '../CommandStack.js';
 

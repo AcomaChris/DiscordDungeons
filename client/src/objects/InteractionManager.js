@@ -1,3 +1,9 @@
+// @doc-player 04:Objects > Interacting
+// Walk near an interactive object and a **[E] prompt** appears above it.
+// Press `E` (or tap **ACT** on touch) to interact. The default interaction
+// range is **32 pixels**. Some objects like traps and teleporters activate
+// automatically when you **step on** or **touch** them instead.
+
 // --- InteractionManager ---
 // Detects when the player is near interactable objects, shows prompts,
 // and dispatches interactions when the E key is pressed. Also handles

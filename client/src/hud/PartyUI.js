@@ -1,3 +1,9 @@
+// @doc-player 03:Multiplayer > Parties
+// To form a party, open the roster and click **Invite** next to a player's name.
+// They receive a **toast notification** with **Accept** and **Decline** buttons
+// (the invite expires after **30 seconds**). Once in a party, a **party panel**
+// shows the leader and all members. You can **leave** the party at any time.
+
 // --- PartyUI ---
 // Shows party members, handles invite toasts with accept/decline buttons.
 // DOM-based overlay, subscribes to party events via EventBus.

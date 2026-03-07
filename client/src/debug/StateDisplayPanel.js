@@ -1,5 +1,12 @@
 import '../styles/state-display.css';
 
+// @doc-dev 01:Debug Panel > State Display
+// Toggle **Show State** from the cog menu to display a live badge strip at the bottom
+// of the screen. Badges light up for each active player state: **idle**, **moving**,
+// **sprinting**, **jumping**, **mantling**, **floating**, and **interacting**. Multiple
+// states can be active simultaneously (e.g., jumping + floating). A facing direction
+// arrow (▲▼◄►) updates every frame alongside the badges.
+
 // --- State Display Panel ---
 // Floating panel showing the player's current states as live badges.
 // States can be concurrent (e.g., jumping + floating). Toggled from cog menu.

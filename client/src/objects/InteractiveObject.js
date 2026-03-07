@@ -3,6 +3,14 @@
 // Created from map Objects layer data + object definitions.
 // AGENT: Position is in world pixels. Components handle all behavior.
 
+// @doc-creator-content 04:Objects > Interactive Object
+// A placed object in the game world. Positioned at `(x, y)` in world pixels with
+// `width` and `height`. Owns multiple components via `ComponentManager`. Interaction
+// methods (`onInteract`, `onTouch`, `onStep`) dispatch to matching components.
+// Emits events via `emit(eventName, data)` (routed by ObjectEventRouter to connections
+// and the global EventBus). Receives events via `receiveEvent(eventName, data)`.
+// Serializable via `getState()` / `applyState(state)` for persistence and network sync.
+
 import { ComponentManager } from './ComponentManager.js';
 import eventBus from '../core/EventBus.js';
 import { OBJECT_STATE_CHANGED, OBJECT_EVENT, OBJECT_SPAWNED, OBJECT_DESTROYED } from '../core/Events.js';

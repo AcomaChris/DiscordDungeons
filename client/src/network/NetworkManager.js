@@ -17,6 +17,12 @@ import {
 } from '../core/Events.js';
 import { NETWORK_SEND_RATE } from '../core/Constants.js';
 
+// @doc-player 03:Multiplayer > Connecting
+// The game **automatically connects** to the multiplayer server when you join.
+// All players in the same room can see each other move in real time.
+// Each player is assigned a **unique color** so you can tell everyone apart.
+// Player positions sync at **10 updates per second** for smooth movement.
+
 // --- NetworkManager ---
 // WebSocket client for multiplayer state sync.
 // Sends local player state at a fixed rate, receives and distributes remote state via EventBus.

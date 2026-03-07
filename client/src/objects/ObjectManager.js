@@ -3,6 +3,13 @@
 // Provides spatial queries, update loop, and object lifecycle management.
 // AGENT: One instance per GameScene. Created after TileMapManager.create().
 
+// @doc-creator-content 04:Objects > Object Manager
+// Scene-level manager that owns all `InteractiveObject` instances for the current map.
+// `createFromMapData(objectDataList)` parses the Objects layer output from TileMapManager.
+// Spatial queries: `getObjectById(id)`, `getObjectsByType(type)`,
+// `getObjectsInRadius(x, y, radius)` (sorted by distance),
+// `getObjectsInTileRadius(tileX, tileY, tileRadius)`. Access all objects via `.all`.
+
 import { InteractiveObject } from './InteractiveObject.js';
 import { TILE_SIZE, DEPTH_ABOVE_PLAYER } from '../core/Constants.js';
 

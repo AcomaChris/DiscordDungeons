@@ -8,6 +8,15 @@
 import { Component } from '../Component.js';
 import { componentRegistry } from '../ComponentRegistry.js';
 
+// @doc-creator-content 02:Components > Container Component
+// Inventory container with a slot limit. Opens a floating UI panel on interact.
+// On first open, rolls a `lootTable` (if defined) to populate items.
+// Parameters: `items[]` (array of `{ id, name, quantity }`), `maxSlots`, `lootTable`,
+// `promptText`. Loot table entries: `{ id, name, quantity, chance }` where `chance`
+// is 0-1 probability (default 1). Use `takeItem(index)` and `addItem(item)` to
+// modify contents programmatically. Emits `container:opened`, `container:closed`,
+// and `container:itemTaken` events.
+
 export class ContainerComponent extends Component {
   init() {
     this._isOpen = false;

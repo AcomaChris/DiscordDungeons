@@ -2,6 +2,10 @@
 // Paint-bucket tool: BFS flood fill from the clicked tile, replacing all
 // contiguous tiles that share the same GID with the selected tile.
 
+// @doc-creator-tools 01:Map Editor > Flood Fill
+// Fill connected tiles of the same type with the selected tile.
+// Click any tile to flood-fill outward from that point. Shortcut: **G**.
+
 import { BaseTool } from './BaseTool.js';
 import { PaintTilesCommand } from '../CommandStack.js';
 

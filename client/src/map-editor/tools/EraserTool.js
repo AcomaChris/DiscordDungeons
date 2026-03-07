@@ -2,6 +2,10 @@
 // Erases tiles on the active layer (sets GID to 0).
 // Same accumulation pattern as BrushTool.
 
+// @doc-creator-tools 01:Map Editor > Eraser Tool
+// Remove tiles from the active layer. Click or drag to erase.
+// Shortcut: **E**.
+
 import { BaseTool } from './BaseTool.js';
 import { PaintTilesCommand } from '../CommandStack.js';
 import { bresenham } from './BrushTool.js';

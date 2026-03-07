@@ -2,6 +2,12 @@
 // Orchestrator for the map editor. Creates components, wires callbacks,
 // and manages global editor state.
 
+// @doc-creator-tools 01:Map Editor > Overview
+// The map editor creates **Tiled-compatible JSON maps** for use in the game.
+// Access it via the cog menu → **Map Editor**, or directly at `/map-editor.html`.
+// Supports multiple layers, object placement, undo/redo, and import/export.
+// Maps follow the standard layer convention (Ground, GroundDecor, Walls, WallTops, Overlay, Collision, Objects).
+
 import './map-editor.css';
 import { ViewTransform } from './ViewTransform.js';
 import { MapEditorCanvas } from './MapEditorCanvas.js';

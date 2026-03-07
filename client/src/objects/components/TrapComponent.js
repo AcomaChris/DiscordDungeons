@@ -5,6 +5,12 @@
 import { Component } from '../Component.js';
 import { componentRegistry } from '../ComponentRegistry.js';
 
+// @doc-creator-content 02:Components > Trap Component
+// Step-triggered damage trap. When `armed` and a player steps on it, emits
+// `trap:triggered` with the `damage` value, then disarms. Automatically rearms
+// after `rearmDelay` milliseconds (0 = stays disarmed). Emits `trap:rearmed` on rearm.
+// Parameters: `damage` (number), `armed` (boolean), `rearmDelay` (ms).
+
 export class TrapComponent extends Component {
   init() {
     this._rearmTimer = null;

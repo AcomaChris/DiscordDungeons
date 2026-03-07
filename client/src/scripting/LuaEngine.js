@@ -8,6 +8,14 @@
 
 import { LuaFactory } from 'wasmoon';
 
+// @doc-creator-content 05:Scripting > Lua Engine
+// Client-side Lua 5.4 VM powered by Wasmoon (WebAssembly). One shared engine per
+// game session. Scripts are isolated via function scoping, not separate VMs.
+// Game bindings are injected as Lua globals: `self` (own object), `world` (spatial
+// queries: `getObject(id)`, `nearby(radius)`, `getObjectsByType(type)`),
+// `timer` (`after(ms, callback)` for delayed execution), and `log(...)` for console output.
+// Must call `await init()` before use. All errors are caught to prevent script crashes.
+
 class LuaEngineClass {
   constructor() {
     this._engine = null;

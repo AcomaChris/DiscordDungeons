@@ -2,6 +2,24 @@
 // Tool button row with selection state. Each button shows "Name (K)"
 // where K is the keyboard shortcut. Lives inside the #tool-buttons div.
 
+// @doc-creator-tools 01:Map Editor > Keyboard Shortcuts
+// | Shortcut | Action |
+// |---|---|
+// | `B` | **Brush** tool |
+// | `E` | **Eraser** tool |
+// | `R` | **Rectangle Fill** tool |
+// | `G` | **Flood Fill** tool |
+// | `L` | **Line** tool |
+// | `S` | **Select** tool |
+// | `O` | **Object** tool |
+// | `1`-`7` | Quick layer switch |
+// | `Ctrl+S` | Export map |
+// | `Ctrl+G` | Toggle grid |
+// | `Ctrl+Z` | Undo |
+// | `Ctrl+Shift+Z` | Redo |
+// | `Space+Click` | Pan the viewport |
+// | `Scroll` | Zoom in/out |
+
 export class ToolBar {
   constructor(containerEl, tools) {
     this._container = containerEl;

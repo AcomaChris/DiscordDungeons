@@ -11,6 +11,14 @@ import { componentRegistry } from '../ComponentRegistry.js';
 import eventBus from '../../core/EventBus.js';
 import { MAP_TRANSITION_REQUEST } from '../../core/Events.js';
 
+// @doc-creator-content 02:Components > Door Component
+// Toggles between open and closed states on interact. Supports three modes:
+// - **Toggle door**: flips `isOpen`, emits `door:opened`/`door:closed` events
+// - **Locked door**: if `lockId` is set, blocks interaction until player has matching key
+// - **Portal door**: if `targetMap` is set, triggers a map transition instead of toggling
+// Parameters: `isOpen`, `lockId`, `targetMap`, `targetSpawn`, `targetX`, `targetY`,
+// `promptOpen`, `promptClose`. Responds to `switch:toggled` events from connected switches.
+
 export class DoorComponent extends Component {
   init() {
     this._updateVisual();

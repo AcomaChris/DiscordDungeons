@@ -2,6 +2,11 @@
 // Select rectangular regions, copy/cut/paste/delete tiles. Rubber-band
 // selection on drag, clipboard operations via Ctrl+C/X/V and Delete.
 
+// @doc-creator-tools 01:Map Editor > Select Tool
+// Select rectangular tile regions. Click and drag to select, then use
+// `Ctrl+C`/`Ctrl+X`/`Ctrl+V` to copy, cut, and paste. Press `Delete` to
+// clear the selection. Shortcut: **S**.
+
 import { BaseTool } from './BaseTool.js';
 import { PaintTilesCommand, BatchCommand } from '../CommandStack.js';
 

@@ -5,6 +5,11 @@
 //
 // Usage: node scripts/convert-tmx.js
 
+// @doc-creator-tools 03:Scripts > convert-tmx
+// Converts Tiled `.tmx` files (infinite/chunk format) to finite Tiled JSON
+// compatible with the game engine. Merges TMX layers into standard game layer
+// names (Ground, Walls, etc.). Usage: `node scripts/convert-tmx.js`.
+
 import { readFileSync, writeFileSync } from 'fs';
 import { JSDOM } from 'jsdom';
 import { resolve, dirname } from 'path';

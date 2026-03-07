@@ -7,6 +7,11 @@
 // Usage: node scripts/import-tilesets.js
 // Idempotent: skips existing metadata files, overwrites PNGs.
 
+// @doc-creator-tools 03:Scripts > import-tilesets
+// Copies tileset PNGs to `client/public/tilesets/` and scaffolds metadata
+// JSON files for the tile editor. Idempotent -- skips existing metadata,
+// overwrites PNGs. Usage: `node scripts/import-tilesets.js`.
+
 import { loadImage } from '@napi-rs/canvas';
 import { copyFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { join, basename, dirname } from 'path';

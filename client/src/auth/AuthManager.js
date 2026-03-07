@@ -1,3 +1,9 @@
+// @doc-player 01:Controls > Login
+// You can sign in with **Discord** for a persistent identity that carries
+// across sessions, or choose **Guest mode** and pick a custom name with no
+// account required. When playing inside Discord as an Activity, login is
+// automatic. Your session is saved locally so you stay logged in between visits.
+
 // --- AuthManager ---
 // Handles Discord OAuth2 and guest identity.
 // Stores player identity in localStorage so it persists across sessions.

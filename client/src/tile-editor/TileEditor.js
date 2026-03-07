@@ -3,6 +3,12 @@
 // Manages mode switching, loads tilesets, coordinates canvas and property
 // panels, handles file I/O for both tile metadata and object definitions.
 
+// @doc-creator-tools 02:Tile Editor > Overview
+// The tile editor manages tileset metadata and object definitions.
+// Access via the cog menu → **Tile Editor**, or directly at `/editor.html`.
+// Two modes: **Tile Mode** (edit per-tile properties like collision and category)
+// and **Object Mode** (define multi-tile objects from tilesets).
+
 import './tile-editor.css';
 import '../bug-report/bug-report.css';
 import { BugReporter } from '../bug-report/BugReporter.js';

@@ -2,6 +2,10 @@
 // Drag a rectangle and fill the area with the selected tile on mouseup.
 // Commits one PaintTilesCommand covering all tiles in the rectangle.
 
+// @doc-creator-tools 01:Map Editor > Rectangle Fill
+// Fill a rectangular area with the selected tile. Click and drag to define
+// the area; tiles are placed when you release. Shortcut: **R**.
+
 import { BaseTool } from './BaseTool.js';
 import { PaintTilesCommand } from '../CommandStack.js';
 

@@ -1,3 +1,9 @@
+// @doc-player 03:Multiplayer > Roster
+// A **"Players: N" badge** in the top-left corner shows how many players are online.
+// Click it to expand the **roster panel**, which lists all connected players
+// grouped by their current map. From the roster you can click **Invite** next
+// to any player's name to send them a party invitation.
+
 // --- RosterHUD ---
 // Minimal badge showing player count, click to expand into grouped player list.
 // DOM-based overlay, subscribes to network events via EventBus.

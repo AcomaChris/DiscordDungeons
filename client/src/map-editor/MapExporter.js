@@ -1,6 +1,12 @@
 // --- MapExporter ---
 // Export MapDocument to Tiled JSON format and import Tiled JSON back into a MapDocument.
 
+// @doc-creator-tools 01:Map Editor > Import and Export
+// **Export** maps as Tiled JSON format (`Ctrl+S` or the export button).
+// **Import** existing Tiled JSON files to continue editing. Also supports
+// creating new blank maps and auto-populating the **Collision** layer from
+// wall tiles.
+
 import { ALL_LAYER_NAMES } from './MapDocument.js';
 
 // --- Export ---

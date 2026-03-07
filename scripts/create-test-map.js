@@ -7,6 +7,12 @@
 // Usage: node scripts/create-test-map.js
 // Output: client/public/maps/test.json, client/public/tilesets/test-tiles.png
 
+// @doc-creator-tools 03:Scripts > create-test-map
+// Generates a minimal 30x20 test map with a 9-tile tileset. Includes animated
+// floor, static floor, walls, wall tops, elevated platform, and elevation data.
+// Output: `client/public/maps/test.json` + `client/public/tilesets/test-tiles.png`.
+// Usage: `node scripts/create-test-map.js`.
+
 import { createCanvas } from '@napi-rs/canvas';
 import { writeFileSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';

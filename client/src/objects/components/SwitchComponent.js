@@ -5,6 +5,12 @@
 import { Component } from '../Component.js';
 import { componentRegistry } from '../ComponentRegistry.js';
 
+// @doc-creator-content 02:Components > Switch Component
+// Toggle switch (lever, button, pressure plate). Flips `isOn` on interact and
+// emits `switch:on`/`switch:off` plus `switch:toggled` events. Connected objects
+// (e.g. doors) can listen for these events via the connection system.
+// Parameters: `isOn` (initial state), `promptOn` (text when on), `promptOff` (text when off).
+
 export class SwitchComponent extends Component {
   onInteract(_player) {
     this.params.isOn = !this.params.isOn;

@@ -3,6 +3,11 @@
 // (hover, select, multi-select, drag-select), and draws visual indicators
 // for tagged/selected tiles. Re-renders only on state change.
 
+// @doc-creator-tools 02:Tile Editor > Tile Mode
+// Displays the tileset image with a selection overlay. Click tiles to select
+// them for property editing. Use the zoom slider for precise work. Shows
+// tile index and coordinates for the hovered tile.
+
 const TILE_SIZE = 16;
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 8;

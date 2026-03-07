@@ -42,6 +42,13 @@ import { PartyUI } from '../hud/PartyUI.js';
 // AGENT: WS_URL is set at build time for production, falls back to localhost for dev.
 const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:3001';
 
+// @doc-dev 03:URL Params > Map Selection
+// The `?map=X` query parameter selects which map to load on startup. GameScene reads
+// the param via `getActiveMapId()` and looks up the map in `MapRegistry`. If no param
+// is provided, the default map (`test`) is loaded. This is useful for jumping directly
+// to a specific map during development without navigating through doors.
+// Example: `http://localhost:5173/?map=tavern`
+
 // Map selection: ?map=X overrides default. Used by E2E tests.
 const DEFAULT_MAP = 'test';
 

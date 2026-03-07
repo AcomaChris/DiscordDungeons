@@ -15,6 +15,12 @@
 //
 // Output goes to tmp/tile-analysis/<tileset>/
 
+// @doc-creator-tools 03:Scripts > analyze-tileset
+// Multi-step tileset analysis pipeline. Detects tile size, extracts individual
+// tiles, groups multi-tile objects, and generates catalog sheets.
+// Usage: `node scripts/analyze-tileset.js <tileset-name> [--step <1-5>]`.
+// Output: `tmp/tile-analysis/<tileset>/`.
+
 import { existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';

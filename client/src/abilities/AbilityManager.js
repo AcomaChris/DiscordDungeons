@@ -6,6 +6,16 @@
 import { ABILITY_DEFS, AbilityType, DEFAULT_ABILITIES } from './AbilityDefs.js';
 import { resolveParam } from './ModifierStack.js';
 
+// @doc-creator-content 01:Abilities > AbilityManager API
+// Per-player manager that tracks equipped abilities, activation state, and modifiers.
+// - `equip(abilityId)` — equips an ability by ID (looked up from `AbilityDefs`)
+// - `unequip(abilityId)` — removes an equipped ability
+// - `get(id)` — returns `{ params, active }` with all modifier-resolved param values
+// - `getParam(abilityId, paramName)` — returns a single resolved param value (base + modifiers)
+// - `updateFromInput(input)` — activates/deactivates active-type abilities based on input snapshot keys
+// - `addModifier(abilityId, modifier)` / `removeModifier(abilityId, modifierId)` — apply or remove buffs/debuffs
+// - `getState()` / `applyState(state)` — serialize/restore for network sync (equipped list, active list, params, modifiers)
+
 export class AbilityManager {
   constructor() {
     // Map<abilityId, { def, params, active, modifiers: [] }>

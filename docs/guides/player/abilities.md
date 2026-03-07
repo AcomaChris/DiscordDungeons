@@ -35,4 +35,13 @@ A passive ability that lets you **climb ledges** during a jump. When
 you jump facing a ledge that's above step-height but within mantle range,
 your character automatically climbs up onto it instead of bouncing off.
 
+### Ghost Mode
+
+<sub>Source: `client/src/entities/Player.js`</sub>
+
+When you spawn on top of another player, you enter **ghost mode** --
+your character turns semi-transparent and can't interact with objects.
+Simply **walk to an open space** and ghost mode clears automatically,
+restoring full visibility and interaction.
+
 <!-- @doc-auto-end -->

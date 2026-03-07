@@ -6,6 +6,14 @@
 // AGENT: Scripts run in a shared Lua VM. Isolation is via function scoping,
 // not separate VMs. Always set self context before calling handlers.
 
+// @doc-creator-content 05:Scripting > Script Component
+// Component that runs custom Lua code on lifecycle events. The `code` parameter
+// contains inline Lua that defines handler functions: `on_init()`, `on_interact()`,
+// `on_touch()`, `on_step()`, `on_update(delta)`, `on_event(name, data)`.
+// Scripts execute in the shared LuaEngine with access to `self` (read/write params,
+// emit events), `world` (query nearby objects), `timer` (delayed callbacks), and `log`.
+// Each script instance is scoped to avoid namespace collisions between objects.
+
 import { Component } from '../objects/Component.js';
 import { componentRegistry } from '../objects/ComponentRegistry.js';
 import luaEngine from './LuaEngine.js';

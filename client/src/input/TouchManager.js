@@ -1,5 +1,12 @@
 import '../styles/touch-controls.css';
 
+// @doc-player 01:Controls > Touch
+// On touch devices, an **on-screen joystick** appears on the left side of the
+// screen for analog movement. Three **action buttons** sit on the right:
+// **JUMP**, **RUN** (hold to sprint), and **ACT** (interact with nearby objects).
+// The layout adapts to both portrait and landscape orientations.
+// To force touch controls on a desktop browser, add `?touch=1` to the URL.
+
 // --- TouchManager ---
 // Creates an HTML overlay with an analog joystick (left) and action buttons (right)
 // for mobile play. Only activates on touch-capable devices.

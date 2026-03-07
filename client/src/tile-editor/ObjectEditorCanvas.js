@@ -3,6 +3,11 @@
 // Draws colored outlines per object, collider/node overlays for the selected object.
 // Handles click-to-select and Shift+drag to create new objects.
 
+// @doc-creator-tools 02:Tile Editor > Object Mode
+// Visual editor for defining multi-tile objects from tilesets. Select tile
+// groups with `Shift+drag`, name them, and assign categories (furniture,
+// structure, decoration, etc.). Defined objects can be placed in the map editor.
+
 const TILE_SIZE = 16;
 
 const CATEGORY_COLORS = {

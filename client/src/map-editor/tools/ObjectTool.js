@@ -2,6 +2,11 @@
 // Object placement and manipulation tool. Places new objects from the
 // ObjectPalette selection, or picks/moves/deletes existing objects on the map.
 
+// @doc-creator-tools 01:Map Editor > Object Tool
+// Place interactive objects (spawn points, doors, chests, NPCs, etc.) on the
+// **Objects** layer. Select an object type from the palette, then click to
+// place. Click existing objects to select, drag to move. Shortcut: **O**.
+
 import { BaseTool } from './BaseTool.js';
 import { PlaceObjectCommand, MoveObjectCommand, DeleteObjectCommand } from '../CommandStack.js';
 

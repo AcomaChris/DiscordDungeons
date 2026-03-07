@@ -4,6 +4,14 @@ import authManager from '../auth/AuthManager.js';
 import { isDiscordActivity } from '../discord/activitySdk.js';
 import { getConsoleLogs } from './ConsoleCapture.js';
 
+// @doc-dev 02:Bug Reporter > Filing Issues
+// Open the cog menu (top-right) and click **"File Issue"** to report a bug.
+// Fill in a **title** (required), optional **description**, and select a **priority**
+// (low / medium / high). You can optionally attach a **screenshot** (captured automatically
+// from the game canvas) and **console logs** (last 200 entries). The report is filed
+// directly to GitHub Issues and includes build metadata: app version, git commit hash,
+// and build timestamp.
+
 // --- Bug Reporter ---
 // Settings cog with "File Issue" option. Opens a dialog to file GitHub issues
 // with optional screenshots, proxied through the game server.

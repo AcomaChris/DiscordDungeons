@@ -1,3 +1,10 @@
+// @doc-dev 01:Debug Panel > World Debug
+// Toggle **World Debug** from the cog menu to open an overlay panel in the top-left corner.
+// Check **"Show Height Data"** to render elevation values as color-coded labels on every
+// elevated tile (grey = lowest, green, orange, red = highest). Labels scroll and zoom
+// with the map. The panel also displays **map info**: current map ID, whether the map is
+// instanced or shared, and the number of players currently on the map.
+
 // --- World Debug Overlay ---
 // Floating panel toggled from the cog menu. Contains checkboxes for
 // individual debug views. Currently supports "Show Height Data" which

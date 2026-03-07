@@ -86,6 +86,12 @@ export class Player {
     scene.events.on('postupdate', this._postUpdate);
   }
 
+  // @doc-player 02:Abilities > Ghost Mode
+  // When you spawn on top of another player, you enter **ghost mode** --
+  // your character turns semi-transparent and can't interact with objects.
+  // Simply **walk to an open space** and ghost mode clears automatically,
+  // restoring full visibility and interaction.
+
   // --- Ghost Mode ---
   // Semi-transparent, non-interactive state when spawning inside another entity.
   // Clears automatically when the player moves to free space.

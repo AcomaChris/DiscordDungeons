@@ -6,6 +6,18 @@
 // Use this.owner.emit() to communicate via events. The owner is the
 // InteractiveObject that holds this component.
 
+// @doc-creator-content 02:Components > Base Class
+// All interactive object components extend this class. Override lifecycle hooks as needed:
+// | Hook | Trigger | Purpose |
+// |------|---------|---------|
+// | `init()` | Once after creation | Setup, cache references |
+// | `update(delta)` | Each frame | Per-frame logic (delta in ms) |
+// | `onInteract(player)` | Player presses E | `trigger: 'interact'` components |
+// | `onTouch(player)` | Physics overlap | `trigger: 'touch'` components |
+// | `onStep(player)` | Standing on tile | `trigger: 'step'` components |
+// | `onEvent(eventName, data)` | Routed event from another object | Cross-object communication |
+// | `getState()` / `applyState(state)` | Persistence/network | Serialize and restore component state |
+
 export class Component {
   constructor(owner, def, overrides = {}) {
     this.owner = owner;

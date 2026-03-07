@@ -1,5 +1,12 @@
 import './build-status.css';
 
+// @doc-dev 01:Debug Panel > Build Status
+// A small colored dot in the bottom-left corner shows the current deploy state.
+// Click it to expand a tooltip with the **version number**, **git commit hash**, and
+// **build timestamp**. The dot color indicates status: green = up to date, yellow =
+// new version available or build in progress, red = build failed, grey = unknown.
+// It polls `/version.json` and the GitHub Actions API to stay current.
+
 // --- Build Status Indicator ---
 // Floating DOM overlay showing deployment state as a colored circle.
 // Polls /version.json and GitHub Actions API to determine state.

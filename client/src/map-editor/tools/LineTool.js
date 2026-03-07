@@ -2,6 +2,10 @@
 // Click-and-drag to paint a Bresenham line from start to end.
 // Commits one PaintTilesCommand on mouseup.
 
+// @doc-creator-tools 01:Map Editor > Line Tool
+// Draw a straight line of tiles. Click to set the start point, drag to the
+// endpoint, and release to place. Shortcut: **L**.
+
 import { BaseTool } from './BaseTool.js';
 import { PaintTilesCommand } from '../CommandStack.js';
 import { bresenham } from './BrushTool.js';

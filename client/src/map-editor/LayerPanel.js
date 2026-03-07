@@ -2,6 +2,12 @@
 // Grouped layer list with active layer selection, visibility toggles,
 // and opacity sliders. Lives inside a FloatingPanel.
 
+// @doc-creator-tools 01:Map Editor > Layers
+// Switch between map layers using the layer panel or number keys `1`-`7`.
+// Standard layers: **Ground**, **GroundDecor**, **Walls**, **WallTops**,
+// **Overlay**, **Collision**, **Elevation**. Each layer has a visibility
+// toggle and opacity slider.
+
 import { LAYER_GROUPS, ALL_LAYER_NAMES } from './MapDocument.js';
 
 export class LayerPanel {

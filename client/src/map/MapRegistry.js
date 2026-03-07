@@ -2,6 +2,21 @@
 // Central lookup for map metadata. Each entry defines the JSON path and
 // tileset entries needed to load a map via TileMapManager.
 
+// @doc-creator-content 03:Maps > Map Registry
+// Register maps here so the game can load them. Each entry defines:
+// ```js
+// mapId: {
+//   instanced: false,       // true = per-party instance, false = shared hub
+//   jsonPath: 'maps/my-map.json',  // path to Tiled JSON (relative to public/)
+//   tilesets: [
+//     { key: 'my-tiles', path: 'tilesets/my-tiles.png', tiledName: 'my-tiles',
+//       tileSize: 16, hasAnimationJson: false }
+//   ]
+// }
+// ```
+// `tiledName` must match the tileset name in your Tiled project. Set `hasAnimationJson: true`
+// if the tileset has an extracted `.animations.json` file for tile animations.
+
 const maps = {
   test: {
     instanced: false, // shared hub map

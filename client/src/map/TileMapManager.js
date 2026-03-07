@@ -10,6 +10,19 @@ import { TileAnimator } from './TileAnimator.js';
 //   WallTops(DEPTH_ABOVE_PLAYER), Overlay(DEPTH_ABOVE_PLAYER+1),
 //   Collision(not rendered), Elevation(not rendered), Objects(parsed, not rendered).
 
+// @doc-creator-content 03:Maps > Layer Convention
+// All Tiled maps must use these layer names (case-sensitive):
+// | Layer | Type | Depth | Purpose |
+// |-------|------|-------|---------|
+// | `Ground` | tile | 0 | Floor/terrain base |
+// | `GroundDecor` | tile | 1 | Rugs, cracks, floor details |
+// | `Walls` | tile | 2 | Furniture, wall bases, props |
+// | `WallTops` | tile | 10000 | Upper wall parts (rendered above player) |
+// | `Overlay` | tile | 10001 | Ceiling, always-on-top decor |
+// | `Collision` | tile | hidden | Invisible collision mask (any tile = blocked) |
+// | `Elevation` | tile | hidden | Per-tile height data (tile index = elevation level) |
+// | `Objects` | object | parsed | Interactive objects (`spawn`, `door`, `chest`, etc.) |
+//
 // AGENT: layer names are case-sensitive and must match the Tiled export.
 
 const LAYER_CONFIG = [

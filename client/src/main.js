@@ -13,6 +13,13 @@ import { StateDisplayPanel } from './debug/StateDisplayPanel.js';
 import { BRAND_TITLE } from './core/BrandConfig.js';
 import { installConsoleCapture } from './bug-report/ConsoleCapture.js';
 
+// @doc-dev 03:URL Params > Available Parameters
+// The game client supports the following URL parameters for development and testing:
+// - `?map=X` -- load a specific map by ID (e.g., `?map=test`, `?map=tavern`).
+//   Defaults to `test` if omitted. See **Map Selection** below.
+// - `?touch=1` -- force touch/D-pad controls on desktop browsers, useful for
+//   testing the mobile UI without a touch device.
+
 installConsoleCapture();
 document.title = BRAND_TITLE;
 

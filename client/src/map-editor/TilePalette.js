@@ -2,6 +2,11 @@
 // Floating panel showing the active tileset's tiles for brush selection.
 // Supports single-tile and rectangular stamp selection.
 
+// @doc-creator-tools 01:Map Editor > Tile Palette
+// Browse and select tiles from loaded tilesets. Click a tile to select it
+// for painting. Drag to select a rectangular multi-tile stamp. Use the
+// tileset dropdown to switch between available tilesets.
+
 const TILE_SIZE = 16;
 const PALETTE_ZOOM = 2;
 

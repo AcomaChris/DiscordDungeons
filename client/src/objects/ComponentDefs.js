@@ -1,3 +1,23 @@
+// @doc-player 04:Objects > Object Types
+// You will encounter several types of interactive objects in the world:
+// - **Doors** -- open, close, or walk through to travel to another map.
+//   Some doors are **locked** and require a key or switch to open.
+// - **Chests and containers** -- open to find loot and items inside.
+// - **Switches and levers** -- activate or deactivate linked mechanisms.
+// - **Traps** -- hidden hazards that trigger when you step on them.
+// - **Teleporters** -- step onto them to warp to another location or map.
+// - **NPCs** -- characters you can talk to for quests, shops, or dialogue.
+
+// @doc-creator-content 02:Components > Component Definition Format
+// Each component in `ComponentDefs` is an object with these fields:
+// - **id** -- unique string identifier (e.g. `"door"`, `"container"`)
+// - **name** -- human-readable display name
+// - **category** -- one of `CORE`, `MECHANICAL`, `ENVIRONMENTAL`, or `EFFECT`
+// - **authority** -- `CLIENT` (resolved locally) or `SERVER` (server-authoritative)
+// - **persistence** -- `VOLATILE` (resets on reload), `SESSION`, or `PERSISTENT`
+// - **trigger** -- `INTERACT` (press E), `TOUCH` (overlap), `STEP` (stand on), or `NONE`
+// - **params** -- default parameter values for this component type
+
 // --- Component Definitions ---
 // Data-only registry of all component types, their default parameters,
 // authority model, persistence mode, and trigger type.
