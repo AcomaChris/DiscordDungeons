@@ -290,7 +290,9 @@ export class GameScene extends Phaser.Scene {
   _addRemotePlayer({ playerId, colorIndex, playerName, mapId }) {
     // Track their map even if they're not on ours
     if (!this._remotePlayerMaps) this._remotePlayerMaps = new Map();
+    if (!this._remotePlayerInfo) this._remotePlayerInfo = new Map();
     this._remotePlayerMaps.set(playerId, mapId || null);
+    this._remotePlayerInfo.set(playerId, { colorIndex, playerName });
 
     // Only create sprite if they're on our map (or map unknown)
     if (mapId && mapId !== this._mapId) return;
@@ -298,6 +300,7 @@ export class GameScene extends Phaser.Scene {
     const spawn = this.tileMapManager.spawnPoint;
     const rp = new RemotePlayer(this, colorIndex, spawn.x, spawn.y, playerName);
     this.remotePlayers.set(playerId, rp);
+    if (import.meta.env.DEV) console.log(`[GameScene] +remote ${playerId} map=${mapId} (sprites: ${this.remotePlayers.size})`);
 
     // Re-check ghost mode — remote player may have spawned on top of us
     if (!this.player.isGhost && this._isPlayerOverlappingEntity()) {
@@ -313,10 +316,12 @@ export class GameScene extends Phaser.Scene {
 
   _removeRemotePlayer({ playerId }) {
     if (this._remotePlayerMaps) this._remotePlayerMaps.delete(playerId);
+    if (this._remotePlayerInfo) this._remotePlayerInfo.delete(playerId);
     const rp = this.remotePlayers.get(playerId);
     if (rp) {
       rp.destroy();
       this.remotePlayers.delete(playerId);
+      if (import.meta.env.DEV) console.log(`[GameScene] -remote ${playerId} (sprites: ${this.remotePlayers.size})`);
     }
   }
 
@@ -330,12 +335,23 @@ export class GameScene extends Phaser.Scene {
   _handlePlayerMapChanged({ playerId, fromMap, toMap }) {
     if (!this._remotePlayerMaps) this._remotePlayerMaps = new Map();
     this._remotePlayerMaps.set(playerId, toMap);
+    if (import.meta.env.DEV) console.log(`[GameScene] mapChanged ${playerId} ${fromMap}→${toMap}`);
 
     // Ignore our own map changes
     if (this.networkManager && playerId === this.networkManager.playerId) return;
 
     if (toMap === this._mapId) {
-      // Player arrived on our map — arrival effect at spawn
+      // Player arrived on our map — create sprite if it doesn't exist yet
+      // (race: playerJoined may have arrived with mapId=null before their mapChange)
+      if (!this.remotePlayers.has(playerId)) {
+        const info = this._remotePlayerInfo?.get(playerId);
+        if (info) {
+          const spawn = this.tileMapManager.spawnPoint;
+          const rp = new RemotePlayer(this, info.colorIndex, spawn.x, spawn.y, info.playerName);
+          this.remotePlayers.set(playerId, rp);
+          if (import.meta.env.DEV) console.log(`[GameScene] +remote ${playerId} (late arrival, sprites: ${this.remotePlayers.size})`);
+        }
+      }
       const spawn = this.tileMapManager.spawnPoint;
       playArrivalEffect(this, spawn.x, spawn.y);
     } else if (fromMap === this._mapId) {
@@ -351,8 +367,12 @@ export class GameScene extends Phaser.Scene {
 
   _handleRoster({ players }) {
     if (!this._remotePlayerMaps) this._remotePlayerMaps = new Map();
+    if (!this._remotePlayerInfo) this._remotePlayerInfo = new Map();
     for (const p of players) {
       this._remotePlayerMaps.set(p.playerId, p.mapId || null);
+      if (p.colorIndex != null) {
+        this._remotePlayerInfo.set(p.playerId, { colorIndex: p.colorIndex, playerName: p.playerName });
+      }
     }
   }
 

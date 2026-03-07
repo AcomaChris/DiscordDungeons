@@ -105,6 +105,7 @@ export class NetworkManager {
   sendMapChange(mapId, { instanced = false } = {}) {
     this._currentMapId = mapId;
     this._currentMapInstanced = instanced;
+    if (import.meta.env.DEV) console.log(`[NetworkManager] mapChange→${mapId} ws=${this.ws?.readyState}`);
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       this.ws.send(JSON.stringify({ type: 'mapChange', mapId, instanced }));
     }
@@ -146,14 +147,17 @@ export class NetworkManager {
     switch (msg.type) {
       case 'welcome':
         this.playerId = msg.playerId;
+        if (import.meta.env.DEV) console.log(`[NetworkManager] welcome id=${msg.playerId} room=${msg.roomId}`);
         eventBus.emit(NETWORK_ROOM_JOINED, {
           playerId: msg.playerId,
           roomId: msg.roomId,
           colorIndex: msg.colorIndex,
         });
-        // Re-send map on reconnect
+        // Re-send map — initial sendMapChange in GameScene.create() fires before
+        // WS is open, so the message is dropped. This re-send ensures the server
+        // knows our map once the connection is established.
         if (this._currentMapId) {
-          this.sendMapChange(this._currentMapId);
+          this.sendMapChange(this._currentMapId, { instanced: this._currentMapInstanced || false });
         }
         break;
       case 'playerJoined':
