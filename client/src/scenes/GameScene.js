@@ -441,7 +441,9 @@ export class GameScene extends Phaser.Scene {
     this.networkManager = new NetworkManager(WS_URL);
     // Persist at game level so it survives scene restarts during map transitions
     this.game.__networkManager = this.networkManager;
-    const roomId = authManager.activityChannelId || 'default';
+    // All players share a single room. Instancing is handled per-map via
+    // sendMapChange({ instanced: true }) for dungeons.
+    const roomId = 'default';
     this.networkManager.connect(roomId, authManager.identity);
   }
 

@@ -118,6 +118,9 @@ export class RosterHUD {
     if (!this._badge) return;
     const count = this._players.size + 1; // +1 for self
     this._badge.textContent = `Players: ${count}`;
+    // Show room + player ID on hover for debugging
+    const roomId = this._networkManager?.roomId || '?';
+    this._badge.title = `Room: ${roomId} | You: #${this._localPlayerId || '?'} | Map: ${this._localMapId || '?'}`;
     if (this._expanded) this._renderPanel();
   }
 

@@ -147,6 +147,7 @@ export class NetworkManager {
     switch (msg.type) {
       case 'welcome':
         this.playerId = msg.playerId;
+        this.roomId = msg.roomId;
         if (import.meta.env.DEV) console.log(`[NetworkManager] welcome id=${msg.playerId} room=${msg.roomId}`);
         eventBus.emit(NETWORK_ROOM_JOINED, {
           playerId: msg.playerId,
