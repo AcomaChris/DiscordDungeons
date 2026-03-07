@@ -4,6 +4,17 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-07 — Documentation System + Multiplayer Visibility Fix (v0.39.0 → v0.39.1)
+
+- **VitePress documentation** (748e6d2): Full docs-as-code pipeline — `@doc` comment tags in source files extracted by `scripts/extract-docs.mjs` into VitePress markdown. 4 guides: Player's, Developer's, Creator Tools, Creator Content. Builds alongside game client at `discorddungeons.com/docs`. Dark theme with brand colors.
+- **@doc tags across codebase** (9f33c3b): 56 `@doc` blocks added to 48 source files via 4 parallel worktree agents. Covers controls, abilities, multiplayer, debug panels, URL params, map/tile editors, CLI scripts, components, scripting.
+- **Multiplayer visibility race fix** (bccc7ae): `_handlePlayerMapChanged` now creates RemotePlayer sprites on arrival when they don't already exist (race between `playerJoined` with `mapId=null` and deferred `mapChange`). Added `_remotePlayerInfo` map for deferred sprite creation. Fixed `sendMapChange` re-send to preserve `instanced` flag.
+- **Shared room for all players** (76a739d): Discord Activity players were joining channel-specific rooms while web/guest players joined `'default'` — completely separate. Changed to single shared room. Dungeon instancing handled separately via `sendMapChange({ instanced: true })`.
+- **Debug aids**: DEV-only logging for remote player lifecycle (`+remote`, `-remote`, `mapChanged`), NetworkManager `mapChange`/`welcome` logs with WS readyState. Roster badge tooltip shows room ID, player ID, and current map on hover.
+- **E2e tests**: 5 new multiplayer visibility tests — mutual spawn visibility, position sync, disconnect cleanup, map transition round-trip, console error audit. Party invite e2e test also added (e7bb31e).
+
+---
+
 ## 2026-03-06 — Phase 6: Party Dungeons (v0.38.0)
 
 - **Server map tracking** (Stage 1): Added `mapId`, `partyId`, `instanceId` fields to player data. New `mapChange` message handler updates player's map and broadcasts `playerMapChanged`. State broadcasts now grouped by map — players only receive states from same-map players. Roster snapshot sent after welcome with all connected players and their maps.
