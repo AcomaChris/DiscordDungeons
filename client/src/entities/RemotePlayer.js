@@ -54,7 +54,7 @@ export class RemotePlayer {
     this.sprite.setTexture(`${this.texturePrefix}-${this._facing}`);
   }
 
-  applyState({ x, y, z, facing, color, abilities }) {
+  applyState({ x, y, z, facing, color, ghost, abilities }) {
     // Start interpolating from current position to the new target
     this._startX = this.sprite.x;
     this._startY = this._groundY;
@@ -71,6 +71,11 @@ export class RemotePlayer {
     if (facing !== this._facing) {
       this._facing = facing;
       this.sprite.setTexture(`${this.texturePrefix}-${facing}`);
+    }
+
+    if (ghost !== undefined) {
+      this.sprite.setAlpha(ghost ? 0.4 : 1);
+      this.nameLabel.setAlpha(ghost ? 0.4 : 1);
     }
 
     if (abilities) {

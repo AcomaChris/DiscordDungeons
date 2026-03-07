@@ -24,6 +24,7 @@ export class Player {
     this.color = PLAYER_COLORS[0];
     this.abilities = new AbilityManager();
     this._isJumping = false;
+    this._isGhost = false;
     this._isMantling = false;
     this._mantleStartZ = 0;
     this._mantleTargetZ = 0;
@@ -83,6 +84,26 @@ export class Player {
       );
     };
     scene.events.on('postupdate', this._postUpdate);
+  }
+
+  // --- Ghost Mode ---
+  // Semi-transparent, non-interactive state when spawning inside another entity.
+  // Clears automatically when the player moves to free space.
+
+  get isGhost() { return this._isGhost; }
+
+  enterGhostMode() {
+    if (this._isGhost) return;
+    this._isGhost = true;
+    this.sprite.setAlpha(0.4);
+    this.nameLabel.setAlpha(0.4);
+  }
+
+  exitGhostMode() {
+    if (!this._isGhost) return;
+    this._isGhost = false;
+    this.sprite.setAlpha(1);
+    this.nameLabel.setAlpha(1);
   }
 
   setColorIndex(colorIndex) {
@@ -328,6 +349,7 @@ export class Player {
       z: this.z,
       facing: this.facing,
       color: this.color,
+      ghost: this._isGhost,
       abilities: this.abilities.getState(),
     };
   }

@@ -103,6 +103,12 @@ export class GameScene extends Phaser.Scene {
     // --- NPC (only on maps that define one — test map for now) ---
     this._initNPC();
 
+    // --- Ghost mode: activate if player spawned overlapping another entity ---
+    if (this._isPlayerOverlappingEntity()) {
+      this.player.enterGhostMode();
+      if (this._playerNpcCollider) this._playerNpcCollider.active = false;
+    }
+
     // --- Input ---
     // Re-enable keyboard after map transition (MapTransitionManager disables it during fade)
     this.input.keyboard.enabled = true;
@@ -178,7 +184,7 @@ export class GameScene extends Phaser.Scene {
     if (this.tileMapManager.collisionLayer) {
       this.physics.add.collider(this.npc.sprite, this.tileMapManager.collisionLayer);
     }
-    this.physics.add.collider(this.player.sprite, this.npc.sprite);
+    this._playerNpcCollider = this.physics.add.collider(this.player.sprite, this.npc.sprite);
 
     if (this.tileMapManager.collisionLayer) {
       this.npc._collisionGrid = buildCollisionGrid(
@@ -285,6 +291,12 @@ export class GameScene extends Phaser.Scene {
     const spawn = this.tileMapManager.spawnPoint;
     const rp = new RemotePlayer(this, colorIndex, spawn.x, spawn.y, playerName);
     this.remotePlayers.set(playerId, rp);
+
+    // Re-check ghost mode — remote player may have spawned on top of us
+    if (!this.player.isGhost && this._isPlayerOverlappingEntity()) {
+      this.player.enterGhostMode();
+      if (this._playerNpcCollider) this._playerNpcCollider.active = false;
+    }
   }
 
   _updatePlayerIdentity({ playerId, playerName }) {
@@ -337,6 +349,28 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
+  // --- Ghost Mode Overlap Check ---
+
+  _isPlayerOverlappingEntity() {
+    const px = this.player.sprite.x;
+    const py = this.player._groundY;
+    const threshold = 10;
+
+    for (const rp of this.remotePlayers.values()) {
+      const dx = Math.abs(px - rp.sprite.x);
+      const dy = Math.abs(py - rp._groundY);
+      if (dx < threshold && dy < threshold) return true;
+    }
+
+    if (this.npc) {
+      const dx = Math.abs(px - this.npc.sprite.x);
+      const dy = Math.abs(py - this.npc._groundY);
+      if (dx < threshold && dy < threshold) return true;
+    }
+
+    return false;
+  }
+
   // --- Update Loop ---
 
   update(_time, delta) {
@@ -349,10 +383,18 @@ export class GameScene extends Phaser.Scene {
     // Tile animations — advance frame timers and swap indices
     this.tileMapManager.update(delta);
 
+    // --- Ghost mode exit check ---
+    if (this.player.isGhost && !this._isPlayerOverlappingEntity()) {
+      this.player.exitGhostMode();
+      if (this._playerNpcCollider) this._playerNpcCollider.active = true;
+    }
+
     // Interactive objects — update components and check interactions
     this.objectManager.update(delta);
     const playerBody = this.player.sprite.body;
-    this.interactionManager.update(delta, playerBody.x, playerBody.y, merged);
+    if (!this.player.isGhost) {
+      this.interactionManager.update(delta, playerBody.x, playerBody.y, merged);
+    }
 
     // Z-axis physics — velocity/height update only. syncGroundPosition and
     // updateDepth run in the entity's postupdate handler, after Phaser's
