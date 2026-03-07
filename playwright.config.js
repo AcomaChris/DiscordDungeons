@@ -17,10 +17,18 @@ export default defineConfig({
       use: { browserName: 'chromium' },
     },
   ],
-  webServer: {
-    command: 'npm run dev -- --port 8081',
-    port: 8081,
-    reuseExistingServer: true,
-    timeout: 30_000,
-  },
+  webServer: [
+    {
+      command: 'npm run dev -- --port 8081',
+      port: 8081,
+      reuseExistingServer: true,
+      timeout: 30_000,
+    },
+    {
+      command: 'npm run server',
+      port: 3001,
+      reuseExistingServer: true,
+      timeout: 10_000,
+    },
+  ],
 });
