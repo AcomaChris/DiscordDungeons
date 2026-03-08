@@ -178,6 +178,7 @@ export class NetworkManager {
           playerId: msg.playerId,
           playerName: msg.playerName,
           avatarUrl: msg.avatarUrl,
+          colorIndex: msg.colorIndex,
         });
         break;
       case 'playerMapChanged':
@@ -185,6 +186,8 @@ export class NetworkManager {
           playerId: msg.playerId,
           fromMap: msg.fromMap,
           toMap: msg.toMap,
+          playerName: msg.playerName || null,
+          colorIndex: msg.colorIndex,
         });
         break;
       case 'roster':

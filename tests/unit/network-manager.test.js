@@ -203,6 +203,8 @@ describe('NetworkManager', () => {
       playerId: '5',
       fromMap: 'tavern',
       toMap: 'dungeon',
+      playerName: null,
+      colorIndex: undefined,
     });
     nm.disconnect();
   });

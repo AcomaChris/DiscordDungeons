@@ -351,7 +351,18 @@ export class GameScene extends Phaser.Scene {
 
   _updateRemotePlayers(states) {
     for (const [playerId, state] of Object.entries(states)) {
-      const rp = this.remotePlayers.get(playerId);
+      let rp = this.remotePlayers.get(playerId);
+      if (!rp) {
+        // Self-healing: create sprite for players we missed during scene restart
+        // (playerMapChanged may have been dropped while events were unsubscribed)
+        const info = this._remotePlayerInfo?.get(playerId);
+        if (info) {
+          const spawn = this.tileMapManager.spawnPoint;
+          rp = new RemotePlayer(this, info.colorIndex, spawn.x, spawn.y, info.playerName);
+          this.remotePlayers.set(playerId, rp);
+          if (import.meta.env.DEV) console.log(`[GameScene] +remote ${playerId} (self-heal from stateUpdate, sprites: ${this.remotePlayers.size})`);
+        }
+      }
       if (rp) rp.applyState(state);
     }
   }

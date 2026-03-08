@@ -810,6 +810,18 @@ async function handleBehaviorEngineProxy(req, res, url) {
   }
 }
 
+// --- Helpers ---
+
+// Enrich party state with member names from room data
+function enrichParty(party, room) {
+  const memberNames = {};
+  for (const mid of party.members) {
+    const m = room.get(mid);
+    if (m) memberNames[mid] = m.playerName || null;
+  }
+  return { ...party, memberNames };
+}
+
 // --- HTTP + WebSocket Server ---
 
 const httpServer = http.createServer(handleHttpRequest);
@@ -935,10 +947,11 @@ wss.on('connection', (ws, req) => {
           ws.send(JSON.stringify({ type: 'partyError', error: result.error }));
         } else {
           // Broadcast party update to all members
+          const enrichedParty = enrichParty(result.party, room);
           for (const memberId of result.party.members) {
             const member = room.get(memberId);
             if (member) {
-              member.ws.send(JSON.stringify({ type: 'partyUpdate', party: result.party }));
+              member.ws.send(JSON.stringify({ type: 'partyUpdate', party: enrichedParty }));
               // Update partyId on player data
               member.partyId = result.partyId;
             }
@@ -972,9 +985,10 @@ wss.on('connection', (ws, req) => {
         } else {
           playerData.partyId = null;
           ws.send(JSON.stringify({ type: 'partyDisbanded' }));
+          const enrichedLeave = enrichParty(result.party, room);
           for (const memberId of result.party.members) {
             const member = room.get(memberId);
-            if (member) member.ws.send(JSON.stringify({ type: 'partyUpdate', party: result.party }));
+            if (member) member.ws.send(JSON.stringify({ type: 'partyUpdate', party: enrichedLeave }));
           }
         }
       } else if (msg.type === 'state') {
@@ -1001,9 +1015,10 @@ wss.on('connection', (ws, req) => {
         }
       }
     } else if (partyResult && partyResult.party) {
+      const enrichedDc = enrichParty(partyResult.party, room);
       for (const memberId of partyResult.party.members) {
         const member = room.get(memberId);
-        if (member) member.ws.send(JSON.stringify({ type: 'partyUpdate', party: partyResult.party }));
+        if (member) member.ws.send(JSON.stringify({ type: 'partyUpdate', party: enrichedDc }));
       }
     }
 

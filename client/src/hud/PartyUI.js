@@ -56,7 +56,7 @@ export class PartyUI {
       const isLeader = memberId === this._party.leaderId;
       const isSelf = memberId === this._networkManager?.playerId;
       const cls = isLeader ? 'dd-party-member leader' : 'dd-party-member';
-      const name = isSelf ? 'You' : `Player ${memberId}`;
+      const name = isSelf ? 'You' : (this._party.memberNames?.[memberId] || `Player ${memberId}`);
       html += `<div class="${cls}">${name}</div>`;
     }
     this._membersEl.innerHTML = html;
