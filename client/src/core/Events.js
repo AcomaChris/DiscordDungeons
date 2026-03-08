@@ -35,3 +35,7 @@ export const NETWORK_PARTY_INVITE = 'network:partyInvite';
 export const NETWORK_PARTY_UPDATE = 'network:partyUpdate';
 export const NETWORK_PARTY_DISBANDED = 'network:partyDisbanded';
 export const NETWORK_PARTY_ERROR = 'network:partyError';
+
+// Inventory
+export const INVENTORY_CHANGED = 'inventory:changed';
+export const INVENTORY_ITEM_ADDED = 'inventory:itemAdded';

@@ -4,6 +4,17 @@ Running log of development sessions. Updated each session to preserve context ac
 
 ---
 
+## 2026-03-07 — Player Accounts + Inventory System (v0.39.1 → v0.41.0)
+
+- **MongoDB player accounts** (d84952f): Full account system with session tokens (30-day expiry). Guest tokens (UUID) stored in localStorage for reconnection. Discord OAuth and Activity SDK create/update accounts. Guest → Discord account linking with data merge. Server endpoints: `/auth/guest`, `/auth/activity`, `/auth/link`, `/api/player`.
+- **Player inventory system**: Grid-based inventory with 11 equipment slots (head through boots), 20-slot bag with emoji item icons. `InventoryManager` singleton handles bag/equipment state with debounced 2s saves to MongoDB. `ItemDefs` registry defines items with emoji, slot, stackable flag. `enrichItem()` resolves container items to full inventory items.
+- **Player menu UI**: Standalone backpack button (top-left), fullscreen overlay panel with tab framework. Inventory tab shows equipment slots grid + 4×5 bag grid. Click-to-equip/unequip between bag and slots. Subscribes to `INVENTORY_CHANGED` for live updates.
+- **Container UI rewrite**: Replaced Phaser-based ContainerUI with DOM overlay. Shows item rows with emoji + name + Take button per item, Take All button. Items taken go into player inventory via `inventoryManager.addItem()`. Auto-closes when empty or player walks away. `acquireInputFocus`/`releaseInputFocus` for blocking game input.
+- **Server inventory endpoint**: `POST /api/player/inventory` accepts `{ items, equipment }`, validates session via Bearer token, updates MongoDB player doc. Added `equipment: {}` to player schema.
+- 988 tests across 74 files (19 new InventoryManager tests).
+
+---
+
 ## 2026-03-07 — Documentation System + Multiplayer Visibility Fix (v0.39.0 → v0.39.1)
 
 - **VitePress documentation** (748e6d2): Full docs-as-code pipeline — `@doc` comment tags in source files extracted by `scripts/extract-docs.mjs` into VitePress markdown. 4 guides: Player's, Developer's, Creator Tools, Creator Content. Builds alongside game client at `discorddungeons.com/docs`. Dark theme with brand colors.

@@ -1,4 +1,14 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+// Mock ContainerUI's dependencies so InteractionManager can import without errors
+vi.mock('../../client/src/core/InputContext.js', () => ({
+  acquireInputFocus: vi.fn(),
+  releaseInputFocus: vi.fn(),
+}));
+vi.mock('../../client/src/inventory/InventoryManager.js', () => ({
+  default: { addItem: vi.fn() },
+}));
+
 import { OBJECT_INTERACT, OBJECT_TOUCH, OBJECT_STEP } from '../../client/src/core/Events.js';
 
 describe('InteractionManager', () => {

@@ -19,7 +19,7 @@ const BE_API_KEY = process.env.BEHAVIOR_ENGINE_API_KEY || '';
 const BE_API_VERSION = '2025-05-15';
 
 const { PartyManager } = require('./PartyManager.js');
-const { connect: connectDb } = require('./db.js');
+const { connect: connectDb, getPlayers } = require('./db.js');
 const {
   createGuestAccount, loginGuest,
   findOrCreateDiscordAccount, getPlayerBySession,
@@ -89,6 +89,10 @@ async function handleHttpRequest(req, res) {
 
   if (url.pathname === '/api/player' && req.method === 'GET') {
     return handleGetPlayer(req, res);
+  }
+
+  if (url.pathname === '/api/player/inventory' && req.method === 'POST') {
+    return handleSaveInventory(req, res);
   }
 
   if (url.pathname === '/api/issue' && req.method === 'POST') {
@@ -389,6 +393,44 @@ async function handleGetPlayer(req, res) {
     res.end(JSON.stringify(sanitizePlayer(player)));
   } catch (err) {
     console.error('[api/player] Error:', err);
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Internal server error' }));
+  }
+}
+
+// --- Inventory Save ---
+
+async function handleSaveInventory(req, res) {
+  try {
+    const authHeader = req.headers.authorization || '';
+    const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+
+    const player = await getPlayerBySession(token);
+    if (!player) {
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Invalid or expired session' }));
+      return;
+    }
+
+    const body = JSON.parse(await readBody(req));
+    const { items, equipment } = body;
+
+    if (!Array.isArray(items)) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'items must be an array' }));
+      return;
+    }
+
+    await getPlayers().updateOne(
+      { _id: player._id },
+      { $set: { 'inventory.items': items, 'inventory.equipment': equipment || {} } }
+    );
+
+    console.log(`[inventory] Saved ${items.length} items for ${player._id}`);
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ success: true }));
+  } catch (err) {
+    console.error('[inventory] Error:', err);
     res.writeHead(500, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ error: 'Internal server error' }));
   }

@@ -12,6 +12,8 @@ import { BehaviorEnginePanel } from './behavior-engine/BehaviorEnginePanel.js';
 import { StateDisplayPanel } from './debug/StateDisplayPanel.js';
 import { BRAND_TITLE } from './core/BrandConfig.js';
 import { installConsoleCapture } from './bug-report/ConsoleCapture.js';
+import { PlayerMenuButton } from './hud/PlayerMenuButton.js';
+import inventoryManager from './inventory/InventoryManager.js';
 
 // @doc-dev 03:URL Params > Available Parameters
 // The game client supports the following URL parameters for development and testing:
@@ -47,6 +49,9 @@ const statePanelBtn = bugReporter.addMenuItem('Show State', () => {
 
 const behaviorPanel = new BehaviorEnginePanel();
 bugReporter.addMenuItem('Behavior Engine', () => behaviorPanel.open());
+
+const playerMenu = new PlayerMenuButton();
+playerMenu.mount();
 
 // --- Game Configuration ---
 
@@ -91,6 +96,9 @@ async function boot() {
       authManager.restore();
     }
   }
+  // Load inventory from server after auth (fire-and-forget — game can start without it)
+  inventoryManager.loadFromServer();
+
   const game = new Phaser.Game(config);
   // Expose for e2e tests — Playwright reads this to inspect game state
   globalThis.__PHASER_GAME__ = game;

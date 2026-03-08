@@ -29,7 +29,7 @@ export class InteractionManager {
     this._scene = scene;
     this._prompt = new InteractionPrompt();
     this._prompt.create(scene);
-    this._containerUI = new ContainerUI(scene);
+    this._containerUI = new ContainerUI();
 
     // Currently targeted object (closest interactable in range)
     this._target = null;
