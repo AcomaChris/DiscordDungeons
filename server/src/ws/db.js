@@ -9,7 +9,7 @@ let client = null;
 let db = null;
 
 async function connect() {
-  client = new MongoClient(MONGO_URL);
+  client = new MongoClient(MONGO_URL, { serverSelectionTimeoutMS: 3000 });
   await client.connect();
   db = client.db();
 

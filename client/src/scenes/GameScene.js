@@ -153,6 +153,22 @@ export class GameScene extends Phaser.Scene {
       this.networkManager.sendMapChange(this._mapId, { instanced: !!mapConfig.instanced });
     }
 
+    // After map transition, recreate sprites for players already on our map
+    // (their mapChanged event arrived before we transitioned, so we missed it)
+    if (isRestart && this._remotePlayerMaps) {
+      for (const [playerId, mapId] of this._remotePlayerMaps) {
+        if (mapId === this._mapId && !this.remotePlayers.has(playerId)) {
+          const info = this._remotePlayerInfo?.get(playerId);
+          if (info) {
+            const spawn = this.tileMapManager.spawnPoint;
+            const rp = new RemotePlayer(this, info.colorIndex, spawn.x, spawn.y, info.playerName);
+            this.remotePlayers.set(playerId, rp);
+            if (import.meta.env.DEV) console.log(`[GameScene] +remote ${playerId} (rejoined map, sprites: ${this.remotePlayers.size})`);
+          }
+        }
+      }
+    }
+
     // --- HUD ---
     // RosterHUD and PartyUI are DOM-based, persist across map transitions.
     if (!isRestart) {
@@ -309,9 +325,17 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
-  _updatePlayerIdentity({ playerId, playerName }) {
+  _updatePlayerIdentity({ playerId, playerName, colorIndex }) {
     const rp = this.remotePlayers.get(playerId);
     if (rp) rp.setPlayerName(playerName);
+    // Keep cache in sync so map transitions use current identity
+    if (this._remotePlayerInfo) {
+      const info = this._remotePlayerInfo.get(playerId);
+      if (info) {
+        info.playerName = playerName;
+        if (colorIndex != null) info.colorIndex = colorIndex;
+      }
+    }
   }
 
   _removeRemotePlayer({ playerId }) {
@@ -332,10 +356,18 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
-  _handlePlayerMapChanged({ playerId, fromMap, toMap }) {
+  _handlePlayerMapChanged({ playerId, fromMap, toMap, playerName, colorIndex }) {
     if (!this._remotePlayerMaps) this._remotePlayerMaps = new Map();
     this._remotePlayerMaps.set(playerId, toMap);
     if (import.meta.env.DEV) console.log(`[GameScene] mapChanged ${playerId} ${fromMap}→${toMap}`);
+
+    // Update cache with fresh identity from server broadcast
+    if (playerName != null && this._remotePlayerInfo) {
+      this._remotePlayerInfo.set(playerId, {
+        colorIndex: colorIndex ?? this._remotePlayerInfo.get(playerId)?.colorIndex ?? 0,
+        playerName,
+      });
+    }
 
     // Ignore our own map changes
     if (this.networkManager && playerId === this.networkManager.playerId) return;

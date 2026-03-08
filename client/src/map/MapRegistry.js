@@ -26,7 +26,7 @@ const maps = {
     ],
   },
   test2: {
-    instanced: false,
+    instanced: true, // party dungeon — each party gets its own instance
     jsonPath: 'maps/test2.json',
     tilesets: [
       { key: 'test-tiles', path: 'tilesets/test-tiles.png', tiledName: 'test-tiles', tileSize: 16 },

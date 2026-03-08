@@ -849,6 +849,7 @@ wss.on('connection', (ws, req) => {
           peer.ws.send(JSON.stringify({
             type: 'playerIdentity', playerId,
             playerName: playerData.playerName, avatarUrl: playerData.avatarUrl,
+            colorIndex: playerData.colorIndex,
           }));
         }
       } else if (msg.type === 'mapChange') {
@@ -862,11 +863,12 @@ wss.on('connection', (ws, req) => {
           playerData.instanceId = null;
         }
         console.log(`[mapChange] player=${playerId} ${oldMapId} → ${playerData.mapId} instance=${playerData.instanceId || 'shared'}`);
-        // Broadcast map change to all room members
+        // Broadcast map change to all room members (include identity for sprite recreation)
         for (const [, peer] of room) {
           peer.ws.send(JSON.stringify({
             type: 'playerMapChanged', playerId,
             fromMap: oldMapId, toMap: playerData.mapId,
+            playerName: playerData.playerName, colorIndex: playerData.colorIndex,
           }));
         }
       } else if (msg.type === 'partyInvite') {
@@ -1020,7 +1022,11 @@ setInterval(() => {
 // --- Startup ---
 
 async function start() {
-  await connectDb();
+  try {
+    await connectDb();
+  } catch (err) {
+    console.warn('[startup] MongoDB unavailable — running without persistence:', err.message);
+  }
   httpServer.listen(PORT, () => {
     console.log(`WebSocket + HTTP server running on port ${PORT}`);
   });
