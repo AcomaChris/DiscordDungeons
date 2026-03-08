@@ -355,12 +355,16 @@ export class GameScene extends Phaser.Scene {
       if (!rp) {
         // Self-healing: create sprite for players we missed during scene restart
         // (playerMapChanged may have been dropped while events were unsubscribed)
-        const info = this._remotePlayerInfo?.get(playerId);
+        if (!this._remotePlayerInfo) this._remotePlayerInfo = new Map();
+        const info = this._remotePlayerInfo.get(playerId);
         if (info) {
           const spawn = this.tileMapManager.spawnPoint;
           rp = new RemotePlayer(this, info.colorIndex, spawn.x, spawn.y, info.playerName);
           this.remotePlayers.set(playerId, rp);
-          if (import.meta.env.DEV) console.log(`[GameScene] +remote ${playerId} (self-heal from stateUpdate, sprites: ${this.remotePlayers.size})`);
+          console.log(`[GameScene] +remote ${playerId} (self-heal, sprites: ${this.remotePlayers.size})`);
+        } else {
+          // No identity info — stash state color so we can create with defaults
+          console.warn(`[GameScene] stateUpdate for unknown player ${playerId} (no identity info, infoMap size: ${this._remotePlayerInfo.size})`);
         }
       }
       if (rp) rp.applyState(state);
@@ -369,11 +373,12 @@ export class GameScene extends Phaser.Scene {
 
   _handlePlayerMapChanged({ playerId, fromMap, toMap, playerName, colorIndex }) {
     if (!this._remotePlayerMaps) this._remotePlayerMaps = new Map();
+    if (!this._remotePlayerInfo) this._remotePlayerInfo = new Map();
     this._remotePlayerMaps.set(playerId, toMap);
-    if (import.meta.env.DEV) console.log(`[GameScene] mapChanged ${playerId} ${fromMap}→${toMap}`);
+    console.log(`[GameScene] mapChanged ${playerId} ${fromMap}→${toMap} (myMap: ${this._mapId}, name: ${playerName})`);
 
     // Update cache with fresh identity from server broadcast
-    if (playerName != null && this._remotePlayerInfo) {
+    if (playerName != null) {
       this._remotePlayerInfo.set(playerId, {
         colorIndex: colorIndex ?? this._remotePlayerInfo.get(playerId)?.colorIndex ?? 0,
         playerName,
@@ -385,15 +390,18 @@ export class GameScene extends Phaser.Scene {
 
     if (toMap === this._mapId) {
       // Player arrived on our map — create sprite if it doesn't exist yet
-      // (race: playerJoined may have arrived with mapId=null before their mapChange)
       if (!this.remotePlayers.has(playerId)) {
-        const info = this._remotePlayerInfo?.get(playerId);
+        const info = this._remotePlayerInfo.get(playerId);
         if (info) {
           const spawn = this.tileMapManager.spawnPoint;
           const rp = new RemotePlayer(this, info.colorIndex, spawn.x, spawn.y, info.playerName);
           this.remotePlayers.set(playerId, rp);
-          if (import.meta.env.DEV) console.log(`[GameScene] +remote ${playerId} (late arrival, sprites: ${this.remotePlayers.size})`);
+          console.log(`[GameScene] +remote ${playerId} (mapChanged arrival, sprites: ${this.remotePlayers.size})`);
+        } else {
+          console.warn(`[GameScene] mapChanged: no identity for ${playerId}, cannot create sprite`);
         }
+      } else {
+        console.log(`[GameScene] mapChanged: ${playerId} already has sprite`);
       }
       const spawn = this.tileMapManager.spawnPoint;
       playArrivalEffect(this, spawn.x, spawn.y);
