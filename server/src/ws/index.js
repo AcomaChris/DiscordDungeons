@@ -95,6 +95,10 @@ async function handleHttpRequest(req, res) {
     return handleSaveInventory(req, res);
   }
 
+  if (url.pathname === '/api/player/stats' && req.method === 'POST') {
+    return handleSaveStats(req, res);
+  }
+
   if (url.pathname === '/api/issue' && req.method === 'POST') {
     return handleFileIssue(req, res);
   }
@@ -431,6 +435,44 @@ async function handleSaveInventory(req, res) {
     res.end(JSON.stringify({ success: true }));
   } catch (err) {
     console.error('[inventory] Error:', err);
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Internal server error' }));
+  }
+}
+
+// --- Stats Save ---
+
+async function handleSaveStats(req, res) {
+  try {
+    const authHeader = req.headers.authorization || '';
+    const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+
+    const player = await getPlayerBySession(token);
+    if (!player) {
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Invalid or expired session' }));
+      return;
+    }
+
+    const body = JSON.parse(await readBody(req));
+    const { attributes, statPoints } = body;
+
+    if (!attributes || typeof attributes !== 'object' || typeof statPoints !== 'number') {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'attributes must be an object and statPoints must be a number' }));
+      return;
+    }
+
+    await getPlayers().updateOne(
+      { _id: player._id },
+      { $set: { 'stats.attributes': attributes, 'stats.statPoints': statPoints } }
+    );
+
+    console.log(`[stats] Saved attributes for ${player._id} (points=${statPoints})`);
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ success: true }));
+  } catch (err) {
+    console.error('[stats] Error:', err);
     res.writeHead(500, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ error: 'Internal server error' }));
   }

@@ -34,11 +34,17 @@ describe('AbilityDefs', () => {
     }
   });
 
-  it('movement has walkSpeed, sprintSpeed, and stepHeight params', () => {
+  it('movement has walkSpeed and stepHeight params', () => {
     const movement = ABILITY_DEFS.movement;
     expect(movement.params.walkSpeed).toBe(80);
-    expect(movement.params.sprintSpeed).toBe(160);
     expect(movement.params.stepHeight).toBe(8);
+  });
+
+  it('sprint has sprintSpeed param', () => {
+    const sprint = ABILITY_DEFS.sprint;
+    expect(sprint.params.sprintSpeed).toBe(160);
+    expect(sprint.type).toBe(AbilityType.ACTIVE);
+    expect(sprint.inputKey).toBe('sprint');
   });
 
   it('jump has heightPower and horizontalPower params', () => {
@@ -52,8 +58,9 @@ describe('AbilityDefs', () => {
     expect(float.params.gravityFactor).toBe(0.5);
   });
 
-  it('movement is active, float is passive', () => {
-    expect(ABILITY_DEFS.movement.type).toBe(AbilityType.ACTIVE);
+  it('movement is passive, sprint is active, float is passive', () => {
+    expect(ABILITY_DEFS.movement.type).toBe(AbilityType.PASSIVE);
+    expect(ABILITY_DEFS.sprint.type).toBe(AbilityType.ACTIVE);
     expect(ABILITY_DEFS.float.type).toBe(AbilityType.PASSIVE);
   });
 
@@ -69,7 +76,7 @@ describe('AbilityDefs', () => {
     expect(ABILITY_DEFS.mantle.inputKey).toBeNull();
   });
 
-  it('mantle is in DEFAULT_ABILITIES', () => {
-    expect(DEFAULT_ABILITIES).toContain('mantle');
+  it('DEFAULT_ABILITIES is movement only (DexterityController manages the rest)', () => {
+    expect(DEFAULT_ABILITIES).toEqual(['movement']);
   });
 });

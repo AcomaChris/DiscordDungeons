@@ -39,3 +39,6 @@ export const NETWORK_PARTY_ERROR = 'network:partyError';
 // Inventory
 export const INVENTORY_CHANGED = 'inventory:changed';
 export const INVENTORY_ITEM_ADDED = 'inventory:itemAdded';
+
+// Stats
+export const STATS_CHANGED = 'stats:changed';

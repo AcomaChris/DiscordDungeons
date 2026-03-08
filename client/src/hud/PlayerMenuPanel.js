@@ -4,6 +4,7 @@
 
 import { acquireInputFocus, releaseInputFocus } from '../core/InputContext.js';
 import { InventoryTab } from './InventoryTab.js';
+import { StatsTab } from './StatsTab.js';
 
 export class PlayerMenuPanel {
   constructor(onClose) {
@@ -35,6 +36,12 @@ export class PlayerMenuPanel {
     inventoryTab.textContent = 'Inventory';
     inventoryTab.addEventListener('click', () => this._switchTab('inventory', inventoryTab));
     tabs.appendChild(inventoryTab);
+
+    const statsTab = document.createElement('button');
+    statsTab.className = 'dd-player-tab';
+    statsTab.textContent = 'Stats';
+    statsTab.addEventListener('click', () => this._switchTab('stats', statsTab));
+    tabs.appendChild(statsTab);
 
     const closeBtn = document.createElement('button');
     closeBtn.className = 'dd-player-close';
@@ -70,6 +77,8 @@ export class PlayerMenuPanel {
     // Create new tab
     if (tabName === 'inventory') {
       this._activeTab = new InventoryTab(this._tabContent);
+    } else if (tabName === 'stats') {
+      this._activeTab = new StatsTab(this._tabContent);
     }
   }
 

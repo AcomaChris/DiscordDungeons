@@ -25,7 +25,11 @@ function newPlayerDoc(overrides) {
     lastLoginAt: now,
     currency: { gold: 0, gems: 0 },
     inventory: { items: [], equipment: {}, maxSlots: 20 },
-    stats: { level: 1, xp: 0, playtime: 0 },
+    stats: {
+      level: 1, xp: 0, playtime: 0,
+      attributes: { strength: 2, dexterity: 2, constitution: 2, intelligence: 2, wisdom: 2, charisma: 2 },
+      statPoints: 3,
+    },
     data: {},
     ...overrides,
   };

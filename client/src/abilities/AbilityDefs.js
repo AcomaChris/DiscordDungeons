@@ -49,12 +49,21 @@ export const ABILITY_DEFS = {
   movement: {
     id: 'movement',
     category: 'Movement',
+    type: AbilityType.PASSIVE,
+    inputKey: null,
+    params: {
+      walkSpeed: 80,    // px/sec (base movement)
+      stepHeight: 8,     // px — max elevation delta for auto-step-up (one ELEVATION_STEP)
+    },
+  },
+
+  sprint: {
+    id: 'sprint',
+    category: 'Movement',
     type: AbilityType.ACTIVE,
     inputKey: 'sprint',
     params: {
-      walkSpeed: 80,    // px/sec (base movement)
       sprintSpeed: 160,  // px/sec (~2× walk)
-      stepHeight: 8,     // px — max elevation delta for auto-step-up (one ELEVATION_STEP)
     },
   },
 
@@ -66,6 +75,7 @@ export const ABILITY_DEFS = {
     params: {
       heightPower: 200,
       horizontalPower: 100,
+      doubleJumpEnabled: false,
     },
   },
 
@@ -92,5 +102,5 @@ export const ABILITY_DEFS = {
   },
 };
 
-// Abilities equipped on every new player by default
-export const DEFAULT_ABILITIES = ['movement', 'jump', 'mantle'];
+// Only movement is always equipped; DexterityController manages the rest based on stats
+export const DEFAULT_ABILITIES = ['movement'];

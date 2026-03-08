@@ -14,6 +14,7 @@ import { BRAND_TITLE } from './core/BrandConfig.js';
 import { installConsoleCapture } from './bug-report/ConsoleCapture.js';
 import { PlayerMenuButton } from './hud/PlayerMenuButton.js';
 import inventoryManager from './inventory/InventoryManager.js';
+import statsManager from './stats/StatsManager.js';
 
 // @doc-dev 03:URL Params > Available Parameters
 // The game client supports the following URL parameters for development and testing:
@@ -96,8 +97,9 @@ async function boot() {
       authManager.restore();
     }
   }
-  // Load inventory from server after auth (fire-and-forget — game can start without it)
+  // Load player data from server after auth (fire-and-forget — game can start without it)
   inventoryManager.loadFromServer();
+  statsManager.loadFromServer();
 
   const game = new Phaser.Game(config);
   // Expose for e2e tests — Playwright reads this to inspect game state

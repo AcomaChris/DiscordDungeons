@@ -41,8 +41,8 @@ describe('AbilityManager', () => {
     const result = mgr.get('movement');
     expect(result).not.toBeNull();
     expect(result.params.walkSpeed).toBe(80);
-    expect(result.params.sprintSpeed).toBe(160);
-    expect(result.active).toBe(false);
+    expect(result.params.stepHeight).toBe(8);
+    expect(result.active).toBe(true); // movement is passive, always active
   });
 
   it('get returns null for unequipped ability', () => {
@@ -64,15 +64,17 @@ describe('AbilityManager', () => {
 
   // --- updateFromInput ---
 
-  it('activates movement when sprint input is true', () => {
+  it('activates sprint when sprint input is true', () => {
+    mgr.equip('sprint');
     mgr.updateFromInput({ sprint: true });
-    expect(mgr.get('movement').active).toBe(true);
+    expect(mgr.get('sprint').active).toBe(true);
   });
 
-  it('deactivates movement when sprint input is false', () => {
+  it('deactivates sprint when sprint input is false', () => {
+    mgr.equip('sprint');
     mgr.updateFromInput({ sprint: true });
     mgr.updateFromInput({ sprint: false });
-    expect(mgr.get('movement').active).toBe(false);
+    expect(mgr.get('sprint').active).toBe(false);
   });
 
   it('passive abilities are always active regardless of input', () => {
@@ -85,21 +87,22 @@ describe('AbilityManager', () => {
 
   it('getState returns correct shape', () => {
     const state = mgr.getState();
-    expect(state.equipped).toEqual(['movement', 'jump', 'mantle']);
-    expect(state.active).toEqual(['mantle']);
-    expect(state.params.movement).toEqual({ walkSpeed: 80, sprintSpeed: 160, stepHeight: 8 });
-    expect(state.params.jump).toEqual({ heightPower: 200, horizontalPower: 100 });
-    expect(state.params.mantle).toEqual({ mantleHeight: 16, mantleSpeed: 200, mantleReach: 1 });
+    expect(state.equipped).toEqual(['movement']);
+    expect(state.active).toEqual(['movement']); // movement is passive, always active
+    expect(state.params.movement).toEqual({ walkSpeed: 80, stepHeight: 8 });
   });
 
   it('getState includes active abilities when sprinting', () => {
+    mgr.equip('sprint');
     mgr.updateFromInput({ sprint: true });
     const state = mgr.getState();
-    expect(state.active).toEqual(['movement', 'mantle']);
+    expect(state.active).toContain('movement');
+    expect(state.active).toContain('sprint');
   });
 
   it('applyState syncs equipped and active sets', () => {
     const remote = new AbilityManager();
+    remote.equip('sprint');
     remote.equip('jump');
     remote.equip('float');
     remote.updateFromInput({ sprint: true });
@@ -108,9 +111,10 @@ describe('AbilityManager', () => {
     mgr.applyState(state);
 
     expect(mgr.has('movement')).toBe(true);
+    expect(mgr.has('sprint')).toBe(true);
     expect(mgr.has('jump')).toBe(true);
     expect(mgr.has('float')).toBe(true);
-    expect(mgr.get('movement').active).toBe(true);
+    expect(mgr.get('sprint').active).toBe(true);
     expect(mgr.get('float').active).toBe(true);
   });
 
@@ -123,20 +127,22 @@ describe('AbilityManager', () => {
   });
 
   it('getState/applyState round-trips correctly', () => {
+    mgr.equip('sprint');
     mgr.equip('jump');
     mgr.equip('float');
     mgr.updateFromInput({ sprint: true });
-    mgr.setParam('movement', 'sprintSpeed', 200);
+    mgr.setParam('sprint', 'sprintSpeed', 200);
 
     const state = mgr.getState();
     const restored = new AbilityManager();
     restored.applyState(state);
 
     expect(restored.has('movement')).toBe(true);
+    expect(restored.has('sprint')).toBe(true);
     expect(restored.has('jump')).toBe(true);
     expect(restored.has('float')).toBe(true);
-    expect(restored.get('movement').active).toBe(true);
-    expect(restored.get('movement').params.sprintSpeed).toBe(200);
+    expect(restored.get('sprint').active).toBe(true);
+    expect(restored.get('sprint').params.sprintSpeed).toBe(200);
     expect(restored.get('float').active).toBe(true);
   });
 
@@ -185,7 +191,7 @@ describe('AbilityManager', () => {
 
   it('clearModifiers removes all modifiers', () => {
     mgr.addModifier('movement', { id: 'a', param: 'walkSpeed', op: 'add', value: 10 });
-    mgr.addModifier('movement', { id: 'b', param: 'sprintSpeed', op: 'mul', value: 1.5 });
+    mgr.addModifier('movement', { id: 'b', param: 'stepHeight', op: 'mul', value: 1.5 });
     mgr.clearModifiers('movement');
     expect(mgr.getModifiers('movement')).toHaveLength(0);
   });
@@ -213,7 +219,7 @@ describe('AbilityManager', () => {
     mgr.addModifier('movement', { id: 'boots', param: 'walkSpeed', op: 'add', value: 20 });
     const result = mgr.get('movement');
     expect(result.params.walkSpeed).toBe(100);
-    expect(result.params.sprintSpeed).toBe(160); // unmodified param unchanged
+    expect(result.params.stepHeight).toBe(8); // unmodified param unchanged
   });
 
   it('setParam writes base value, does not affect modifiers', () => {
@@ -260,6 +266,7 @@ describe('AbilityManager', () => {
   });
 
   it('getState/applyState round-trips modifiers', () => {
+    mgr.equip('jump');
     mgr.addModifier('movement', { id: 'boots', param: 'walkSpeed', op: 'add', value: 20, source: 'item:boots' });
     mgr.addModifier('jump', { id: 'ring', param: 'heightPower', op: 'mul', value: 2, source: 'item:ring' });
 

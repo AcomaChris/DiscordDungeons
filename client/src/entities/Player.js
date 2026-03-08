@@ -1,9 +1,10 @@
 import eventBus from '../core/EventBus.js';
 import { PLAYER_MOVED } from '../core/Events.js';
-import { CHAR_WIDTH, CHAR_HEIGHT, TEXTURE_SCALE, PLAYER_COLORS, ELEVATION_STEP } from '../core/Constants.js';
+import { CHAR_WIDTH, CHAR_HEIGHT, TEXTURE_SCALE, PLAYER_COLORS, ELEVATION_STEP, JUMP_VELOCITY_SCALE } from '../core/Constants.js';
 import { generatePlayerTextures } from './PlayerTextureGenerator.js';
 import { AbilityManager } from '../abilities/AbilityManager.js';
 import { startJump, updateJumpState } from '../physics/JumpPhysics.js';
+import { DexterityController } from '../stats/DexterityController.js';
 import { checkMantle, updateMantleState } from '../physics/MantlePhysics.js';
 import { createShadow, updateShadow } from './ShadowHelper.js';
 
@@ -23,9 +24,12 @@ export class Player {
     this.texturePrefix = 'player-0';
     this.color = PLAYER_COLORS[0];
     this.abilities = new AbilityManager();
+    this._dexController = new DexterityController(this.abilities);
     this._isJumping = false;
     this._isGhost = false;
     this._isMantling = false;
+    this._doubleJumpUsed = false;
+    this._jumpWasPressed = false;
     this._mantleStartZ = 0;
     this._mantleTargetZ = 0;
     this._mantleElapsed = 0;
@@ -127,14 +131,27 @@ export class Player {
   handleInput({ moveX, moveY, sprint, jump }) {
     this.abilities.updateFromInput({ sprint, jump });
 
-    // Trigger jump on activation (single press, not held)
+    // Rising-edge detection for jump (trigger on press, not hold)
     const jumpAbility = this.abilities.get('jump');
-    if (jumpAbility?.active && !this._isJumping && !this._isMantling) {
-      this._startJump(jumpAbility.params.heightPower);
+    const jumpPressed = !!jumpAbility?.active;
+    const jumpRising = jumpPressed && !this._jumpWasPressed;
+    this._jumpWasPressed = jumpPressed;
+
+    if (jumpRising && !this._isMantling) {
+      if (!this._isJumping) {
+        // Normal jump from ground
+        this._startJump(jumpAbility.params.heightPower);
+        this._doubleJumpUsed = false;
+      } else if (jumpAbility.params.doubleJumpEnabled && !this._doubleJumpUsed) {
+        // Double jump: reset vz at reduced power
+        this.vz = jumpAbility.params.heightPower * JUMP_VELOCITY_SCALE * 0.8;
+        this._doubleJumpUsed = true;
+      }
     }
 
     const movement = this.abilities.get('movement');
-    const speed = movement?.active ? movement.params.sprintSpeed : movement?.params.walkSpeed ?? 80;
+    const sprintAbility = this.abilities.get('sprint');
+    const speed = sprintAbility?.active ? sprintAbility.params.sprintSpeed : movement?.params.walkSpeed ?? 80;
 
     let vx = moveX * speed;
     let vy = moveY * speed;
@@ -257,6 +274,8 @@ export class Player {
     );
     this.z = state.z;
     this.vz = state.vz;
+    // Reset double jump on landing
+    if (this._isJumping && !state.isJumping) this._doubleJumpUsed = false;
     this._isJumping = state.isJumping;
   }
 
@@ -361,6 +380,7 @@ export class Player {
   }
 
   destroy() {
+    if (this._dexController) this._dexController.destroy();
     this.scene.events.off('preupdate', this._preUpdate);
     this.scene.events.off('postupdate', this._postUpdate);
     // Remove body from physics world first so Phaser doesn't run
