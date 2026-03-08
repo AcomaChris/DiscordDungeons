@@ -219,6 +219,94 @@ describe('TileAnimator', () => {
     expect(animator._tileLocations.size).toBe(0);
   });
 
+  // --- Mobile Safari resilience ---
+  // On Mobile Safari, sprites can have null glTexture (failed WebGL upload)
+  // or be destroyed mid-frame. The update loop must not crash.
+
+  it('skips destroyed sprites during animation update', () => {
+    const animator = new TileAnimator();
+    const tilemap = createMockTilemap({
+      0: {
+        animation: [
+          { tileid: 0, duration: 100 },
+          { tileid: 5, duration: 100 },
+        ],
+      },
+    }, 1);
+
+    const mockSprite = {
+      active: true,
+      frame: { name: 0 },
+      _tileFirstgid: 1,
+      texture: { has: () => true },
+      setFrame: function(f) { this.frame.name = f; },
+    };
+
+    animator.init(tilemap, { Ground: createMockLayer([[makeTile(1)]]) }, []);
+    // Manually register the sprite (normally done by _buildSpriteIndex)
+    animator._tileLocations.get(1).sprites.push(mockSprite);
+
+    // Destroy the sprite before animation fires
+    mockSprite.active = false;
+
+    // Should not throw
+    animator.update(150);
+    expect(mockSprite.frame.name).toBe(0); // unchanged — skipped
+  });
+
+  it('skips sprites when target frame does not exist in texture', () => {
+    const animator = new TileAnimator();
+    const tilemap = createMockTilemap({
+      0: {
+        animation: [
+          { tileid: 0, duration: 100 },
+          { tileid: 5, duration: 100 },
+        ],
+      },
+    }, 1);
+
+    const mockSprite = {
+      active: true,
+      frame: { name: 0 },
+      _tileFirstgid: 1,
+      texture: { has: (frame) => frame === 0 }, // only frame 0 exists
+      setFrame: function(f) { this.frame.name = f; },
+    };
+
+    animator.init(tilemap, { Ground: createMockLayer([[makeTile(1)]]) }, []);
+    animator._tileLocations.get(1).sprites.push(mockSprite);
+
+    // Frame 1 maps to localFrame 5 (GID 6 - firstgid 1), which doesn't exist
+    animator.update(150);
+    expect(mockSprite.frame.name).toBe(0); // unchanged — frame 5 not in texture
+  });
+
+  it('updates sprite when frame exists in texture', () => {
+    const animator = new TileAnimator();
+    const tilemap = createMockTilemap({
+      0: {
+        animation: [
+          { tileid: 0, duration: 100 },
+          { tileid: 5, duration: 100 },
+        ],
+      },
+    }, 1);
+
+    const mockSprite = {
+      active: true,
+      frame: { name: 0 },
+      _tileFirstgid: 1,
+      texture: { has: () => true }, // all frames exist
+      setFrame: function(f) { this.frame.name = f; },
+    };
+
+    animator.init(tilemap, { Ground: createMockLayer([[makeTile(1)]]) }, []);
+    animator._tileLocations.get(1).sprites.push(mockSprite);
+
+    animator.update(150);
+    expect(mockSprite.frame.name).toBe(5); // localFrame = GID 6 - firstgid 1
+  });
+
   it('updates multiple tiles sharing the same animation in sync', () => {
     const animator = new TileAnimator();
     const tile1 = makeTile(1);

@@ -152,6 +152,9 @@ export class TileAnimator {
       // Swap wall sprite frames (local ID = GID - firstgid)
       const localFrame = newGID - anim.firstgid;
       for (const sprite of locs.sprites) {
+        // Guard: skip if sprite was destroyed or frame doesn't exist in texture
+        // (prevents glTexture null crash on Mobile Safari)
+        if (!sprite.active || !sprite.texture.has(localFrame)) continue;
         sprite.setFrame(localFrame);
       }
     }
