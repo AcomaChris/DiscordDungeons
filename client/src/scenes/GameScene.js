@@ -266,6 +266,9 @@ export class GameScene extends Phaser.Scene {
   // --- Event Subscriptions ---
 
   _subscribeEvents() {
+    // Defensive: always remove previous handlers before registering new ones.
+    // Arrow functions create new references each call — stale refs leak if not removed first.
+    this._unsubscribeEvents();
     this._onInput = (data) => this.player.handleInput(data);
     this._onRoomJoined = ({ colorIndex, playerId }) => {
       this.player.setColorIndex(colorIndex);
@@ -352,9 +355,20 @@ export class GameScene extends Phaser.Scene {
   _updateRemotePlayers(states) {
     for (const [playerId, state] of Object.entries(states)) {
       let rp = this.remotePlayers.get(playerId);
+
+      // Guard: sprite may have been destroyed externally (race during transition).
+      // Clean the stale entry so self-healing can recreate it correctly.
+      if (rp && !rp.sprite?.scene) {
+        this.remotePlayers.delete(playerId);
+        rp = null;
+      }
+
       if (!rp) {
-        // Self-healing: create sprite for players we missed during scene restart
-        // (playerMapChanged may have been dropped while events were unsubscribed)
+        // Self-healing: only create a sprite if the player is actually on our map.
+        // State updates can arrive a frame after a departure event — don't recreate.
+        const knownMap = this._remotePlayerMaps?.get(playerId);
+        if (knownMap !== undefined && knownMap !== this._mapId) continue;
+
         if (!this._remotePlayerInfo) this._remotePlayerInfo = new Map();
         const info = this._remotePlayerInfo.get(playerId);
         if (info) {
@@ -363,8 +377,7 @@ export class GameScene extends Phaser.Scene {
           this.remotePlayers.set(playerId, rp);
           console.log(`[GameScene] +remote ${playerId} (self-heal, sprites: ${this.remotePlayers.size})`);
         } else {
-          // No identity info — stash state color so we can create with defaults
-          console.warn(`[GameScene] stateUpdate for unknown player ${playerId} (no identity info, infoMap size: ${this._remotePlayerInfo.size})`);
+          console.warn(`[GameScene] stateUpdate for unknown player ${playerId} (no identity info)`);
         }
       }
       if (rp) rp.applyState(state);
@@ -501,9 +514,7 @@ export class GameScene extends Phaser.Scene {
   // --- Cleanup ---
   // AGENT: Must unsubscribe all EventBus listeners to prevent duplicates on scene restart
 
-  shutdown() {
-    this.mapTransitionManager.destroy();
-    this.scale.off('resize', this._updateCamera, this);
+  _unsubscribeEvents() {
     eventBus.off(INPUT_ACTION, this._onInput);
     eventBus.off(NETWORK_ROOM_JOINED, this._onRoomJoined);
     eventBus.off(NETWORK_PLAYER_JOINED, this._onPlayerJoined);
@@ -513,6 +524,12 @@ export class GameScene extends Phaser.Scene {
     eventBus.off(NETWORK_PLAYER_MAP_CHANGED, this._onPlayerMapChanged);
     eventBus.off(NETWORK_ROSTER, this._onRoster);
     eventBus.off(OBJECT_STATE_CHANGED, this._onObjectStateChanged);
+  }
+
+  shutdown() {
+    this.mapTransitionManager.destroy();
+    this.scale.off('resize', this._updateCamera, this);
+    this._unsubscribeEvents();
 
     if (this._luaBindings?.timer) this._luaBindings.timer.clearAll();
     luaEngine.destroy();
