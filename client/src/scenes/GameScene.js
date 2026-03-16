@@ -100,6 +100,9 @@ export class GameScene extends Phaser.Scene {
     // --- Player ---
     const spawn = this.tileMapManager.getSpawnTarget(this._spawnTarget);
     this.player = new Player(this, spawn.x, spawn.y, authManager.identity?.playerName);
+    // Restore server-assigned color on restart (welcome only fires once at initial connect)
+    const savedColor = this.game.__networkManager?.localColorIndex;
+    if (savedColor != null) this.player.setColorIndex(savedColor);
     this.player.sprite.setCollideWorldBounds(true);
 
     // Collide player with the invisible collision layer
@@ -272,6 +275,8 @@ export class GameScene extends Phaser.Scene {
     this._onInput = (data) => this.player.handleInput(data);
     this._onRoomJoined = ({ colorIndex, playerId }) => {
       this.player.setColorIndex(colorIndex);
+      // Persist colorIndex on networkManager so it survives scene restarts
+      if (this.networkManager) this.networkManager.localColorIndex = colorIndex;
       // Deferred HUD init: playerId is only known after welcome
       if (this.rosterHUD && !this.rosterHUD._badge) {
         this.rosterHUD.init(playerId, this._mapId, this.networkManager);
